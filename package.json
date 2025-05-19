@@ -1,0 +1,55 @@
+{
+  "name": "yzlab",
+  "version": "0.0.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yz13-dev/yzlab.git"
+  },
+  "keywords": [
+    "yzlab"
+  ],
+  "author": "yz13-dev",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yz13-dev/yzlab/issues"
+  },
+  "homepage": "https://github.com/yz13-dev/yzlab#readme",
+  "devDependencies": {
+    "prettier": "^3.5.3",
+    "turbo": "^2.5.0",
+    "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=22",
+    "npm": ">=11.0.0"
+  },
+  "packageManager": "bun@1.2.9",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "peerDependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "resolutions": {
+    "tsup": "^6.6.0",
+    "lucide-react": "^0.488.0",
+    "typescript": "^5.8.3",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "@types/node": "22",
+    "next": "^15.3.0",
+    "tailwindcss": "^4.1.3"
+  }
+}
