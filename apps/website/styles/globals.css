@@ -1,0 +1,34 @@
+@layer base, theme, components;
+@import "tailwind-config/dist/theme.css" layer(theme);
+
+@import "tailwindcss";
+
+@import "tailwind-config/dist/globals.css" layer(base);
+@import "ui/css/globals.css" layer(components);
+
+@source "../app";
+@source "../components";
+@source "../../../packages/ui/dist";
+
+.locked {
+  @apply overflow-hidden;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+  background-color: transparent;
+  display: none;
+}
+
+.no-scrollbar::-webkit-scrollbar-thumb {
+  width: 0px;
+  height: 0px;
+  background-color: transparent;
+  display: none;
+}

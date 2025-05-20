@@ -1,0 +1,35 @@
+{
+  "name": "tailwind-config",
+  "version": "0.0.0",
+  "description": "Package that containt tailwind config for entire repo",
+  "imports": {
+    "./tailwind.config.ts": "./tailwind.config.ts",
+    "./theme.css": "./dist/theme.css",
+    "./vars.css": "./dist/vars.css",
+    "./globals.css": "./dist/globals.css"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsup",
+    "dev": "tsup --watch"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "tailwind",
+    "config"
+  ],
+  "author": "yz13-dev",
+  "license": "ISC",
+  "dependencies": {
+    "tailwind": "^4.0.0",
+    "tailwind-merge": "^3.2.0",
+    "tailwindcss-animate": "^1.0.7",
+    "tsup": "^8.4.0"
+  },
+  "devDependencies": {
+    "tailwindcss": "^4.1.3",
+    "typescript": "^5.8.3"
+  }
+}

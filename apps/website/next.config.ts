@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  transpilePackages: [],
+  transpilePackages: ["ui"],
   compress: true,
   experimental: {
     inlineCss: true,

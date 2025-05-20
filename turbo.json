@@ -1,0 +1,33 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "ui": "stream",
+  "globalEnv": [
+    "EDGE_CONFIG",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+    "NEXT_PUBLIC_SUPABASE_URL"
+  ],
+  "globalDependencies": [
+    ".env.local",
+    ".env.development",
+    ".env.production",
+    ".env.test",
+    ".env.staging",
+    ".env.preview"
+  ],
+  "daemon": false,
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+    },
+    "lint": {
+      "dependsOn": ["^lint"]
+    },
+    "dev": {
+      "env": ["NODE_ENV"],
+      "cache": false,
+      "persistent": true
+    }
+  }
+}
