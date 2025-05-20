@@ -8,6 +8,6 @@ export default defineConfig({
   minify: true,
   clean: true,
   skipNodeModulesBundle: true,
-  dts: true,
+  dts: false,
   external: ["node_modules"],
 });

@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "description": "Package that containt tailwind config for entire repo",
   "imports": {
-    "./tailwind.config.ts": "./tailwind.config.ts",
     "./theme.css": "./dist/theme.css",
     "./vars.css": "./dist/vars.css",
     "./globals.css": "./dist/globals.css"
