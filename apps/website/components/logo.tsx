@@ -20,7 +20,8 @@ const Logo = ({
 }) => {
   const lightSrc = type === "icon" ? logo_light : logo_full_light;
   const darkSrc = type === "icon" ? logo_dark : logo_full_dark;
-  const width = size * 2;
+  const isFull = type === "full";
+  const width = isFull ? size * 6.5625 : size * 2;
   const height = size;
   const isSizeToSmall = height < 40;
   const Label = () => (
