@@ -11,12 +11,14 @@ export default function page() {
           <Image
             className="object-cover w-full h-full light-mode-image"
             src={light}
+            placeholder="blur"
             fill
             alt=""
           />
           <Image
             className="object-cover w-full h-full dark-mode-image"
             src={dark}
+            placeholder="blur"
             fill
             alt=""
           />
