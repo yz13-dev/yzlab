@@ -13,16 +13,27 @@ crawl.post("/", async (c) => {
   if (!url) return c.json({ error: "Missing URL" }, 400);
 
   try {
-    const baseUrl = new URL(url).origin;
+    const baseUrl = new URL(url);
 
     const html = await fetchPageContent(url, renderJS);
     const doc = extractContent(html, url);
 
     const title = doc.title;
+    const description = doc.description;
+    const tags = doc.tags;
 
-    console.log("[CRAWLED]", url, doc.title);
+    console.group("[CRAWLED]");
+    console.log("URL:", baseUrl.origin);
+    console.log("PATH:", baseUrl.pathname);
+    console.groupEnd();
 
-    return c.json({ success: true, title });
+    return c.json({
+      baseUrl: baseUrl.origin,
+      success: true,
+      title,
+      description,
+      tags,
+    });
   } catch (e) {
     console.error("[ERROR]", e);
     return c.json({ error: "Failed to crawl" }, 500);
