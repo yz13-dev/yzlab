@@ -1,17 +1,17 @@
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.26 0 0);
-  --card: oklch(1 0 0);
+  --card: oklch(0.99 0 0);
   --card-foreground: oklch(0.26 0 0);
-  --popover: oklch(1 0 0);
+  --popover: oklch(0.99 0 0);
   --popover-foreground: oklch(0.26 0 0);
   --primary: oklch(0.33 0 0);
   --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.98 0 0);
+  --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.33 0 0);
-  --muted: oklch(0.98 0 0);
+  --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.65 0 0);
-  --accent: oklch(0.98 0 0);
+  --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.33 0 0);
   --destructive: oklch(0.62 0.21 25.77);
   --destructive-foreground: oklch(1 0 0);
@@ -39,7 +39,7 @@
   --font-mono:
     ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
     "Courier New", monospace;
-  --radius: 0.625rem;
+  --radius: 1.5rem;
   --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
   --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
   --shadow-sm:
@@ -96,7 +96,6 @@
     --font-mono:
       ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
-    --radius: 1.5rem;
     --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
     --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
     --shadow-sm:
@@ -155,7 +154,6 @@
     --font-mono:
       ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
-    --radius: 1.5rem;
     --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
     --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
     --shadow-sm:

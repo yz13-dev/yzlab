@@ -1,7 +1,8 @@
 import "@/styles/globals.css";
 import type { Metadata, Viewport } from "next";
-import { Geist_Mono, Inter, Pixelify_Sans } from "next/font/google";
+import { Geist_Mono, Onest, Pixelify_Sans } from "next/font/google";
 import { cn } from "ui/cn";
+import { Analytics } from "@vercel/analytics/next";
 
 const PIXEL = Pixelify_Sans({
   subsets: ["latin", "cyrillic"],
@@ -10,7 +11,7 @@ const PIXEL = Pixelify_Sans({
   variable: "--font-pixel",
 });
 
-const SANS = Inter({
+const SANS = Onest({
   weight: "variable",
   subsets: ["latin", "cyrillic"],
   display: "swap",
@@ -58,6 +59,7 @@ export default function RootLayout({
         </head>
       )}
       <body id="root" className="antialiased">
+        <Analytics />
         {children}
       </body>
     </html>
