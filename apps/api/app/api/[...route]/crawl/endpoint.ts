@@ -21,6 +21,7 @@ crawl.post("/", async (c) => {
     const title = doc.title;
     const description = doc.description;
     const tags = doc.tags;
+    const snippets = doc.snippets;
 
     console.group("[CRAWLED]");
     console.log("URL:", baseUrl.origin);
@@ -33,6 +34,7 @@ crawl.post("/", async (c) => {
       title,
       description,
       tags,
+      snippets,
     });
   } catch (e) {
     console.error("[ERROR]", e);
