@@ -13,15 +13,16 @@ crawl.post("/", async (c) => {
   if (!url) return c.json({ error: "Missing URL" }, 400);
 
   try {
+    const baseUrl = new URL(url).origin;
+
     const html = await fetchPageContent(url, renderJS);
     const doc = extractContent(html, url);
 
     const title = doc.title;
-    const description = doc?.content ?? null;
 
     console.log("[CRAWLED]", url, doc.title);
 
-    return c.json({ success: true, title, description });
+    return c.json({ success: true, title });
   } catch (e) {
     console.error("[ERROR]", e);
     return c.json({ error: "Failed to crawl" }, 500);
