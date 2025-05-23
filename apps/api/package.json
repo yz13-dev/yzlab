@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "cheerio": "^1.0.0",
+    "hono": "^4.7.10",
     "next": "15.1.8",
     "puppeteer": "^24.9.0",
     "react": "^19.0.0",
