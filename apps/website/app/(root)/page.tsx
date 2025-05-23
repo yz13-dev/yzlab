@@ -27,22 +27,21 @@ export default function page() {
           <div className="w-full h-full absolute top-0 left-0 backdrop-grayscale bg-gradient-to-b from-background via-transparent to-background backdrop-blur-lg" />
         </div>
       </div>
-      <main className="flex flex-col justify-center max-w-4xl w-full mx-auto px-6 h-dvh">
+      <main className="flex flex-col gap-8 justify-center max-w-4xl w-full mx-auto px-6 h-dvh">
         <Logo size={32} type="full" />
-        <div className="space-y-3 *:block mt-6 mb-10 max-w-xl">
-          <h1 className="text-4xl font-semibold">
-            Библиотека веб-приложений, сайтов и сервисов
-          </h1>
-          <p className="text-lg text-muted-foreground">
-            Проходите, распологайтесь чувствуйте себя как дома.
-          </p>
-        </div>
+        {/* <div className="space-y-3 *:block mt-6 mb-10 max-w-xl"> */}
+        {/* <h1 className="text-4xl font-semibold"></h1> */}
+        {/* <p className="text-lg text-muted-foreground"></p> */}
+        {/* </div> */}
         <div className="flex items-center gap-2">
           <Input
+            disabled
             placeholder="yz13@yzlab.ru"
             className="bg-background max-w-xs"
           />
-          <Button variant="secondary">Присоединиться</Button>
+          <Button disabled variant="secondary">
+            Присоединиться
+          </Button>
         </div>
       </main>
     </>
