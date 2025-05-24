@@ -11,6 +11,10 @@ export function extractContent(html: string, url: string) {
     .map((_, el) => $(el).text())
     .get();
 
+  const links = $("a")
+    .map((_, el) => $(el).attr("href"))
+    .get();
+
   const head = $("head");
   const tags = Object.values(head.children())
     .map((el) => {
@@ -55,6 +59,7 @@ export function extractContent(html: string, url: string) {
       language: detectLang(code), // можно позже улучшить
     })),
     tags: onlyMetaTags,
+    links,
   };
 }
 

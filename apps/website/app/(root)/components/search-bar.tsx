@@ -1,13 +1,16 @@
 "use client";
 import { Logo } from "@/components/logo";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Input } from "ui/components/input";
 import { AnimatePresence, motion } from "motion/react";
 import { cn } from "ui/cn";
 import { Button } from "ui/components/button";
 import { ArrowRight, XIcon } from "lucide-react";
 
-export default function () {
+type Props = {
+  disabled?: boolean;
+};
+export default function ({ disabled = false }: Props) {
   const [focused, setFocused] = useState<boolean>(false);
   const [text, setText] = useState<string>("");
   return (
@@ -44,6 +47,7 @@ export default function () {
         )}
       >
         <Input
+          disabled={disabled}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
           placeholder="Поможем найти код"
