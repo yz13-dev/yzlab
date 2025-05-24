@@ -26,7 +26,7 @@ export default function page() {
         </div>
       </div>
       <main className="flex flex-col gap-8 items-center justify-center max-w-4xl w-full mx-auto px-6 h-dvh">
-        <SearchBar disabled />
+        <SearchBar disabled={process.env.NODE_ENV !== "development"} />
       </main>
     </>
   );

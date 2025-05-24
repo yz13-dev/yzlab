@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { cn } from "ui/cn";
 import { Button } from "ui/components/button";
 import { ArrowRight, XIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 type Props = {
   disabled?: boolean;
@@ -13,6 +14,13 @@ type Props = {
 export default function ({ disabled = false }: Props) {
   const [focused, setFocused] = useState<boolean>(false);
   const [text, setText] = useState<string>("");
+  const router = useRouter();
+  const search = () => {
+    const query = text.trim();
+    if (query.length > 0) {
+      router.push(`/search?q=${encodeURIComponent(query)}`);
+    }
+  };
   return (
     <div className="flex overflow-hidden items-center h-16 relative px-2 rounded-full border bg-background max-w-lg w-full gap-2">
       <AnimatePresence>
@@ -57,6 +65,11 @@ export default function ({ disabled = false }: Props) {
           )}
           value={text}
           onChange={(e) => setText(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              search();
+            }
+          }}
         />
       </div>
       <AnimatePresence>
@@ -87,7 +100,11 @@ export default function ({ disabled = false }: Props) {
             >
               <XIcon size={24} />
             </button>
-            <Button className="h-full aspect-square" disabled={!focused}>
+            <Button
+              disabled={!focused || text.length <= 3 || disabled}
+              className="h-full aspect-square"
+              onClick={search}
+            >
               <ArrowRight className="size-5" />
             </Button>
           </motion.div>
