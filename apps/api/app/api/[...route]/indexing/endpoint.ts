@@ -13,6 +13,7 @@ import {
   updateInLinks,
   writeInDomains,
   writeInLinks,
+  writeInSnippets,
 } from "./action";
 import { API_URL } from "@/const/url";
 import { wait } from "@/lib/wait";
@@ -116,6 +117,21 @@ indexing.post("/", async (c) => {
     console.log("Domain:", result.domain);
     console.log("AS:", as);
     console.groupEnd();
+
+    if (result.snippets.length !== 0) {
+      const snippets = result.snippets;
+      for (const snippet of snippets) {
+        console.log("Snippet:", snippet);
+        try {
+          await writeInSnippets({
+            code: snippet.code,
+            language: snippet.language,
+          });
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    }
 
     if (as === "domain") {
       const response = await createOrUpdateDomain({
