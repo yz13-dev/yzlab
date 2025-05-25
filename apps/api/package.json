@@ -9,8 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "db": "*",
+    "@upstash/qstash": "^2.8.1",
     "cheerio": "^1.0.0",
+    "db": "*",
+    "rest-api": "*",
     "hono": "^4.7.10",
     "next": "15.1.8",
     "puppeteer": "^24.9.0"
