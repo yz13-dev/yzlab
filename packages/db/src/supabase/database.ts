@@ -87,6 +87,7 @@ export type Database = {
           domain: string | null;
           id: number;
           language: string;
+          pathname: string | null;
         };
         Insert: {
           code: string;
@@ -94,6 +95,7 @@ export type Database = {
           domain?: string | null;
           id?: number;
           language: string;
+          pathname?: string | null;
         };
         Update: {
           code?: string;
@@ -101,6 +103,7 @@ export type Database = {
           domain?: string | null;
           id?: number;
           language?: string;
+          pathname?: string | null;
         };
         Relationships: [
           {

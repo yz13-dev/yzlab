@@ -126,6 +126,8 @@ indexing.post("/", async (c) => {
           await writeInSnippets({
             code: snippet.code,
             language: snippet.language,
+            domain: baseUrl.host,
+            pathname,
           });
         } catch (error) {
           console.error(error);
@@ -234,7 +236,7 @@ indexing.post(
       try {
         console.group("[INDEXING]");
 
-        for (const link of links) {
+        const promises = links.map((link) => {
           console.log("INDEXING LINK:", link.domain, link.pathname);
           const url = new URL("/indexing", API_URL);
           const searchParams = url.searchParams;
@@ -242,12 +244,12 @@ indexing.post(
           const linkUrl = new URL(link.pathname, link.domain);
           searchParams.set("url", linkUrl.toString());
           searchParams.set("as", "link");
-          const response = await fetch(url.toString(), {
+          return fetch(url.toString(), {
             method: "POST",
           });
-          const status = response.status;
-          console.log("INDEXING STATUS:", status);
-        }
+        });
+
+        await Promise.all(promises);
 
         console.groupEnd();
         return true;
