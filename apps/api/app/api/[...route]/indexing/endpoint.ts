@@ -1,11 +1,16 @@
-import { Hono } from "hono";
+import { serve } from "@upstash/workflow/hono";
 import { createClient } from "db/supabase/server";
+import { Hono } from "hono";
 import { cookies } from "next/headers";
 import { crawl } from "../crawl/action";
-import { createAdminClient } from "db/supabase/admin";
-import { writeInDomains, writeInLinks } from "./action";
-import { qstash } from "@/app/extensions/qstash";
+import {
+  getUnIndexedDomain,
+  getUnIndexedLinks,
+  writeInDomains,
+  writeInLinks,
+} from "./action";
 import { API_URL } from "@/const/url";
+import { wait } from "@/lib/wait";
 
 export const indexing = new Hono();
 
@@ -39,8 +44,11 @@ indexing.get("/", async (c) => {
 });
 
 indexing.get("/callback", async (c) => {
-  const body = await c.req.json();
-  console.log(body);
+  const body = await c.req.text();
+  const decoded = atob(body);
+
+  console.log(decoded);
+
   return c.json(null, 200);
 });
 
@@ -95,13 +103,16 @@ indexing.post("/", async (c) => {
 
     const result = await crawl({ url, js: renderJS });
 
-    const callbackUrl = new URL("/indexing/callback", API_URL);
-
     if (!result) throw new Error("Failed crawl");
     if (!result.domain) throw new Error("Missing domain");
 
+    console.group("[INDEXING]");
+    console.log("URL:", url);
+    console.log("Domain:", result.domain);
+    console.log("AS:", as);
+    console.groupEnd();
+
     if (as === "domain") {
-      const links = result.links ?? [];
       const { data, error } = await writeInDomains({
         description: result.description ?? "",
         title: result.title ?? "",
@@ -110,26 +121,6 @@ indexing.post("/", async (c) => {
         last_crawled_at: null,
         domain: result.domain,
       });
-
-      if (links.length !== 0) {
-        const queue = qstash.queue({
-          queueName: "code-indexing",
-        });
-        for (const link of links) {
-          const linkUrl = new URL(API_URL);
-          const linkSearchParams = linkUrl.searchParams;
-          linkSearchParams.append("url", link);
-          linkSearchParams.append("as", "link");
-          // console.log(decodeURIComponent(linkUrl.toString()));
-          queue.enqueueJSON({
-            url: linkUrl.toString(),
-            method: "POST",
-            delay: 1 * 60 * 60 * 1000, // 1h,
-            deduplicationId: link,
-            callback: callbackUrl.toString(),
-          });
-        }
-      }
 
       // @ts-expect-error
       const isDuplicateError = error?.code === "23505";
@@ -143,7 +134,6 @@ indexing.post("/", async (c) => {
     }
 
     if (as === "link") {
-      const links = result.links ?? [];
       const { data, error } = await writeInLinks({
         description: result.description ?? "",
         title: result.title ?? "",
@@ -151,26 +141,6 @@ indexing.post("/", async (c) => {
         pathname: result.pathname,
         domain: result.domain,
       });
-
-      if (links.length !== 0) {
-        const queue = qstash.queue({
-          queueName: "code-indexing",
-        });
-        for (const link of links) {
-          const linkUrl = new URL(API_URL);
-          const linkSearchParams = linkUrl.searchParams;
-          linkSearchParams.append("url", link);
-          linkSearchParams.append("as", "link");
-          // console.log(decodeURIComponent(linkUrl.toString()));
-          queue.enqueueJSON({
-            url: linkUrl.toString(),
-            method: "POST",
-            delay: 1 * 60 * 60 * 1000, // 1h,
-            deduplicationId: link,
-            callback: callbackUrl.toString(),
-          });
-        }
-      }
 
       // @ts-expect-error
       const isDuplicateError = error?.code === "23505";
@@ -189,3 +159,59 @@ indexing.post("/", async (c) => {
     return c.json(null, 500);
   }
 });
+
+indexing.post(
+  "/workflow",
+  serve(async (context) => {
+    const domain = await context.run("retrieve domains", async () => {
+      console.group("[DOMAINS]");
+      const { data: domain } = await getUnIndexedDomain();
+
+      console.log("DOMAINS COUNT:", domain?.domain);
+      console.groupEnd();
+      return domain;
+    });
+
+    const links = await context.run("retrieve domain links", async () => {
+      console.group("[LINKS]");
+      const domainId = domain?.domain;
+
+      if (!domainId) {
+        await context.cancel();
+        return [];
+      }
+
+      const { data: links } = await getUnIndexedLinks(domainId);
+
+      console.log("LINKS COUNT:", links.length);
+
+      console.groupEnd();
+      return links;
+    });
+
+    const result = await context.run("indexing links", async () => {
+      try {
+        console.group("[INDEXING]");
+
+        for (const link of links) {
+          console.log("INDEXING LINK:", link.domain, link.pathname);
+          const url = new URL("/indexing", API_URL);
+          const response = await fetch(url.toString(), {
+            method: "POST",
+          });
+          const status = response.status;
+          console.log("INDEXING STATUS:", status);
+          const TIMEOUT = 5 * 60 * 1000; // 5 minutes
+          await wait(TIMEOUT);
+        }
+
+        console.groupEnd();
+        return true;
+      } catch (error) {
+        console.error(error);
+        return false;
+      }
+    });
+    return result;
+  }),
+);
