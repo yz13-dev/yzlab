@@ -1,3 +1,4 @@
+import { API_URL } from "@/const/url";
 import { serve } from "@upstash/workflow/hono";
 import { createClient } from "db/supabase/server";
 import { Hono } from "hono";
@@ -9,14 +10,8 @@ import {
   getOldIndexedDomain,
   getUnIndexedDomain,
   getUnIndexedLinks,
-  updateInDomains,
-  updateInLinks,
-  writeInDomains,
-  writeInLinks,
   writeInSnippets,
 } from "./action";
-import { API_URL } from "@/const/url";
-import { wait } from "@/lib/wait";
 
 export const indexing = new Hono();
 
@@ -92,8 +87,10 @@ indexing.post("/", async (c) => {
   const url = c.req.query("url");
   const js = c.req.query("js");
   const asQuery = c.req.query("as");
+  const deepQuery = c.req.query("deep");
 
   const as = asQuery ?? "domain";
+  const deep = deepQuery === "true";
 
   const isValidAs = as === "domain" || as === "link";
 
@@ -120,19 +117,16 @@ indexing.post("/", async (c) => {
 
     if (result.snippets.length !== 0) {
       const snippets = result.snippets;
-      for (const snippet of snippets) {
+      const promises = snippets.map((snippet) => {
         console.log("Snippet:", snippet);
-        try {
-          await writeInSnippets({
-            code: snippet.code,
-            language: snippet.language,
-            domain: baseUrl.host,
-            pathname,
-          });
-        } catch (error) {
-          console.error(error);
-        }
-      }
+        return writeInSnippets({
+          code: snippet.code,
+          language: snippet.language,
+          domain: baseUrl.host,
+          pathname,
+        });
+      });
+      await Promise.all(promises);
     }
 
     if (as === "domain") {
@@ -147,18 +141,32 @@ indexing.post("/", async (c) => {
 
       const links = result.links;
 
-      for (const link of links) {
-        try {
+      if (renderJS === false && links.length === 0) {
+        const base = new URL("/indexing", API_URL);
+        const searchParams = base.searchParams;
+        searchParams.set("url", url);
+        searchParams.set("as", "domain");
+        if (deep) {
+          searchParams.set("deep", "true");
+        }
+        const response = await fetch(base.toString(), {
+          method: "POST",
+        });
+        return c.json(response);
+      }
+
+      if (deep) {
+        const promises = links.map((link) => {
           const url = new URL("/indexing", API_URL);
           const searchParams = url.searchParams;
           searchParams.set("url", link);
           searchParams.set("as", "link");
-          await fetch(url.toString(), {
+          return fetch(url.toString(), {
             method: "POST",
           });
-        } catch (error) {
-          console.error(error);
-        }
+        });
+
+        Promise.all(promises);
       }
 
       return c.json(response);
@@ -172,6 +180,37 @@ indexing.post("/", async (c) => {
         pathname: result.pathname,
         domain: result.domain,
       });
+
+      const links = result.links;
+
+      if (renderJS === false && links.length === 0) {
+        const base = new URL("/indexing", API_URL);
+        const searchParams = base.searchParams;
+        searchParams.set("url", url);
+        searchParams.set("as", "domain");
+        if (deep) {
+          searchParams.set("deep", "true");
+        }
+        const response = await fetch(base.toString(), {
+          method: "POST",
+        });
+        return c.json(response);
+      }
+
+      if (deep) {
+        const promises = links.map((link) => {
+          const url = new URL("/indexing", API_URL);
+          const searchParams = url.searchParams;
+          searchParams.set("url", link);
+          searchParams.set("as", "link");
+          return fetch(url.toString(), {
+            method: "POST",
+          });
+        });
+
+        Promise.all(promises);
+      }
+
       return c.json(response);
     }
   } catch (error) {
@@ -244,12 +283,13 @@ indexing.post(
           const linkUrl = new URL(link.pathname, link.domain);
           searchParams.set("url", linkUrl.toString());
           searchParams.set("as", "link");
+          searchParams.set("deep", "true");
           return fetch(url.toString(), {
             method: "POST",
           });
         });
 
-        await Promise.all(promises);
+        Promise.all(promises);
 
         console.groupEnd();
         return true;
