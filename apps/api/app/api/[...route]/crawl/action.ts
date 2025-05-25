@@ -53,7 +53,7 @@ export async function crawl({ url, js = false }: CrawlProps) {
       error: null,
       favicon: favicon ?? null,
       crawled_at: crawledAt,
-      domain: baseUrl.origin,
+      domain: baseUrl.host,
       pathname,
       title,
       description,

@@ -6,3 +6,10 @@ export async function getIndexRegisrty() {
     method: "GET",
   });
 }
+
+export async function getIndexRegisrtyItem(domain: string) {
+  const path = `/indexing/${domain}`;
+  return await customFetch<DomainFull | null>(path, {
+    method: "GET",
+  });
+}
