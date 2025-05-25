@@ -38,6 +38,12 @@ indexing.get("/", async (c) => {
   }
 });
 
+indexing.get("/callback", async (c) => {
+  const body = await c.req.json();
+  console.log(body);
+  return c.json(null, 200);
+});
+
 indexing.get("/:domain", async (c) => {
   const domain = c.req.param("domain");
 
@@ -89,6 +95,8 @@ indexing.post("/", async (c) => {
 
     const result = await crawl({ url, js: renderJS });
 
+    const callbackUrl = new URL("/indexing/callback", API_URL);
+
     if (!result) throw new Error("Failed crawl");
     if (!result.domain) throw new Error("Missing domain");
 
@@ -112,12 +120,13 @@ indexing.post("/", async (c) => {
           const linkSearchParams = linkUrl.searchParams;
           linkSearchParams.append("url", link);
           linkSearchParams.append("as", "link");
-          console.log(decodeURIComponent(linkUrl.toString()));
+          // console.log(decodeURIComponent(linkUrl.toString()));
           queue.enqueueJSON({
             url: linkUrl.toString(),
             method: "POST",
             delay: 1 * 60 * 60 * 1000, // 1h,
             deduplicationId: link,
+            callback: callbackUrl.toString(),
           });
         }
       }
@@ -152,12 +161,13 @@ indexing.post("/", async (c) => {
           const linkSearchParams = linkUrl.searchParams;
           linkSearchParams.append("url", link);
           linkSearchParams.append("as", "link");
-          console.log(decodeURIComponent(linkUrl.toString()));
+          // console.log(decodeURIComponent(linkUrl.toString()));
           queue.enqueueJSON({
             url: linkUrl.toString(),
             method: "POST",
             delay: 1 * 60 * 60 * 1000, // 1h,
             deduplicationId: link,
+            callback: callbackUrl.toString(),
           });
         }
       }
