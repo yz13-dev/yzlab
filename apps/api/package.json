@@ -10,12 +10,13 @@
   },
   "dependencies": {
     "@upstash/qstash": "^2.8.1",
+    "@upstash/workflow": "^0.2.13",
     "cheerio": "^1.0.0",
     "db": "*",
-    "rest-api": "*",
     "hono": "^4.7.10",
     "next": "15.1.8",
-    "puppeteer": "^24.9.0"
+    "puppeteer": "^24.9.0",
+    "rest-api": "*"
   },
   "devDependencies": {
     "typescript": "^5",
