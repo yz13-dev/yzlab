@@ -1,0 +1,47 @@
+{
+  "name": "rest-api",
+  "version": "0.0.0",
+  "description": "Package with rest-api endpoints for current monorepo",
+  "exports": {
+    "./lib/avatar-url": {
+      "types": "./dist/lib/avatar-url.d.ts",
+      "import": "./dist/lib/avatar-url.mjs",
+      "require": "./dist/lib/avatar-url.js"
+    },
+    "./types/domains": "./dist/types/domains.d.ts",
+    "./domains": {
+      "types": "./dist/rest/domains/indexing.d.ts",
+      "import": "./dist/rest/domains/indexing.mjs",
+      "require": "./dist/rest/domains/indexing.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "publish": "bun run build",
+    "build": "tsup",
+    "dev": "tsup --watch --clean=false"
+  },
+  "keywords": [
+    "package",
+    "rest-api"
+  ],
+  "author": "YZ13-dev",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^22.14.1",
+    "@types/react": "^19.1.1",
+    "typescript": "^5.8.3",
+    "db": "*"
+  },
+  "dependencies": {
+    "date-fns": "^4.1.0",
+    "next": "^15.3.0",
+    "tsup": "^6.7.0",
+    "typescript-config": "*"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

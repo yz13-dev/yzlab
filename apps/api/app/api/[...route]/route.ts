@@ -2,14 +2,14 @@ import { Hono } from "hono";
 import packageJson from "@/package.json";
 import { handle } from "hono/vercel";
 import { crawl } from "./crawl/endpoint";
+import { indexing } from "./indexing/endpoint";
 
 export const runtime = "nodejs";
 
 const app = new Hono().basePath("/");
 
-const isDev = process.env.NODE_ENV === "development";
-
 app.route("crawl", crawl);
+app.route("indexing", indexing);
 
 app.get("/version", (c) => {
   const version = packageJson.version;
