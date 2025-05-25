@@ -1,0 +1,79 @@
+{
+  "name": "db",
+  "version": "0.0.0",
+  "type": "module",
+  "description": "supabase wrapper",
+  "exports": {
+    "./supabase/database": {
+      "types": "./dist/supabase/database.d.ts",
+      "import": "./dist/supabase/database.js",
+      "require": "./dist/supabase/database.cjs"
+    },
+    "./supabase/client": {
+      "types": "./dist/supabase/client.d.ts",
+      "import": "./dist/supabase/client.js",
+      "require": "./dist/supabase/client.cjs"
+    },
+    "./supabase/server": {
+      "types": "./dist/supabase/server.d.ts",
+      "import": "./dist/supabase/server.js",
+      "require": "./dist/supabase/server.cjs"
+    },
+    "./supabase/admin": {
+      "types": "./dist/supabase/admin.d.ts",
+      "import": "./dist/supabase/admin.js",
+      "require": "./dist/supabase/admin.cjs"
+    },
+    "./supabase/middleware": {
+      "types": "./dist/supabase/middleware.d.ts",
+      "import": "./dist/supabase/middleware.js",
+      "require": "./dist/supabase/middleware.cjs"
+    },
+    "./supabase/storage": {
+      "types": "./dist/supabase/storage.d.ts",
+      "import": "./dist/supabase/storage.js",
+      "require": "./dist/supabase/storage.cjs"
+    },
+    "./supabase/cookies": {
+      "types": "./dist/supabase/cookies.d.ts",
+      "import": "./dist/supabase/cookies.js",
+      "require": "./dist/supabase/cookies.cjs"
+    },
+    "./supabase/extra": {
+      "types": "./dist/supabase/extra.d.ts",
+      "import": "./dist/supabase/extra.js",
+      "require": "./dist/supabase/extra.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "publish": "bun run build",
+    "build": "tsup",
+    "dev": "tsup --watch --clean=false",
+    "test": "jest .test.ts"
+  },
+  "keywords": [
+    "package",
+    "supabase"
+  ],
+  "author": "YZ13-ENV",
+  "license": "ISC",
+  "dependencies": {
+    "@supabase/ssr": "^0.6.1",
+    "@supabase/supabase-js": "^2.49.4",
+    "rimraf": "^6.0.1",
+    "tsup": "^6.7.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.14.1",
+    "jest": "29.7.0",
+    "ts-jest": "^29.3.2",
+    "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
