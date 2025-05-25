@@ -56,7 +56,7 @@ export default async function page() {
             </TableHeader>
             <TableBody>
               {domains.map((domain) => {
-                const domainName = domain.domain;
+                const domainName = `https://${domain.domain}`;
                 const isIndexed = domain.last_crawled_at !== null;
                 const lastUpdated = domain.last_crawled_at
                   ? parseISO(domain.last_crawled_at)

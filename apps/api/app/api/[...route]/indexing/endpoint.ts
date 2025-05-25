@@ -4,10 +4,16 @@ import { Hono } from "hono";
 import { cookies } from "next/headers";
 import { crawl } from "../crawl/action";
 import {
+  createOrUpdateDomain,
+  createOrUpdateLink,
+  getOldIndexedDomain,
   getUnIndexedDomain,
   getUnIndexedLinks,
+  updateInDomains,
+  updateInLinks,
   writeInDomains,
   writeInLinks,
+  writeInSnippets,
 } from "./action";
 import { API_URL } from "@/const/url";
 import { wait } from "@/lib/wait";
@@ -112,48 +118,60 @@ indexing.post("/", async (c) => {
     console.log("AS:", as);
     console.groupEnd();
 
+    if (result.snippets.length !== 0) {
+      const snippets = result.snippets;
+      for (const snippet of snippets) {
+        console.log("Snippet:", snippet);
+        try {
+          await writeInSnippets({
+            code: snippet.code,
+            language: snippet.language,
+          });
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    }
+
     if (as === "domain") {
-      const { data, error } = await writeInDomains({
+      const response = await createOrUpdateDomain({
         description: result.description ?? "",
         title: result.title ?? "",
         favicon: result.favicon,
         tags: result.tags,
-        last_crawled_at: null,
+        last_crawled_at: new Date().toISOString(),
         domain: result.domain,
       });
 
-      // @ts-expect-error
-      const isDuplicateError = error?.code === "23505";
+      const links = result.links;
 
-      if (error) {
-        if (isDuplicateError) return c.json(null, 200);
-        console.log(error);
-        return c.json(null, 500);
+      for (const link of links) {
+        try {
+          const url = new URL("/indexing", API_URL);
+          const searchParams = url.searchParams;
+          searchParams.set("url", link);
+          searchParams.set("as", "link");
+          await fetch(url.toString(), {
+            method: "POST",
+          });
+        } catch (error) {
+          console.error(error);
+        }
       }
-      return c.json(data, 200);
+
+      return c.json(response);
     }
 
     if (as === "link") {
-      const { data, error } = await writeInLinks({
+      const response = await createOrUpdateLink({
         description: result.description ?? "",
         title: result.title ?? "",
-        last_crawled_at: null,
+        last_crawled_at: new Date().toISOString(),
         pathname: result.pathname,
         domain: result.domain,
       });
-
-      // @ts-expect-error
-      const isDuplicateError = error?.code === "23505";
-
-      if (error) {
-        if (isDuplicateError) return c.json(null, 200);
-        console.log(error);
-        return c.json(null, 500);
-      }
-      return c.json(data, 200);
+      return c.json(response);
     }
-
-    return c.json(null, 400);
   } catch (error) {
     console.error(error);
     return c.json(null, 500);
@@ -165,9 +183,32 @@ indexing.post(
   serve(async (context) => {
     const domain = await context.run("retrieve domains", async () => {
       console.group("[DOMAINS]");
-      const { data: domain } = await getUnIndexedDomain();
+      const unIndexedDomain = await getUnIndexedDomain();
+      const oldIndexedDomain = await getOldIndexedDomain();
 
-      console.log("DOMAINS COUNT:", domain?.domain);
+      const domain = unIndexedDomain.data ?? oldIndexedDomain.data;
+
+      if (!domain) {
+        await context.cancel();
+        return null;
+      }
+
+      console.log("INDEXING DOMAIN:", domain.domain);
+      const url = new URL("/indexing", API_URL);
+      const searchParams = url.searchParams;
+
+      const domainAsUrl = `https://${domain.domain}`;
+      const domainUrl = new URL("/", domainAsUrl);
+      searchParams.set("url", domainUrl.toString());
+      searchParams.set("as", "domain");
+      const response = await fetch(url.toString(), {
+        method: "POST",
+      });
+      const status = response.status;
+      console.log("INDEXING STATUS:", status);
+
+      console.log("DOMAIN:", domain.domain);
+
       console.groupEnd();
       return domain;
     });
@@ -196,13 +237,16 @@ indexing.post(
         for (const link of links) {
           console.log("INDEXING LINK:", link.domain, link.pathname);
           const url = new URL("/indexing", API_URL);
+          const searchParams = url.searchParams;
+
+          const linkUrl = new URL(link.pathname, link.domain);
+          searchParams.set("url", linkUrl.toString());
+          searchParams.set("as", "link");
           const response = await fetch(url.toString(), {
             method: "POST",
           });
           const status = response.status;
           console.log("INDEXING STATUS:", status);
-          const TIMEOUT = 5 * 60 * 1000; // 5 minutes
-          await wait(TIMEOUT);
         }
 
         console.groupEnd();

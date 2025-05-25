@@ -14,6 +14,7 @@ import {
 } from "ui/components/table";
 import { format, parseISO } from "date-fns";
 import { Badge } from "ui/components/badge";
+import { Tabs, TabsList, TabsTrigger } from "ui/components/tabs";
 
 type PageProps = {
   params: Promise<{
@@ -68,6 +69,14 @@ export default async function page({ params }: PageProps) {
           </div>
         </div>
       </main>
+      <div className="max-w-4xl w-full mx-auto px-6 mb-6">
+        <Tabs defaultValue="links">
+          <TabsList>
+            <TabsTrigger value="links">Ссылки</TabsTrigger>
+            <TabsTrigger value="snippets">Снипеты</TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </div>
       <div className="max-w-4xl w-full mx-auto px-6">
         <div className="rounded-2xl bg-card border over">
           <Table>
@@ -91,7 +100,7 @@ export default async function page({ params }: PageProps) {
                 const pathname = domain.pathname;
                 return (
                   <TableRow
-                    key={domainName}
+                    key={domainName + pathname}
                     className="[&>td]:first:pl-4 [&>td]:last:pr-4"
                   >
                     <TableCell>
@@ -116,6 +125,9 @@ export default async function page({ params }: PageProps) {
           </Table>
         </div>
       </div>
+      <footer className="max-w-4xl w-full mx-auto px-6 py-12">
+        <span className="text-sm text-muted-foreground">YZ13 2025</span>
+      </footer>
     </>
   );
 }

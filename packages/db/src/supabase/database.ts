@@ -47,6 +47,7 @@ export type Database = {
           created_at: string;
           description: string;
           domain: string;
+          id: number;
           last_crawled_at: string | null;
           pathname: string;
           title: string;
@@ -55,6 +56,7 @@ export type Database = {
           created_at?: string;
           description: string;
           domain: string;
+          id?: number;
           last_crawled_at?: string | null;
           pathname: string;
           title: string;
@@ -63,6 +65,7 @@ export type Database = {
           created_at?: string;
           description?: string;
           domain?: string;
+          id?: number;
           last_crawled_at?: string | null;
           pathname?: string;
           title?: string;
@@ -71,7 +74,7 @@ export type Database = {
           {
             foreignKeyName: "links_domain_fkey";
             columns: ["domain"];
-            isOneToOne: true;
+            isOneToOne: false;
             referencedRelation: "domains";
             referencedColumns: ["domain"];
           },

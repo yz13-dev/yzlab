@@ -13,3 +13,7 @@ export type DomainFull = Domain & {
 export type NewDomain = TablesInsert<"domains">;
 export type NewLink = TablesInsert<"links">;
 export type NewSnippet = TablesInsert<"snippets">;
+
+export type UpdateDomain = TablesInsert<"domains">;
+export type UpdateLink = TablesInsert<"links">;
+export type UpdateSnippet = TablesInsert<"snippets">;
