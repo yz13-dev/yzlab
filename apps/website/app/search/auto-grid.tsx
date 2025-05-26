@@ -9,6 +9,7 @@ import { Button } from "ui/components/button";
 import CodeCopyButton from "./code-copy-button";
 import { CodeBlockLoader } from "./client-code-block";
 import { highlight } from "../lib/highlight";
+import { SnippetCard } from "./snippet-card";
 
 export default function AutoGrid({
   children,
@@ -47,34 +48,15 @@ export default function AutoGrid({
       {snippets.map((snippet) => {
         const lang = snippet.language;
         return (
-          <div key={snippet.id} className="space-y-4">
-            <div className="w-full px-4 flex items-center justify-between">
-              <div className="flex flex-col">
-                <span className="text-lg font-semibold block">
-                  {snippet.domain}
-                </span>
-                <span className="text-sm text-muted-foreground">
-                  {snippet.language}
-                </span>
-              </div>
-              <Button size="icon" variant="secondary">
-                <ArrowRightIcon size={16} />
-              </Button>
-            </div>
-            <div className="relative w-full">
-              <CodeCopyButton
+          <SnippetCard key={snippet.id} snippet={snippet}>
+            <div className="w-full bg-card relative font-mono border rounded-lg text-sm p-4">
+              <CodeBlockLoader
+                render={highlight}
+                lang={lang}
                 code={snippet.code}
-                className="absolute top-4 z-10 right-4"
               />
-              <div className="w-full bg-card relative font-mono border rounded-lg text-sm p-4">
-                <CodeBlockLoader
-                  render={highlight}
-                  lang={lang}
-                  code={snippet.code}
-                />
-              </div>
             </div>
-          </div>
+          </SnippetCard>
         );
       })}
       <Button
