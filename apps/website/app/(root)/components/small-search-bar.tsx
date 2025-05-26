@@ -1,6 +1,6 @@
 "use client";
 import { Logo } from "@/components/logo";
-import { ArrowRight, XIcon } from "lucide-react";
+import { ArrowRight, Loader2Icon, XIcon } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -17,11 +17,19 @@ export function SmallSearchBarSkeleton() {
 export default function ({ defaultValue = "" }: { defaultValue?: string }) {
   const [focused, setFocused] = useState<boolean>(false);
   const [text, setText] = useState<string>(defaultValue);
+  const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
   const search = () => {
     const query = text.trim();
     if (query.length > 0) {
-      router.push(`/search?q=${encodeURIComponent(query)}`);
+      setLoading(true);
+      try {
+        router.push(`/search?q=${encodeURIComponent(query)}`);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
     }
   };
   return (
@@ -38,6 +46,7 @@ export default function ({ defaultValue = "" }: { defaultValue?: string }) {
         )}
       >
         <Input
+          disabled={loading}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
           placeholder="Поможем найти код"
@@ -79,8 +88,15 @@ export default function ({ defaultValue = "" }: { defaultValue?: string }) {
             >
               <XIcon size={24} />
             </button>
-            <Button className="h-full aspect-square" disabled={!focused}>
-              <ArrowRight className="size-5" />
+            <Button
+              className="h-full aspect-square"
+              disabled={loading ?? !focused}
+            >
+              {loading ? (
+                <Loader2Icon className="size-5 animate-spin" />
+              ) : (
+                <ArrowRight className="size-5" />
+              )}
             </Button>
           </motion.div>
         )}

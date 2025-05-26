@@ -307,3 +307,7 @@ indexing.post(
     return result;
   }),
 );
+
+indexing.delete("/", async (c) => {
+  return c.json(null, 200);
+});

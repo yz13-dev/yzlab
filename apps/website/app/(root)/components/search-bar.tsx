@@ -5,7 +5,7 @@ import { Input } from "ui/components/input";
 import { AnimatePresence, motion } from "motion/react";
 import { cn } from "ui/cn";
 import { Button } from "ui/components/button";
-import { ArrowRight, XIcon } from "lucide-react";
+import { ArrowRight, Loader2Icon, XIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 type Props = {
@@ -14,11 +14,19 @@ type Props = {
 export default function ({ disabled = false }: Props) {
   const [focused, setFocused] = useState<boolean>(false);
   const [text, setText] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
   const search = () => {
     const query = text.trim();
     if (query.length > 0) {
-      router.push(`/search?q=${encodeURIComponent(query)}`);
+      setLoading(true);
+      try {
+        router.push(`/search?q=${encodeURIComponent(query)}`);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
     }
   };
   return (
@@ -55,7 +63,7 @@ export default function ({ disabled = false }: Props) {
         )}
       >
         <Input
-          disabled={disabled}
+          disabled={loading ?? disabled}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
           placeholder="Поможем найти код"
@@ -101,11 +109,15 @@ export default function ({ disabled = false }: Props) {
               <XIcon size={24} />
             </button>
             <Button
-              disabled={!focused || text.length <= 3 || disabled}
+              disabled={loading || !focused || text.length <= 3 || disabled}
               className="h-full aspect-square"
               onClick={search}
             >
-              <ArrowRight className="size-5" />
+              {loading ? (
+                <Loader2Icon className="size-5 animate-spin" />
+              ) : (
+                <ArrowRight className="size-5" />
+              )}
             </Button>
           </motion.div>
         )}
