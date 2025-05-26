@@ -11,21 +11,24 @@
   "dependencies": {
     "@vercel/analytics": "^1.5.0",
     "lucide-react": "^0.488.0",
+    "motion": "^12.14.0",
     "next": "15.3.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "ui": "*",
     "rest-api": "*",
+    "ui": "*",
     "zustand": "^5.0.4"
   },
   "devDependencies": {
-    "tailwind-config": "*",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "babel-plugin-react-compiler": "^19.1.0-rc.2",
     "critters": "^0.0.25",
+    "hast-util-to-jsx-runtime": "^2.3.6",
+    "shiki": "^3.4.2",
+    "tailwind-config": "*",
     "tailwindcss": "^4",
     "typescript": "^5",
     "typescript-config": "*"
