@@ -115,8 +115,9 @@ indexing.post("/", async (c) => {
     console.log("AS:", as);
     console.groupEnd();
 
+    const snippets = result.snippets;
     if (result.snippets.length !== 0) {
-      const snippets = result.snippets;
+      console.log("Snippets:", snippets.length);
       const promises = snippets.map((snippet) => {
         console.log("Snippet:", snippet);
         return writeInSnippets({
@@ -127,7 +128,7 @@ indexing.post("/", async (c) => {
         });
       });
       await Promise.all(promises);
-    }
+    } else console.log("No snippets found");
 
     if (as === "domain") {
       const response = await createOrUpdateDomain({
@@ -146,6 +147,7 @@ indexing.post("/", async (c) => {
         const searchParams = base.searchParams;
         searchParams.set("url", url);
         searchParams.set("as", "domain");
+        searchParams.set("js", "true");
         if (deep) {
           searchParams.set("deep", "true");
         }
@@ -154,6 +156,8 @@ indexing.post("/", async (c) => {
         });
         return c.json(response);
       }
+
+      console.log("DEEP", deep);
 
       if (deep) {
         const promises = links.map((link) => {
@@ -173,29 +177,7 @@ indexing.post("/", async (c) => {
     }
 
     if (as === "link") {
-      const response = await createOrUpdateLink({
-        description: result.description ?? "",
-        title: result.title ?? "",
-        last_crawled_at: new Date().toISOString(),
-        pathname: result.pathname,
-        domain: result.domain,
-      });
-
       const links = result.links;
-
-      if (renderJS === false && links.length === 0) {
-        const base = new URL("/indexing", API_URL);
-        const searchParams = base.searchParams;
-        searchParams.set("url", url);
-        searchParams.set("as", "domain");
-        if (deep) {
-          searchParams.set("deep", "true");
-        }
-        const response = await fetch(base.toString(), {
-          method: "POST",
-        });
-        return c.json(response);
-      }
 
       if (deep) {
         const promises = links.map((link) => {
@@ -211,7 +193,31 @@ indexing.post("/", async (c) => {
         Promise.all(promises);
       }
 
-      return c.json(response);
+      if (snippets.length !== 0) {
+        const response = await createOrUpdateLink({
+          description: result.description ?? "",
+          title: result.title ?? "",
+          last_crawled_at: new Date().toISOString(),
+          pathname: result.pathname,
+          domain: result.domain,
+        });
+        return c.json(response);
+      }
+
+      if (renderJS && links.length === 0) {
+        const base = new URL("/indexing", API_URL);
+        const searchParams = base.searchParams;
+        searchParams.set("url", url);
+        searchParams.set("as", "domain");
+        searchParams.set("js", "true");
+        if (deep) {
+          searchParams.set("deep", "true");
+        }
+        const response = await fetch(base.toString(), {
+          method: "POST",
+        });
+        return c.json(response);
+      }
     }
   } catch (error) {
     console.error(error);
