@@ -14,7 +14,13 @@ export function SmallSearchBarSkeleton() {
   return <Skeleton className="max-w-lg w-full h-[46px]" />;
 }
 
-export default function ({ defaultValue = "" }: { defaultValue?: string }) {
+export default function ({
+  className = "",
+  defaultValue = "",
+}: {
+  className?: string;
+  defaultValue?: string;
+}) {
   const [focused, setFocused] = useState<boolean>(false);
   const [text, setText] = useState<string>(defaultValue);
   const [loading, setLoading] = useState<boolean>(false);
@@ -33,7 +39,12 @@ export default function ({ defaultValue = "" }: { defaultValue?: string }) {
     }
   };
   return (
-    <div className="flex overflow-hidden items-center h-fit relative p-1 rounded-full border bg-background max-w-lg w-full gap-2">
+    <div
+      className={cn(
+        "flex overflow-hidden items-center h-fit relative p-1 rounded-full border bg-background lg:max-w-lg max-w-md w-full gap-2",
+        className,
+      )}
+    >
       <div className="py-2 px-3 rounded-full bg-secondary">
         <Link href="/">
           <Logo size={20} type="icon" />
