@@ -2,11 +2,17 @@
 import { Logo } from "@/components/logo";
 import { ArrowRight, XIcon } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { cn } from "ui/cn";
 import { Button } from "ui/components/button";
 import { Input } from "ui/components/input";
+import { Skeleton } from "ui/components/skeleton";
+
+export function SmallSearchBarSkeleton() {
+  return <Skeleton className="max-w-lg w-full h-[46px]" />;
+}
 
 export default function ({ defaultValue = "" }: { defaultValue?: string }) {
   const [focused, setFocused] = useState<boolean>(false);
@@ -21,7 +27,9 @@ export default function ({ defaultValue = "" }: { defaultValue?: string }) {
   return (
     <div className="flex overflow-hidden items-center h-fit relative p-1 rounded-full border bg-background max-w-lg w-full gap-2">
       <div className="py-2 px-3 rounded-full bg-secondary">
-        <Logo size={20} type="icon" />
+        <Link href="/">
+          <Logo size={20} type="icon" />
+        </Link>
       </div>
       <div
         className={cn(
