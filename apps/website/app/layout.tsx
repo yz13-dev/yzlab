@@ -1,4 +1,5 @@
 import "@/styles/globals.css";
+import "@/styles/shiki.css";
 import type { Metadata, Viewport } from "next";
 import { Geist_Mono, Onest, Pixelify_Sans } from "next/font/google";
 import { cn } from "ui/cn";

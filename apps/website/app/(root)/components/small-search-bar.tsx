@@ -2,6 +2,7 @@
 import { Logo } from "@/components/logo";
 import { ArrowRight, XIcon } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { cn } from "ui/cn";
 import { Button } from "ui/components/button";
@@ -10,6 +11,13 @@ import { Input } from "ui/components/input";
 export default function ({ defaultValue = "" }: { defaultValue?: string }) {
   const [focused, setFocused] = useState<boolean>(false);
   const [text, setText] = useState<string>(defaultValue);
+  const router = useRouter();
+  const search = () => {
+    const query = text.trim();
+    if (query.length > 0) {
+      router.push(`/search?q=${encodeURIComponent(query)}`);
+    }
+  };
   return (
     <div className="flex overflow-hidden items-center h-fit relative p-1 rounded-full border bg-background max-w-lg w-full gap-2">
       <div className="py-2 px-3 rounded-full bg-secondary">
@@ -28,6 +36,11 @@ export default function ({ defaultValue = "" }: { defaultValue?: string }) {
           className="!bg-transparent border-none transition-all px-4 w-full !text-lg h-full"
           value={text}
           onChange={(e) => setText(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              search();
+            }
+          }}
         />
       </div>
       <AnimatePresence>

@@ -13,6 +13,11 @@
       "types": "./dist/rest/domains/indexing.d.ts",
       "import": "./dist/rest/domains/indexing.mjs",
       "require": "./dist/rest/domains/indexing.js"
+    },
+    "./search": {
+      "types": "./dist/rest/search/search.d.ts",
+      "import": "./dist/rest/search/search.mjs",
+      "require": "./dist/rest/search/search.js"
     }
   },
   "files": [

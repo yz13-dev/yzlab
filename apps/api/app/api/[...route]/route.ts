@@ -3,6 +3,7 @@ import packageJson from "@/package.json";
 import { handle } from "hono/vercel";
 import { crawl } from "./crawl/endpoint";
 import { indexing } from "./indexing/endpoint";
+import { search } from "./search/endpoint";
 
 export const runtime = "nodejs";
 
@@ -10,6 +11,7 @@ const app = new Hono().basePath("/");
 
 app.route("crawl", crawl);
 app.route("indexing", indexing);
+app.route("search", search);
 
 app.get("/version", (c) => {
   const version = packageJson.version;

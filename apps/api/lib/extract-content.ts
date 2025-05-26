@@ -1,4 +1,5 @@
 import * as cheerio from "cheerio";
+import { detectLang } from "./code-registry/registry";
 
 export function extractContent(html: string, url: string) {
   const $ = cheerio.load(html);
@@ -61,11 +62,4 @@ export function extractContent(html: string, url: string) {
     tags: onlyMetaTags,
     links,
   };
-}
-
-function detectLang(code: string): string {
-  if (code.includes("console.log") || code.includes("function"))
-    return "javascript";
-  if (code.includes("def ") || code.includes("print(")) return "python";
-  return "plaintext";
 }
