@@ -342,4 +342,20 @@ export async function updateInSnippets(id: number, snippet: UpdateSnippet) {
   }
 }
 
-export async function createOrUpdateSnippet(snippet: NewSnippet) {}
+export async function clearSnippets(domain: string) {
+  try {
+    const cookieStore = await cookies();
+    const client = createAdminClient(cookieStore);
+
+    const { data, error } = await client
+      .from("snippets")
+      .delete()
+      .eq("domain", domain)
+      .select();
+
+    return { data, error };
+  } catch (error) {
+    console.error(error);
+    return { error, data: null };
+  }
+}
