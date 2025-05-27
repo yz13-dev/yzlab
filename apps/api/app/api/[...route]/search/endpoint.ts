@@ -16,6 +16,7 @@ search.get("/", async (c) => {
     if (!text) {
       return c.json([], 400);
     }
+    const durationStart = Date.now();
     const cookieStore = await cookies();
 
     const client = createClient(cookieStore);
@@ -29,6 +30,9 @@ search.get("/", async (c) => {
     if (error) {
       return c.json([], 500);
     }
+    const durationEnd = Date.now();
+    const duration = durationEnd - durationStart;
+    console.log(`Search took ${duration}ms`);
 
     return c.json(data, 200);
   } catch (err) {
@@ -36,4 +40,8 @@ search.get("/", async (c) => {
     console.log(error);
     return c.json([], 500);
   }
+});
+
+search.get("/filters", async (c) => {
+  return c.json({}, 200);
 });

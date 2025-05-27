@@ -4,6 +4,8 @@ import SmallSearchBar from "../(root)/components/small-search-bar";
 import AutoGrid from "./auto-grid";
 import CodeBlock from "./server-code-block";
 import { SnippetCard } from "./snippet-card";
+import { Suspense } from "react";
+import Loading from "./loading";
 
 type PageProps = {
   searchParams: Promise<{
@@ -17,15 +19,14 @@ export default async function page({ searchParams }: PageProps) {
   const snippets = data ?? [];
 
   return (
-    <>
-      <header className="w-full py-4 border-b bg-background/60 backdrop-blur-sm sticky top-0 z-20">
-        <div className="max-w-screen-2xl w-full mx-auto px-6 flex items-center justify-between">
-          <SmallSearchBar defaultValue={q} />
-          <div className="size-[46px] bg-secondary rounded-full border" />
+    <Suspense fallback={<Loading />}>
+      <header className="w-full py-4 border-b gap-4 bg-background/60 backdrop-blur-sm sticky top-0 z-20">
+        <div className="max-w-screen-2xl w-full mx-auto px-6 flex items-center justify-start">
+          <SmallSearchBar className="shrink" defaultValue={q} />
         </div>
       </header>
-      <div className="max-w-screen-2xl divide-x border-x w-full mx-auto flex">
-        <div className="w-2/4 divide-y">
+      <div className="max-w-screen-2xl divide-x min-h-[calc(100Dvh-79px)] border-x w-full mx-auto flex">
+        <div className="lg:w-2/4 w-full divide-y">
           <div className="px-6 w-full py-3">
             <div className="flex items-center gap-2">
               <Button variant="secondary">Язык</Button>
@@ -49,8 +50,8 @@ export default async function page({ searchParams }: PageProps) {
             </AutoGrid>
           </div>
         </div>
-        <div className="w-2/4"></div>
+        <div className="w-2/4 lg:flex hidden flex-col"></div>
       </div>
-    </>
+    </Suspense>
   );
 }

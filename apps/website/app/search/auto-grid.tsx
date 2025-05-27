@@ -15,7 +15,9 @@ export default function AutoGrid({
   children,
   text = "",
   defaultOffset = 0,
+  empty = false,
 }: {
+  empty?: boolean;
   defaultOffset?: number;
   children?: React.ReactNode;
   text?: string;
@@ -59,20 +61,22 @@ export default function AutoGrid({
           </SnippetCard>
         );
       })}
-      <Button
-        variant="ghost"
-        disabled={disabled}
-        className="w-full"
-        onClick={loadMore}
-      >
-        {loading && <Loader2Icon size={16} className="animate-spin" />}
+      {!empty && (
+        <Button
+          variant="ghost"
+          disabled={disabled}
+          className="w-full"
+          onClick={loadMore}
+        >
+          {loading && <Loader2Icon size={16} className="animate-spin" />}
 
-        {isEnd
-          ? "Вы просмотрели все результаты"
-          : loading
-            ? "Загрузка..."
-            : "Показать больше"}
-      </Button>
+          {isEnd
+            ? "Вы просмотрели все результаты"
+            : loading
+              ? "Загрузка..."
+              : "Показать больше"}
+        </Button>
+      )}
     </>
   );
 }

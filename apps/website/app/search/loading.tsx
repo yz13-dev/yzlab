@@ -6,14 +6,13 @@ export default function () {
   const codeSnippets = Array.from({ length: 10 }, (_, i) => i + 1);
   return (
     <>
-      <header className="w-full py-4 border-b bg-background/60 backdrop-blur-sm sticky top-0 z-20">
-        <div className="max-w-screen-2xl w-full mx-auto px-6 flex items-center justify-between">
+      <header className="w-full py-4 border-b gap-4 bg-background/60 backdrop-blur-sm sticky top-0 z-20">
+        <div className="max-w-screen-2xl w-full mx-auto px-6 flex items-center justify-start">
           <SmallSearchBarSkeleton />
-          <div className="size-[46px] bg-secondary rounded-full border" />
         </div>
       </header>
       <div className="max-w-screen-2xl divide-x border-x w-full mx-auto flex">
-        <div className="w-2/4 divide-y">
+        <div className="lg:w-2/4 w-full divide-y">
           <div className="px-6 w-full py-3">
             <div className="flex items-center gap-2">
               <Button variant="secondary">Язык</Button>
@@ -25,7 +24,7 @@ export default function () {
             })}
           </div>
         </div>
-        <div className="w-2/4"></div>
+        <div className="w-2/4 lg:flex hidden flex-col"></div>
       </div>
     </>
   );
