@@ -50,15 +50,17 @@ export function extractContent(html: string, url: string) {
 
   const description = descriptionTag?.attributes?.content;
 
+  const snippets = codes.map((code) => ({
+    code,
+    language: detectLang(code), // можно позже улучшить
+  }));
+
   return {
     url,
     title,
     description,
     content: paragraphs.join("\n\n"),
-    snippets: codes.map((code) => ({
-      code,
-      language: detectLang(code), // можно позже улучшить
-    })),
+    snippets,
     tags: onlyMetaTags,
     links,
   };

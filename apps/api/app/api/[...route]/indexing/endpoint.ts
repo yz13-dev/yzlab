@@ -5,6 +5,7 @@ import { Hono } from "hono";
 import { cookies } from "next/headers";
 import { crawl } from "../crawl/action";
 import {
+  clearSnippets,
   createOrUpdateDomain,
   createOrUpdateLink,
   getOldIndexedDomain,
@@ -139,6 +140,8 @@ indexing.post("/", async (c) => {
         last_crawled_at: new Date().toISOString(),
         domain: result.domain,
       });
+
+      await clearSnippets(result.domain);
 
       const links = result.links;
 

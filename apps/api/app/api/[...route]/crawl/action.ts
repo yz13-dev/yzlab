@@ -16,7 +16,7 @@ export async function crawl({ url, js = false }: CrawlProps) {
     const isRoot = pathname === "/";
 
     const html = await fetchPageContent(url, js);
-    const doc = extractContent(html, url);
+    const doc = await extractContent(html, url);
 
     const title = doc.title;
     const description = doc.description;
