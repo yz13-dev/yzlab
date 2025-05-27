@@ -10,8 +10,9 @@ import { useRouter } from "next/navigation";
 
 type Props = {
   disabled?: boolean;
+  autoFocus?: boolean;
 };
-export default function ({ disabled = false }: Props) {
+export default function ({ disabled = false, autoFocus = false }: Props) {
   const [focused, setFocused] = useState<boolean>(false);
   const [text, setText] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
@@ -63,6 +64,7 @@ export default function ({ disabled = false }: Props) {
         )}
       >
         <Input
+          autoFocus={autoFocus}
           disabled={loading ?? disabled}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}

@@ -41,3 +41,7 @@ search.get("/", async (c) => {
     return c.json([], 500);
   }
 });
+
+search.get("/filters", async (c) => {
+  return c.json({}, 200);
+});

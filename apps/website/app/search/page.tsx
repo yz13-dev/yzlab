@@ -25,7 +25,7 @@ export default async function page({ searchParams }: PageProps) {
           <SmallSearchBar className="shrink" defaultValue={q} />
         </div>
       </header>
-      <div className="max-w-screen-2xl divide-x border-x w-full mx-auto flex">
+      <div className="max-w-screen-2xl divide-x min-h-[calc(100Dvh-79px)] border-x w-full mx-auto flex">
         <div className="lg:w-2/4 w-full divide-y">
           <div className="px-6 w-full py-3">
             <div className="flex items-center gap-2">
