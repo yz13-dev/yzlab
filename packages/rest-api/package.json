@@ -18,6 +18,11 @@
       "types": "./dist/rest/search/search.d.ts",
       "import": "./dist/rest/search/search.mjs",
       "require": "./dist/rest/search/search.js"
+    },
+    "./snippets": {
+      "types": "./dist/rest/snippets/snippets.d.ts",
+      "import": "./dist/rest/snippets/snippets.mjs",
+      "require": "./dist/rest/snippets/snippets.js"
     }
   },
   "files": [

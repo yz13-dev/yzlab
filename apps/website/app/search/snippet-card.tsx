@@ -3,6 +3,7 @@ import type { Snippet } from "rest-api/types/domains";
 import { Button } from "ui/components/button";
 import CodeCopyButton from "./code-copy-button";
 import { Skeleton } from "ui/components/skeleton";
+import CodePreviewButton from "./code-preview-button";
 
 type Props = {
   snippet: Snippet;
@@ -18,9 +19,7 @@ export const SnippetCard = ({ snippet, children }: Props) => {
             {snippet.language}
           </span>
         </div>
-        <Button size="icon" variant="secondary">
-          <ArrowRightIcon size={16} />
-        </Button>
+        <CodePreviewButton snippet={snippet} />
       </div>
       <div className="relative w-full">
         <CodeCopyButton
