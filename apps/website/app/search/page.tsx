@@ -10,11 +10,10 @@ import { SnippetCard } from "./snippet-card";
 type PageProps = {
   searchParams: Promise<{
     q?: string;
-    snippetId?: string;
   }>;
 };
 export default async function page({ searchParams }: PageProps) {
-  const { q = "", snippetId } = await searchParams;
+  const { q = "" } = await searchParams;
 
   const { data } = await search(q);
   const snippets = data ?? [];

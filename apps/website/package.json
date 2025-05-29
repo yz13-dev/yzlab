@@ -17,6 +17,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "rest-api": "*",
+    "tw-animate-css": "^1.3.1",
     "ui": "*",
     "zustand": "^5.0.4"
   },
