@@ -8,6 +8,13 @@ import { Button } from "ui/components/button";
 import { ArrowRight, Loader2Icon, XIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useDebounceEffect } from "ahooks";
+import { Skeleton } from "ui/components/skeleton";
+
+export function SearchbarSkeleton() {
+  return (
+    <Skeleton className="h-16 relative rounded-full border bg-background max-w-lg w-full" />
+  );
+}
 
 type Props = {
   disabled?: boolean;
@@ -41,7 +48,7 @@ export default function ({ disabled = false, autoFocus = false }: Props) {
       if (text && text.length >= 3) presearch(text);
     },
     [text],
-    { wait: 250 },
+    { wait: 150 },
   );
   return (
     <div className="flex overflow-hidden items-center h-16 relative px-2 rounded-full border bg-background max-w-lg w-full gap-2">
