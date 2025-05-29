@@ -1,6 +1,6 @@
 "use client";
 import { type JSX, useLayoutEffect, useState } from "react";
-import { highlight } from "../lib/highlight";
+import type { highlight } from "../lib/highlight";
 import { LoaderIcon } from "lucide-react";
 
 type Props = {
@@ -8,13 +8,13 @@ type Props = {
 };
 
 export function ClientCodeBlock({ initial }: Props) {
-  const [nodes, setNodes] = useState(initial);
+  // const [nodes, setNodes] = useState(initial);
 
-  useLayoutEffect(() => {
-    void highlight('console.log("Rendered on client")', "ts").then(setNodes);
-  }, []);
+  // useLayoutEffect(() => {
+  //   void highlight('console.log("Rendered on client")', "ts").then(setNodes);
+  // }, []);
 
-  return nodes ?? <p>Loading...</p>;
+  return initial ?? <p>Loading...</p>;
 }
 
 export function CodeBlockLoader({

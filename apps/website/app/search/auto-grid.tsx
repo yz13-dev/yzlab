@@ -34,6 +34,7 @@ export default function AutoGridP({
       const data = response.data ?? [];
       setOffset(offset + data.length);
       setIsEnd(data.length === 0);
+      console.log(data);
       setSnippets((prev) => [...prev, ...data]);
     } catch (error) {
       console.error(error);
@@ -52,7 +53,7 @@ export default function AutoGridP({
         const croppedCode = isCropped ? `${code.slice(0, 200)}...` : code;
         return (
           <SnippetCard key={snippet.id} snippet={snippet}>
-            <div className="w-full bg-card relative font-mono border rounded-lg text-sm p-4">
+            <div className="w-full bg-card relative font-mono border overflow-x-auto rounded-b-lg text-sm p-4">
               <CodeBlockLoader
                 render={highlight}
                 lang={lang}

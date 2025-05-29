@@ -69,7 +69,9 @@ search.get("/filters", async (c) => {
       return c.json({ languages: [] }, 500);
     }
 
-    return c.json({ languages: data.map((d) => d.language) }, 200);
+    const languages = [...new Set(data.map((d) => d.language))];
+
+    return c.json({ languages }, 200);
   } catch (error) {
     console.log(error);
     return c.json({ languages: [] }, 500);

@@ -7,7 +7,7 @@ import { codeToHast } from "shiki/bundle/web";
 export async function highlight(code: string, lang: string) {
   const out = await codeToHast(code, {
     lang,
-    mergeWhitespaces: true,
+    // mergeWhitespaces: true,
     defaultColor: "light",
     themes: {
       dark: "github-dark",

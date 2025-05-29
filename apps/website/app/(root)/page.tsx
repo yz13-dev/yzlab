@@ -25,7 +25,7 @@ export default function page() {
           <div className="w-full h-full absolute top-0 left-0 backdrop-grayscale bg-gradient-to-b from-background via-transparent to-background backdrop-blur-lg" />
         </div>
       </div>
-      <main className="flex flex-col gap-8 items-center justify-center max-w-4xl w-full mx-auto px-6 h-dvh">
+      <main className="flex flex-col gap-8 items-center justify-center max-w-4xl w-full mx-auto px-6 py-12 h-dvh">
         <SearchBar autoFocus />
       </main>
     </>
