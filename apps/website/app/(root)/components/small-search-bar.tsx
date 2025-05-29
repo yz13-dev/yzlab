@@ -1,5 +1,6 @@
 "use client";
 import { Logo } from "@/components/logo";
+import { useDebounceEffect } from "ahooks";
 import { ArrowRight, Loader2Icon, XIcon } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
@@ -25,6 +26,11 @@ export default function ({
   const [text, setText] = useState<string>(defaultValue);
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
+  const presearch = (text: string) => {
+    const query = text.trim();
+    const path = `/search?q=${encodeURIComponent(query)}`;
+    router.prefetch(path);
+  };
   const search = () => {
     const query = text.trim();
     if (query.length > 0) {
@@ -38,6 +44,13 @@ export default function ({
       }
     }
   };
+  useDebounceEffect(
+    () => {
+      if (text && text.length >= 3) presearch(text);
+    },
+    [text],
+    { wait: 150 },
+  );
   return (
     <div
       className={cn(

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@vercel/analytics": "^1.5.0",
+    "ahooks": "^3.8.5",
     "lucide-react": "^0.488.0",
     "motion": "^12.14.0",
     "next": "15.3.2",
