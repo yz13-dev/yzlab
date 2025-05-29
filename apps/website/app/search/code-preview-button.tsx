@@ -8,8 +8,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "ui/components/sheet";
-import { highlight } from "../lib/highlight";
-import { CodeBlockLoader } from "./client-code-block";
 import CodeCopyButton from "./code-copy-button";
 import ServerCodeBlock from "./server-code-block";
 
@@ -17,15 +15,17 @@ export default function CodePreviewButton({ snippet }: { snippet: Snippet }) {
   const isCropped = snippet.code.length >= 200;
   const lang = snippet.language;
   const code = snippet.code;
+  if (!isCropped) return null;
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button size="icon" variant="secondary" disabled={!isCropped}>
+        <Button size="sm" variant="secondary" disabled={!isCropped}>
+          <span>Открыть</span>
           <ArrowRightIcon size={16} />
         </Button>
       </SheetTrigger>
-      <SheetContent className="lg:max-w-1/2 max-w-dvw space-y-4">
-        <div className="p-4 w-full px-4 flex items-center justify-start">
+      <SheetContent className="lg:max-w-1/2 max-w-dvw">
+        <div className="p-4 w-full flex items-center justify-start">
           <div className="flex flex-col">
             <SheetTitle>{snippet.domain}</SheetTitle>
             <SheetDescription>{snippet.language}</SheetDescription>

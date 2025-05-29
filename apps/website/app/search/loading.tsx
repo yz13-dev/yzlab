@@ -11,11 +11,13 @@ export default function () {
           <SmallSearchBarSkeleton />
         </div>
       </header>
-      <div className="max-w-screen-2xl divide-x border-x w-full mx-auto flex">
-        <div className="lg:w-2/4 w-full divide-y">
-          <div className="px-6 w-full py-3">
-            <div className="flex items-center gap-2">
-              <Button variant="secondary">Язык</Button>
+      <div className="max-w-screen-2xl w-full mx-auto flex">
+        <div className="lg:w-2/4 w-full pt-4">
+          <div className="w-full px-6">
+            <div className="w-full border bg-secondary/20 rounded-full p-1.5">
+              <div className="flex items-center gap-2">
+                <Button variant="secondary">Язык</Button>
+              </div>
             </div>
           </div>
           <div className="space-y-12 px-6 py-4">
@@ -24,7 +26,6 @@ export default function () {
             })}
           </div>
         </div>
-        <div className="w-2/4 lg:flex hidden flex-col"></div>
       </div>
     </>
   );

@@ -1,6 +1,8 @@
+import { expire, redis } from "@/extensions/redis";
 import { createClient } from "db/supabase/server";
 import { Hono } from "hono";
 import { cookies } from "next/headers";
+import type { Snippet } from "rest-api/types/domains";
 
 export const search = new Hono();
 
@@ -12,10 +14,20 @@ search.get("/", async (c) => {
   const limit = offset + 100;
 
   const text = query ?? "";
+
+  const key = `search:${text}:${offset}:${limit}`;
+
   try {
     if (!text) {
       return c.json([], 400);
     }
+
+    const cached = await redis.get<Snippet[]>(key);
+
+    if (cached) {
+      return c.json(cached, 200);
+    }
+
     const durationStart = Date.now();
     const cookieStore = await cookies();
 
@@ -33,6 +45,9 @@ search.get("/", async (c) => {
     const durationEnd = Date.now();
     const duration = durationEnd - durationStart;
     console.log(`Search took ${duration}ms`);
+
+    if (data && data.length !== 0)
+      await redis.set(key, data, { ex: expire.tenMin });
 
     return c.json(data, 200);
   } catch (err) {

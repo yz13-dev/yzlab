@@ -6,6 +6,8 @@
 @import "tailwind-config/dist/globals.css" layer(base);
 @import "ui/css/globals.css" layer(components);
 
+@import "tw-animate-css";
+
 @source "../app";
 @source "../components";
 @source "../../../packages/ui/dist";
