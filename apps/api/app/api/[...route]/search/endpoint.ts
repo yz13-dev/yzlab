@@ -43,5 +43,20 @@ search.get("/", async (c) => {
 });
 
 search.get("/filters", async (c) => {
-  return c.json({}, 200);
+  try {
+    const cookieStore = await cookies();
+
+    const client = createClient(cookieStore);
+
+    const { data, error } = await client.from("snippets").select("language");
+
+    if (error) {
+      return c.json({ languages: [] }, 500);
+    }
+
+    return c.json({ languages: data.map((d) => d.language) }, 200);
+  } catch (error) {
+    console.log(error);
+    return c.json({ languages: [] }, 500);
+  }
 });

@@ -9,6 +9,7 @@
       "require": "./dist/lib/avatar-url.js"
     },
     "./types/domains": "./dist/types/domains.d.ts",
+    "./types/filters": "./dist/types/filters.d.ts",
     "./domains": {
       "types": "./dist/rest/domains/indexing.d.ts",
       "import": "./dist/rest/domains/indexing.mjs",
@@ -23,6 +24,11 @@
       "types": "./dist/rest/snippets/snippets.d.ts",
       "import": "./dist/rest/snippets/snippets.mjs",
       "require": "./dist/rest/snippets/snippets.js"
+    },
+    "./filters": {
+      "types": "./dist/rest/search/filters.d.ts",
+      "import": "./dist/rest/search/filters.mjs",
+      "require": "./dist/rest/search/filters.js"
     }
   },
   "files": [

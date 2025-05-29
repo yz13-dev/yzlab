@@ -1,5 +1,6 @@
-import dark from "@/public/bg/dark.png";
-import light from "@/public/bg/light.png";
+// import dark from "@/public/bg/dark.png";
+// import light from "@/public/bg/light.png";
+import animated from "@/public/bg/animated.gif";
 import Image from "next/image";
 import SearchBar from "./components/search-bar";
 
@@ -9,19 +10,18 @@ export default function page() {
       <div className="w-full h-dvh absolute top-0 z-[-1] left-0">
         <div className="w-full h-full relative">
           <Image
-            className="object-cover w-full h-full light-mode-image"
-            src={light}
-            placeholder="blur"
+            className="object-cover w-full opacity-25 h-full"
+            src={animated}
             fill
             alt=""
           />
-          <Image
+          {/* <Image
             className="object-cover w-full h-full dark-mode-image"
             src={dark}
             placeholder="blur"
             fill
             alt=""
-          />
+          /> */}
           <div className="w-full h-full absolute top-0 left-0 backdrop-grayscale bg-gradient-to-b from-background via-transparent to-background backdrop-blur-lg" />
         </div>
       </div>
