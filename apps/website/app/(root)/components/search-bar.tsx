@@ -7,6 +7,7 @@ import { cn } from "ui/cn";
 import { Button } from "ui/components/button";
 import { ArrowRight, Loader2Icon, XIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useDebounceEffect } from "ahooks";
 
 type Props = {
   disabled?: boolean;
@@ -17,6 +18,11 @@ export default function ({ disabled = false, autoFocus = false }: Props) {
   const [text, setText] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
+  const presearch = (text: string) => {
+    const query = text.trim();
+    const path = `/search?q=${encodeURIComponent(query)}`;
+    router.prefetch(path);
+  };
   const search = () => {
     const query = text.trim();
     if (query.length > 0) {
@@ -30,6 +36,13 @@ export default function ({ disabled = false, autoFocus = false }: Props) {
       }
     }
   };
+  useDebounceEffect(
+    () => {
+      if (text && text.length >= 3) presearch(text);
+    },
+    [text],
+    { wait: 250 },
+  );
   return (
     <div className="flex overflow-hidden items-center h-16 relative px-2 rounded-full border bg-background max-w-lg w-full gap-2">
       <AnimatePresence>
