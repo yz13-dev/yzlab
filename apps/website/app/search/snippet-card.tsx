@@ -11,8 +11,8 @@ type Props = {
 };
 export const SnippetCard = ({ snippet, children }: Props) => {
   return (
-    <div className="space-y-4">
-      <div className="w-full px-4 flex items-center justify-between">
+    <div>
+      <div className="w-full px-4 py-2 rounded-t-lg border-x border-t flex items-center justify-between">
         <div className="flex flex-col">
           <span className="text-lg font-semibold block">{snippet.domain}</span>
           <span className="text-sm text-muted-foreground">

@@ -6,6 +6,7 @@ import AutoGrid from "./auto-grid";
 import Loading from "./loading";
 import CodeBlock from "./server-code-block";
 import { SnippetCard } from "./snippet-card";
+import { getFilters } from "rest-api/filters";
 
 type PageProps = {
   searchParams: Promise<{
@@ -18,6 +19,10 @@ export default async function page({ searchParams }: PageProps) {
   const { data } = await search(q);
   const snippets = data ?? [];
 
+  // const { data: filters } = await getFilters();
+
+  // const languages = filters?.languages ?? [];
+
   return (
     <Suspense fallback={<Loading />}>
       <header className="w-full py-4 border-b gap-4 bg-background/60 backdrop-blur-sm sticky top-0 z-20">
@@ -27,13 +32,13 @@ export default async function page({ searchParams }: PageProps) {
       </header>
       <div className="max-w-screen-2xl divide-x min-h-[calc(100Dvh-79px)] w-full mx-auto flex">
         <div className="lg:w-2/4 w-full pt-4">
-          <div className="w-full px-6">
+          {/* <div className="w-full px-6">
             <div className="w-full border bg-secondary/20 rounded-full p-1.5">
               <div className="flex items-center gap-2">
                 <Button variant="secondary">Язык</Button>
               </div>
             </div>
-          </div>
+          </div> */}
           <div className="space-y-12 px-6 py-4">
             <AutoGrid defaultOffset={snippets.length} text={q}>
               {snippets.map((snippet) => {
@@ -46,7 +51,7 @@ export default async function page({ searchParams }: PageProps) {
                 return (
                   <SnippetCard key={snippet.id} snippet={snippet}>
                     <CodeBlock
-                      className="w-full bg-card relative font-mono border rounded-lg text-sm p-4"
+                      className="w-full bg-card relative font-mono border rounded-b-lg text-sm p-4"
                       lang={lang}
                     >
                       {croppedCode}
