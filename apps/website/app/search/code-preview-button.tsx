@@ -31,13 +31,13 @@ export default function CodePreviewButton({ snippet }: { snippet: Snippet }) {
             <SheetDescription>{snippet.language}</SheetDescription>
           </div>
         </div>
-        <div className="relative px-4 w-full">
+        <div className="relative px-4 h-[calc(100%-76px-32px)] w-full">
           <CodeCopyButton
             code={snippet.code}
             className="absolute top-4 z-10 right-8"
           />
           <ServerCodeBlock
-            className="w-full bg-card relative font-mono border rounded-lg text-sm p-4"
+            className="w-full max-h-full bg-card overflow-auto relative font-mono border rounded-lg text-sm p-4"
             lang={lang}
           >
             {code}
