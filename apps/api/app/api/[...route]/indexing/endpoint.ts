@@ -201,7 +201,7 @@ indexing.post("/", async (c) => {
           description: result.description ?? "",
           title: result.title ?? "",
           last_crawled_at: new Date().toISOString(),
-          pathname: result.pathname,
+          pathname,
           domain: result.domain,
         });
         return c.json(response);
