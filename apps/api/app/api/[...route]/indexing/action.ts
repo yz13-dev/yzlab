@@ -1,3 +1,4 @@
+import { addDays } from "date-fns";
 import { createAdminClient } from "db/supabase/admin";
 import { createClient } from "db/supabase/server";
 import { cookies } from "next/headers";
@@ -11,7 +12,6 @@ import type {
   UpdateLink,
   UpdateSnippet,
 } from "rest-api/types/domains";
-import { addDays } from "date-fns";
 
 export async function getOldIndexedDomain(): Promise<{
   data: Domain | null;
@@ -309,6 +309,7 @@ export async function writeInSnippets(snippet: NewSnippet) {
         code: snippet.code,
         language: snippet.language,
         domain: snippet.domain,
+        pathname: snippet.pathname,
       })
       .select("*")
       .maybeSingle();

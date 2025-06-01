@@ -120,7 +120,7 @@ indexing.post("/", async (c) => {
     if (result.snippets.length !== 0) {
       console.log("Snippets:", snippets.length);
       const promises = snippets.map((snippet) => {
-        console.log("Snippet:", snippet);
+        console.log("Snippet:", snippet, pathname);
         return writeInSnippets({
           code: snippet.code,
           language: snippet.language,
@@ -201,7 +201,7 @@ indexing.post("/", async (c) => {
           description: result.description ?? "",
           title: result.title ?? "",
           last_crawled_at: new Date().toISOString(),
-          pathname,
+          pathname: result.pathname,
           domain: result.domain,
         });
         return c.json(response);
