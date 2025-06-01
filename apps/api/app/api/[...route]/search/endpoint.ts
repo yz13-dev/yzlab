@@ -11,7 +11,8 @@ search.get("/", async (c) => {
   const offsetQuery = c.req.query("offset");
 
   const offset = offsetQuery ? Number.parseInt(offsetQuery) : 0;
-  const limit = offset + 100;
+  const LIMIT = 25;
+  const limit = offset + LIMIT;
 
   const text = query ?? "";
 
