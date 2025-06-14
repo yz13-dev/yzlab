@@ -1,0 +1,4 @@
+
+
+
+export type PRESETS_TYPES = "DEFAULT" | "SNIPPETS" | "OG" | "SCREENSHOT"

@@ -3,15 +3,10 @@ import { serve } from "@upstash/workflow/hono";
 import { createClient } from "db/supabase/server";
 import { Hono } from "hono";
 import { cookies } from "next/headers";
-import { crawl } from "../crawl/action";
 import {
-  clearSnippets,
-  createOrUpdateDomain,
-  createOrUpdateLink,
   getOldIndexedDomain,
   getUnIndexedDomain,
-  getUnIndexedLinks,
-  writeInSnippets,
+  getUnIndexedLinks
 } from "./action";
 
 export const indexing = new Hono();
@@ -96,136 +91,7 @@ indexing.post("/", async (c) => {
   const isValidAs = as === "domain" || as === "link";
 
   const renderJS = js === "true";
-  try {
-    if (!isValidAs) throw new Error("Invalid as");
-    if (!url) throw new Error("Missing URL");
-    const baseUrl = new URL(url);
-    if (!baseUrl) throw new Error("Invalid URL");
-    const pathname = baseUrl.pathname;
-    if (as === "domain" && pathname !== "/") throw new Error("Invalid path");
-    if (as === "link" && pathname === "/") throw new Error("Invalid path");
-
-    const result = await crawl({ url, js: renderJS });
-
-    if (!result) throw new Error("Failed crawl");
-    if (!result.domain) throw new Error("Missing domain");
-
-    console.group("[INDEXING]");
-    console.log("URL:", url);
-    console.log("Domain:", result.domain);
-    console.log("AS:", as);
-    console.groupEnd();
-
-    const snippets = result.snippets;
-    if (result.snippets.length !== 0) {
-      console.log("Snippets:", snippets.length);
-      const promises = snippets.map((snippet) => {
-        console.log("Snippet:", snippet, pathname);
-        return writeInSnippets({
-          code: snippet.code,
-          language: snippet.language,
-          domain: baseUrl.host,
-          pathname,
-        });
-      });
-      await Promise.all(promises);
-    } else console.log("No snippets found");
-
-    if (as === "domain") {
-      const response = await createOrUpdateDomain({
-        description: result.description ?? "",
-        title: result.title ?? "",
-        favicon: result.favicon,
-        tags: result.tags,
-        last_crawled_at: new Date().toISOString(),
-        domain: result.domain,
-      });
-
-      await clearSnippets(result.domain);
-
-      const links = result.links;
-
-      if (renderJS === false && links.length === 0) {
-        const base = new URL("/indexing", API_URL);
-        const searchParams = base.searchParams;
-        searchParams.set("url", url);
-        searchParams.set("as", "domain");
-        searchParams.set("js", "true");
-        if (deep) {
-          searchParams.set("deep", "true");
-        }
-        const response = await fetch(base.toString(), {
-          method: "POST",
-        });
-        return c.json(response);
-      }
-
-      console.log("DEEP", deep);
-
-      if (deep) {
-        const promises = links.map((link) => {
-          const url = new URL("/indexing", API_URL);
-          const searchParams = url.searchParams;
-          searchParams.set("url", link);
-          searchParams.set("as", "link");
-          return fetch(url.toString(), {
-            method: "POST",
-          });
-        });
-
-        Promise.all(promises);
-      }
-
-      return c.json(response);
-    }
-
-    if (as === "link") {
-      const links = result.links;
-
-      if (deep) {
-        const promises = links.map((link) => {
-          const url = new URL("/indexing", API_URL);
-          const searchParams = url.searchParams;
-          searchParams.set("url", link);
-          searchParams.set("as", "link");
-          return fetch(url.toString(), {
-            method: "POST",
-          });
-        });
-
-        Promise.all(promises);
-      }
-
-      if (snippets.length !== 0) {
-        const response = await createOrUpdateLink({
-          description: result.description ?? "",
-          title: result.title ?? "",
-          last_crawled_at: new Date().toISOString(),
-          pathname: result.pathname,
-          domain: result.domain,
-        });
-        return c.json(response);
-      }
-
-      if (renderJS && links.length === 0) {
-        const base = new URL("/indexing", API_URL);
-        const searchParams = base.searchParams;
-        searchParams.set("url", url);
-        searchParams.set("as", "domain");
-        searchParams.set("js", "true");
-        if (deep) {
-          searchParams.set("deep", "true");
-        }
-        const response = await fetch(base.toString(), {
-          method: "POST",
-        });
-        return c.json(response);
-      }
-    }
-  } catch (error) {
-    console.error(error);
-    return c.json(null, 500);
-  }
+  return c.json({ error: "Not implemented" }, 501);
 });
 
 indexing.post(

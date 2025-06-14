@@ -1,9 +1,9 @@
 import "@/styles/globals.css";
 import "@/styles/shiki.css";
+import { Analytics } from "@vercel/analytics/next";
 import type { Metadata, Viewport } from "next";
 import { Geist_Mono, Onest, Pixelify_Sans } from "next/font/google";
 import { cn } from "ui/cn";
-import { Analytics } from "@vercel/analytics/next";
 
 const PIXEL = Pixelify_Sans({
   subsets: ["latin", "cyrillic"],

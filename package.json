@@ -44,6 +44,7 @@
   },
   "scripts": {
     "build": "turbo build",
+    "build:packages": "turbo build --filter=./packages/*",
     "dev": "turbo dev",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""

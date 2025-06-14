@@ -10,10 +10,20 @@
     },
     "./types/domains": "./dist/types/domains.d.ts",
     "./types/filters": "./dist/types/filters.d.ts",
+    "./env": {
+      "types": "./dist/const/api.d.ts",
+      "import": "./dist/const/api.mjs",
+      "require": "./dist/const/api.js"
+    },
     "./domains": {
-      "types": "./dist/rest/domains/indexing.d.ts",
-      "import": "./dist/rest/domains/indexing.mjs",
-      "require": "./dist/rest/domains/indexing.js"
+      "types": "./dist/rest/domains/domains.d.ts",
+      "import": "./dist/rest/domains/domains.mjs",
+      "require": "./dist/rest/domains/domains.js"
+    },
+    "./indexing": {
+      "types": "./dist/rest/indexing/indexing.d.ts",
+      "import": "./dist/rest/indexing/indexing.mjs",
+      "require": "./dist/rest/indexing/indexing.js"
     },
     "./search": {
       "types": "./dist/rest/search/search.d.ts",

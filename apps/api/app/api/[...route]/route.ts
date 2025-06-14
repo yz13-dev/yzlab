@@ -1,7 +1,8 @@
-import { Hono } from "hono";
 import packageJson from "@/package.json";
+import { Hono } from "hono";
 import { handle } from "hono/vercel";
 import { crawl } from "./crawl/endpoint";
+import { domains } from "./domains/endpoint";
 import { indexing } from "./indexing/endpoint";
 import { search } from "./search/endpoint";
 import { snippets } from "./snippets/endpoint";
@@ -11,6 +12,7 @@ export const runtime = "nodejs";
 const app = new Hono().basePath("/");
 
 app.route("crawl", crawl);
+app.route("domains", domains);
 app.route("indexing", indexing);
 app.route("search", search);
 app.route("snippets", snippets);
