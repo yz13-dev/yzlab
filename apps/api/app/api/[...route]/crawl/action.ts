@@ -1,49 +1,48 @@
-import { checkFavicon } from "@/lib/check-favicon";
-import { extractContent } from "@/lib/extract-content";
-import { extractLinks } from "@/lib/extract-links";
+import { extractContent, extractMetadata, extractSnippets } from "@/lib/extract-content";
 import { fetchPageContent } from "@/lib/fetch/page";
+import { getScreenshotWithPuppeteer } from "@/lib/fetch/puppeteer";
 
 type CrawlProps = {
   url: string;
   js?: boolean;
 };
-export async function crawl({ url, js = false }: CrawlProps) {
+
+export async function crawlDefault({ url }: { url: string }) {
+  try {
+    const html = await fetchPageContent(url);
+    const doc = extractContent(html, url);
+
+    const crawledAt = new Date().toISOString();
+
+    console.groupEnd();
+
+    return {
+      ...doc,
+      crawledAt,
+      error: null,
+    };
+  } catch (error) {
+    const err = error as { message: string | undefined };
+    const message = err?.message;
+    return {
+      error: message ?? "Unknown error",
+    };
+  }
+}
+
+export async function crawlSimple({ url }: { url: string }) {
   try {
     const baseUrl = new URL(url);
 
     const pathname = baseUrl.pathname;
 
-    const isRoot = pathname === "/";
-
-    const html = await fetchPageContent(url, js);
-    const doc = await extractContent(html, url);
-
-    const title = doc.title;
-    const description = doc.description;
-    const tags = isRoot ? doc.tags : [];
-    const snippets = doc.snippets;
-
-    const links = extractLinks(html);
-
-    const favicon = checkFavicon(
-      tags.find(
-        (tag) =>
-          tag.attributes.rel === "icon" ||
-          tag.attributes.rel === "shortcut icon" ||
-          tag.attributes.rel === "icon shortcut",
-      )?.attributes?.href ?? null,
-      baseUrl.origin,
-    );
-
-    const linksWithBaseUrl = links.map((link) =>
-      new URL(link, baseUrl).toString(),
-    );
+    const html = await fetchPageContent(url);
+    const doc = extractContent(html, url);
 
     console.group("[CRAWLED]");
     console.log("URL:", baseUrl.origin);
     console.log("PATH:", baseUrl.pathname);
-    console.log("LINKS:", links.length);
-    console.log("SNIPPETS:", snippets.length);
+    console.log("LINKS:", doc.links.length);
 
     const crawledAt = new Date().toISOString();
 
@@ -51,20 +50,110 @@ export async function crawl({ url, js = false }: CrawlProps) {
 
     return {
       error: null,
-      favicon: favicon ?? null,
-      crawled_at: crawledAt,
+      crawledAt,
       domain: baseUrl.host,
       pathname,
-      title,
-      description,
-      tags,
-      snippets,
-      links: linksWithBaseUrl,
+      ...doc,
     };
   } catch (error) {
     const err = error as { message: string | undefined };
     const message = err?.message;
     return {
+      error: message ?? "Unknown error",
+    };
+  }
+}
+
+export async function crawlSnippets({ url, js = false }: CrawlProps) {
+  try {
+    const baseUrl = new URL(url);
+
+    const pathname = baseUrl.pathname;
+
+    const html = await fetchPageContent(url, js);
+    const doc = extractSnippets(html, url);
+
+    console.group("[CRAWLED]");
+    console.log("URL:", baseUrl.origin);
+    console.log("PATH:", baseUrl.pathname);
+    console.log("LINKS:", doc.links.length);
+    console.log("SNIPPETS:", doc.snippets.length);
+
+    const crawledAt = new Date().toISOString();
+
+    console.groupEnd();
+
+    return {
+      error: null,
+      crawledAt,
+      domain: baseUrl.host,
+      pathname,
+      ...doc,
+    };
+  } catch (error) {
+    const err = error as { message: string | undefined };
+    const message = err?.message;
+    return {
+      error: message ?? "Unknown error",
+    };
+  }
+}
+
+export async function crawlMetadata({ url }: { url: string }) {
+  try {
+    const baseUrl = new URL(url);
+    const html = await fetchPageContent(url);
+    const doc = extractMetadata(html, url);
+
+    const crawledAt = new Date().toISOString();
+
+    return {
+      error: null,
+      domain: baseUrl.host,
+      crawledAt,
+      ...doc
+    };
+  } catch (error) {
+    const err = error as { message: string | undefined };
+    const message = err?.message;
+    return {
+      error: message ?? "Unknown error",
+    };
+  }
+}
+
+export async function crawlScreenshot({ url, fullPage = false, quality = 100 }: { url: string, fullPage?: boolean, quality?: number }) {
+  try {
+    const screenshot = await getScreenshotWithPuppeteer(url, fullPage, quality);
+
+    console.groupEnd();
+    return {
+      error: null,
+      screenshot,
+    };
+  } catch (error) {
+    const err = error as { message: string | undefined };
+    const message = err?.message;
+    return {
+      screenshot: null,
+      error: message ?? "Unknown error",
+    };
+  }
+}
+
+export async function crawlVideo({ url }: { url: string }) {
+  try {
+    const video = await getScreenshotWithPuppeteer(url);
+    console.groupEnd();
+    return {
+      error: null,
+      video,
+    };
+  } catch (error) {
+    const err = error as { message: string | undefined };
+    const message = err?.message;
+    return {
+      video: null,
       error: message ?? "Unknown error",
     };
   }
