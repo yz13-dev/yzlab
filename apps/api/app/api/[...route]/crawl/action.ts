@@ -3,8 +3,8 @@ import { fetchPageContent } from "@/lib/fetch/page";
 import { getScreenshotWithPuppeteer } from "@/lib/fetch/puppeteer";
 
 type CrawlProps = {
+  html: string;
   url: string;
-  js?: boolean;
 };
 
 export async function crawlDefault({ url }: { url: string }) {
@@ -30,13 +30,12 @@ export async function crawlDefault({ url }: { url: string }) {
   }
 }
 
-export async function crawlSimple({ url }: { url: string }) {
+export async function crawlSimple({ url, html }: CrawlProps) {
   try {
     const baseUrl = new URL(url);
 
     const pathname = baseUrl.pathname;
 
-    const html = await fetchPageContent(url);
     const doc = extractContent(html, url);
 
     console.group("[CRAWLED]");
@@ -47,11 +46,9 @@ export async function crawlSimple({ url }: { url: string }) {
     const crawledAt = new Date().toISOString();
 
     console.groupEnd();
-
     return {
       error: null,
       crawledAt,
-      domain: baseUrl.host,
       pathname,
       ...doc,
     };
@@ -64,13 +61,12 @@ export async function crawlSimple({ url }: { url: string }) {
   }
 }
 
-export async function crawlSnippets({ url, js = false }: CrawlProps) {
+export async function crawlSnippets({ url, html }: CrawlProps) {
   try {
     const baseUrl = new URL(url);
 
     const pathname = baseUrl.pathname;
 
-    const html = await fetchPageContent(url, js);
     const doc = extractSnippets(html, url);
 
     console.group("[CRAWLED]");
@@ -86,7 +82,6 @@ export async function crawlSnippets({ url, js = false }: CrawlProps) {
     return {
       error: null,
       crawledAt,
-      domain: baseUrl.host,
       pathname,
       ...doc,
     };
@@ -99,17 +94,15 @@ export async function crawlSnippets({ url, js = false }: CrawlProps) {
   }
 }
 
-export async function crawlMetadata({ url }: { url: string }) {
+export async function crawlMetadata({ url, html }: CrawlProps) {
   try {
-    const baseUrl = new URL(url);
-    const html = await fetchPageContent(url);
+
     const doc = extractMetadata(html, url);
 
     const crawledAt = new Date().toISOString();
 
     return {
       error: null,
-      domain: baseUrl.host,
       crawledAt,
       ...doc
     };
