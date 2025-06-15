@@ -1,8 +1,9 @@
 import { SearchIcon, SendIcon } from "lucide-react";
+import { Suspense } from "react";
 import { cn } from "ui/cn";
 import { Button } from "ui/components/button";
 import { Logo } from "./logo";
-import Nav from "./nav";
+import Nav, { NavSkeleton } from "./nav";
 import Modal from "./request/modal";
 import Search from "./search";
 
@@ -19,7 +20,9 @@ export default function ({ className = "" }: Props) {
       )}>
         <div className="flex items-center lg:w-fit w-[calc(100%-56px)] md:gap-6 gap-3">
           <Logo size={28} className="shrink-0" />
-          <Nav />
+          <Suspense fallback={<NavSkeleton />}>
+            <Nav />
+          </Suspense>
         </div>
         <div className="flex w-fit lg:justify-start justify-center items-center gap-2">
           <Modal>

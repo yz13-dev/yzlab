@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { cn } from "ui/cn";
 import { Button } from "ui/components/button";
+import { Skeleton } from "ui/components/skeleton";
 
 type NavLink = {
   type: "link"
@@ -36,7 +37,7 @@ const links = [
     link("/site", "Сайты", <AppWindowIcon />),
     link("/og", "OG", <ImageIcon />),
   ),
-  link("/index", "Индекс", <BookMarkedIcon />),
+  link("/indexing", "Индекс", <BookMarkedIcon />),
 ]
 
 
@@ -52,6 +53,16 @@ const checkPathname = (pathname: string, href: string) => {
     }
     return false
   }
+}
+
+export const NavSkeleton = () => {
+  return (
+    <nav className="flex items-center gap-2">
+      <Skeleton className="h-10 w-28" />
+      <Skeleton className="h-10 w-28" />
+      <Skeleton className="h-10 w-28" />
+    </nav>
+  )
 }
 
 export default function () {

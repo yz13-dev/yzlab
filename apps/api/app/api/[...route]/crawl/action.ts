@@ -1,6 +1,4 @@
-import { checkFavicon } from "@/lib/check-favicon";
-import { extractContent, extractMetadata } from "@/lib/extract-content";
-import { extractLinks } from "@/lib/extract-links";
+import { extractContent, extractMetadata, extractSnippets } from "@/lib/extract-content";
 import { fetchPageContent } from "@/lib/fetch/page";
 import { getScreenshotWithPuppeteer } from "@/lib/fetch/puppeteer";
 
@@ -9,41 +7,42 @@ type CrawlProps = {
   js?: boolean;
 };
 
+export async function crawlDefault({ url }: { url: string }) {
+  try {
+    const html = await fetchPageContent(url);
+    const doc = extractContent(html, url);
+
+    const crawledAt = new Date().toISOString();
+
+    console.groupEnd();
+
+    return {
+      ...doc,
+      crawledAt,
+      error: null,
+    };
+  } catch (error) {
+    const err = error as { message: string | undefined };
+    const message = err?.message;
+    return {
+      error: message ?? "Unknown error",
+    };
+  }
+}
+
 export async function crawlSimple({ url }: { url: string }) {
   try {
     const baseUrl = new URL(url);
 
     const pathname = baseUrl.pathname;
 
-    const isRoot = pathname === "/";
-
     const html = await fetchPageContent(url);
     const doc = extractContent(html, url);
-
-    const title = doc.title;
-    const description = doc.description;
-    const tags = isRoot ? doc.tags : [];
-
-    const links = extractLinks(html);
-
-    const favicon = checkFavicon(
-      tags.find(
-        (tag) =>
-          tag.attributes.rel === "icon" ||
-          tag.attributes.rel === "shortcut icon" ||
-          tag.attributes.rel === "icon shortcut",
-      )?.attributes?.href ?? null,
-      baseUrl.origin,
-    );
-
-    const linksWithBaseUrl = links.map((link) =>
-      new URL(link, baseUrl).toString(),
-    );
 
     console.group("[CRAWLED]");
     console.log("URL:", baseUrl.origin);
     console.log("PATH:", baseUrl.pathname);
-    console.log("LINKS:", links.length);
+    console.log("LINKS:", doc.links.length);
 
     const crawledAt = new Date().toISOString();
 
@@ -51,14 +50,10 @@ export async function crawlSimple({ url }: { url: string }) {
 
     return {
       error: null,
-      favicon: favicon ?? null,
-      crawled_at: crawledAt,
+      crawledAt,
       domain: baseUrl.host,
       pathname,
-      title,
-      description,
-      tags,
-      links: linksWithBaseUrl,
+      ...doc,
     };
   } catch (error) {
     const err = error as { message: string | undefined };
@@ -75,37 +70,14 @@ export async function crawlSnippets({ url, js = false }: CrawlProps) {
 
     const pathname = baseUrl.pathname;
 
-    const isRoot = pathname === "/";
-
     const html = await fetchPageContent(url, js);
-    const doc = extractContent(html, url);
-
-    const title = doc.title;
-    const description = doc.description;
-    const tags = isRoot ? doc.tags : [];
-    const snippets = doc.snippets;
-
-    const links = extractLinks(html);
-
-    const favicon = checkFavicon(
-      tags.find(
-        (tag) =>
-          tag.attributes.rel === "icon" ||
-          tag.attributes.rel === "shortcut icon" ||
-          tag.attributes.rel === "icon shortcut",
-      )?.attributes?.href ?? null,
-      baseUrl.origin,
-    );
-
-    const linksWithBaseUrl = links.map((link) =>
-      new URL(link, baseUrl).toString(),
-    );
+    const doc = extractSnippets(html, url);
 
     console.group("[CRAWLED]");
     console.log("URL:", baseUrl.origin);
     console.log("PATH:", baseUrl.pathname);
-    console.log("LINKS:", links.length);
-    console.log("SNIPPETS:", snippets.length);
+    console.log("LINKS:", doc.links.length);
+    console.log("SNIPPETS:", doc.snippets.length);
 
     const crawledAt = new Date().toISOString();
 
@@ -113,15 +85,10 @@ export async function crawlSnippets({ url, js = false }: CrawlProps) {
 
     return {
       error: null,
-      favicon: favicon ?? null,
-      crawled_at: crawledAt,
+      crawledAt,
       domain: baseUrl.host,
       pathname,
-      title,
-      description,
-      tags,
-      snippets,
-      links: linksWithBaseUrl,
+      ...doc,
     };
   } catch (error) {
     const err = error as { message: string | undefined };
@@ -138,30 +105,13 @@ export async function crawlMetadata({ url }: { url: string }) {
     const html = await fetchPageContent(url);
     const doc = extractMetadata(html, url);
 
-    const tags = doc.tags;
-    const metatags = doc.metatags;
-
-    const titleTag = tags.find(tag => tag.attributes.property === "og:title");
-
-    const imageTag = tags.find(tag => tag.attributes.property === "og:image");
-
-    const image = imageTag?.attributes?.content;
-
-    const favicon = doc.favicon;
-
-    const title = titleTag?.attributes?.content;
-    const description = doc.description;
-
     const crawledAt = new Date().toISOString();
 
     return {
       error: null,
-      favicon,
-      thumbnail: image,
-      crawled_at: crawledAt,
       domain: baseUrl.host,
-      title,
-      description,
+      crawledAt,
+      ...doc
     };
   } catch (error) {
     const err = error as { message: string | undefined };

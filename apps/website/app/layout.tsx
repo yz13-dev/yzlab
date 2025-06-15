@@ -6,6 +6,7 @@ import { Geist_Mono, Onest, Pixelify_Sans } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { cn } from "ui/cn";
 import { Toaster } from "ui/components/sonner";
+import { TooltipProvider } from "ui/components/tooltip";
 
 const PIXEL = Pixelify_Sans({
   subsets: ["latin", "cyrillic"],
@@ -65,7 +66,9 @@ export default function RootLayout({
         <Toaster />
         <Analytics />
         <NuqsAdapter>
-          {children}
+          <TooltipProvider>
+            {children}
+          </TooltipProvider>
         </NuqsAdapter>
       </body>
     </html>

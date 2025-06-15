@@ -1,16 +1,17 @@
 import Header from "@/components/header";
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
-import Filters from "../components/filters";
+import { Suspense } from "react";
+import Filters, { FiltersSkeleton } from "../components/filters";
 
 export default function () {
   return (
     <>
-      <Header className="h-16 border-x bg-secondary/40" />
+      <Header />
 
-      <Filters
-        className="sticky top-0 border-x border-b bg-secondary/40 rounded-b-xl backdrop-blur-3xl"
-      />
+      <Suspense fallback={<FiltersSkeleton />}>
+        <Filters />
+      </Suspense>
 
       <div className="w-full max-w-screen-2xl mx-auto p-6">
         <div className="w-full grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6">
