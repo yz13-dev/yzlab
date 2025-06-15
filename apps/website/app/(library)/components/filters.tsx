@@ -3,11 +3,15 @@ import Draggable from "@/components/draggable";
 import Tags from "@/components/tags";
 import { HeartIcon, MoonIcon, PaletteIcon, SunIcon } from "lucide-react";
 import { useQueryState } from "nuqs";
+import { cn } from "ui/cn";
 import { Button } from "ui/components/button";
 import { Separator } from "ui/components/separator";
 
 
-export default function () {
+type Props = {
+  className?: string;
+}
+export default function ({ className = "" }: Props) {
   const [theme, setTheme] = useQueryState("theme")
 
   const changeTheme = (newTheme: string) => {
@@ -16,7 +20,10 @@ export default function () {
   }
 
   return (
-    <div className="w-full max-w-screen-2xl mx-auto px-6 py-3 bg-background">
+    <div className={cn(
+      "w-full max-w-screen-2xl mx-auto px-6 py-3 bg-background",
+      className,
+    )}>
       <div className="flex lg:flex-row flex-col lg:items-center items-start gap-2 lg:h-9 h-fit">
         <div className="flex items-center gap-2 lg:w-[395px] md:w-fit sm:w-fit w-full justify-between h-9">
           <Button variant="ghost"><HeartIcon /></Button>

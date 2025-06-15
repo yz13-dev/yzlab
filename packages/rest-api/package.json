@@ -10,10 +10,16 @@
     },
     "./types/domains": "./dist/types/domains.d.ts",
     "./types/filters": "./dist/types/filters.d.ts",
+    "./types/requests": "./dist/types/requests.d.ts",
     "./env": {
       "types": "./dist/const/api.d.ts",
       "import": "./dist/const/api.mjs",
       "require": "./dist/const/api.js"
+    },
+    "./requests": {
+      "types": "./dist/rest/requests/requests.d.ts",
+      "import": "./dist/rest/requests/requests.mjs",
+      "require": "./dist/rest/requests/requests.js"
     },
     "./domains": {
       "types": "./dist/rest/domains/domains.d.ts",

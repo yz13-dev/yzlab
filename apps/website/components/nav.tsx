@@ -85,10 +85,11 @@ export default function () {
                     return (
                       <Button
                         key={link.href}
-                        variant={isActive ? "secondary" : "outline"}
+                        variant={isActive ? "default" : "ghost"}
                         size="lg"
                         className={cn(
                           "font-medium text-base border",
+                          isActive ? "border-foreground" : "border-border"
                         )}
                         asChild
                       >

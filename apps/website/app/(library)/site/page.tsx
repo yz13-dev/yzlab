@@ -6,12 +6,74 @@ import Filters from "../components/filters";
 export default function () {
   return (
     <>
-      <Header />
+      <Header className="h-16 border-x bg-secondary/40" />
 
-      <Filters />
+      <Filters
+        className="sticky top-0 border-x border-b bg-secondary/40 rounded-b-xl backdrop-blur-3xl"
+      />
 
       <div className="w-full max-w-screen-2xl mx-auto p-6">
         <div className="w-full grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6">
+
+          <div className="w-full h-full flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+              <div className="w-fit items-center flex gap-2">
+                <div className="size-5 rounded-full bg-secondary" />
+                <div className="h-5 w-16 rounded-full bg-secondary" />
+              </div>
+              <div className="w-fit items-center flex gap-2">
+                <div className="size-5 rounded-full bg-secondary" />
+                <div className="size-5 rounded-full bg-secondary" />
+              </div>
+            </div>
+            <div className="h-4 w-1/2 rounded-full bg-secondary" />
+            <div className="aspect-[640/400] w-full rounded-md border" />
+          </div>
+
+          <div className="w-full h-full flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+              <div className="w-fit items-center flex gap-2">
+                <div className="size-5 rounded-full bg-secondary" />
+                <div className="h-5 w-16 rounded-full bg-secondary" />
+              </div>
+              <div className="w-fit items-center flex gap-2">
+                <div className="size-5 rounded-full bg-secondary" />
+                <div className="size-5 rounded-full bg-secondary" />
+              </div>
+            </div>
+            <div className="h-4 w-1/2 rounded-full bg-secondary" />
+            <div className="aspect-[640/400] w-full rounded-md border" />
+          </div>
+
+          <div className="w-full h-full flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+              <div className="w-fit items-center flex gap-2">
+                <div className="size-5 rounded-full bg-secondary" />
+                <div className="h-5 w-16 rounded-full bg-secondary" />
+              </div>
+              <div className="w-fit items-center flex gap-2">
+                <div className="size-5 rounded-full bg-secondary" />
+                <div className="size-5 rounded-full bg-secondary" />
+              </div>
+            </div>
+            <div className="h-4 w-1/2 rounded-full bg-secondary" />
+            <div className="aspect-[640/400] w-full rounded-md border" />
+          </div>
+
+          <div className="w-full h-full flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+              <div className="w-fit items-center flex gap-2">
+                <div className="size-5 rounded-full bg-secondary" />
+                <div className="h-5 w-16 rounded-full bg-secondary" />
+              </div>
+              <div className="w-fit items-center flex gap-2">
+                <div className="size-5 rounded-full bg-secondary" />
+                <div className="size-5 rounded-full bg-secondary" />
+              </div>
+            </div>
+            <div className="h-4 w-1/2 rounded-full bg-secondary" />
+            <div className="aspect-[640/400] w-full rounded-md border" />
+          </div>
 
           <div className="w-full h-full flex flex-col gap-2">
             <div className="flex items-center justify-between">

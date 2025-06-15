@@ -18,7 +18,8 @@
     "hono": "^4.7.10",
     "next": "15.1.8",
     "puppeteer": "^24.9.0",
-    "rest-api": "*"
+    "rest-api": "*",
+    "zod": "^3.25.64"
   },
   "devDependencies": {
     "typescript": "^5",

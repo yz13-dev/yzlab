@@ -5,6 +5,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist_Mono, Onest, Pixelify_Sans } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { cn } from "ui/cn";
+import { Toaster } from "ui/components/sonner";
 
 const PIXEL = Pixelify_Sans({
   subsets: ["latin", "cyrillic"],
@@ -61,6 +62,7 @@ export default function RootLayout({
         </head>
       )}
       <body id="root" className="antialiased">
+        <Toaster />
         <Analytics />
         <NuqsAdapter>
           {children}

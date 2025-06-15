@@ -1,4 +1,5 @@
 import { SearchIcon, SendIcon } from "lucide-react";
+import { cn } from "ui/cn";
 import { Button } from "ui/components/button";
 import { Logo } from "./logo";
 import Nav from "./nav";
@@ -6,10 +7,16 @@ import Modal from "./request/modal";
 import Search from "./search";
 
 
-export default function () {
+type Props = {
+  className?: string
+}
+export default function ({ className = "" }: Props) {
   return (
     <header className="w-full h-16 flex items-center">
-      <div className="max-w-screen-2xl w-full flex justify-between items-center mx-auto px-6">
+      <div className={cn(
+        "max-w-screen-2xl w-full flex justify-between items-center mx-auto px-6",
+        className
+      )}>
         <div className="flex items-center lg:w-fit w-[calc(100%-56px)] md:gap-6 gap-3">
           <Logo size={28} className="shrink-0" />
           <Nav />
