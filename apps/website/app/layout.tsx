@@ -3,6 +3,7 @@ import "@/styles/shiki.css";
 import { Analytics } from "@vercel/analytics/next";
 import type { Metadata, Viewport } from "next";
 import { Geist_Mono, Onest, Pixelify_Sans } from "next/font/google";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { cn } from "ui/cn";
 
 const PIXEL = Pixelify_Sans({
@@ -61,7 +62,9 @@ export default function RootLayout({
       )}
       <body id="root" className="antialiased">
         <Analytics />
-        {children}
+        <NuqsAdapter>
+          {children}
+        </NuqsAdapter>
       </body>
     </html>
   );

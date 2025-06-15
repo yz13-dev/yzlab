@@ -1,33 +1,15 @@
-import Draggable from "@/components/draggable";
 import Header from "@/components/header";
-import Tags from "@/components/tags";
-import { ArrowRightIcon, HeartIcon } from "lucide-react";
+import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
-import { Button } from "ui/components/button";
-import { Separator } from "ui/components/separator";
+import Filters from "../components/filters";
 
 export default function () {
   return (
     <>
       <Header />
 
-      <div className="w-full max-w-screen-2xl mx-auto px-6 py-3 bg-background">
-        <div className="flex lg:flex-row flex-col lg:items-center items-start gap-2 lg:h-9 h-fit">
-          <div className="flex items-center gap-2 h-9 lg:w-fit w-full">
-            <Button variant="ghost"><HeartIcon /></Button>
-            <Separator orientation="vertical" />
-            <div className="flex lg:w-fit w-full items-center gap-2">
-              <div className="h-9 w-24 rounded-full bg-secondary" />
-              <div className="h-9 w-24 rounded-full bg-secondary" />
-              <div className="h-9 w-24 rounded-full bg-secondary" />
-            </div>
-            <Separator orientation="vertical" />
-          </div>
-          <Draggable className="lg:w-[calc(100%-370px)] w-full no-scrollbar overflow-x-hidden">
-            <Tags />
-          </Draggable>
-        </div>
-      </div>
+      <Filters />
+
       <div className="w-full max-w-screen-2xl mx-auto p-6">
         <div className="w-full grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6">
 

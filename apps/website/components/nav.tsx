@@ -1,7 +1,7 @@
 "use client"
 import { AppWindowIcon, BookMarkedIcon, ImageIcon, LayoutGridIcon } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { cn } from "ui/cn";
 import { Button } from "ui/components/button";
 
@@ -56,6 +56,11 @@ const checkPathname = (pathname: string, href: string) => {
 
 export default function () {
   const pathname = usePathname()
+  const searchParams = useSearchParams()
+
+  const makeLink = (href: string) => {
+    return `${href}?${searchParams.toString()}`
+  }
 
   return (
     <nav className="flex items-center gap-2">
@@ -87,7 +92,9 @@ export default function () {
                         )}
                         asChild
                       >
-                        <Link href={link.href}>
+                        <Link
+                          href={makeLink(link.href)}
+                        >
                           {link.icon}
                           <span className="md:inline hidden">
                             {link.name}
@@ -111,7 +118,9 @@ export default function () {
               className="font-medium text-base"
               asChild
             >
-              <Link href={link.href}>
+              <Link
+                href={makeLink(link.href)}
+              >
                 {link.icon}
                 <span className="md:inline hidden">
                   {link.name}
