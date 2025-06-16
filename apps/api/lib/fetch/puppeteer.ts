@@ -31,7 +31,10 @@ export async function getScreenshotWithPuppeteer(url: string, fullPage = false, 
 
   await page.goto(url, { waitUntil: "networkidle2" });
 
+  await wait(1000);
+
   const screenshot = await page.screenshot({ fullPage, encoding: "base64", type: "jpeg", quality, optimizeForSpeed: true });
+
   await browser.close();
   return screenshot;
 }

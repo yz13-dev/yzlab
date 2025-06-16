@@ -1,10 +1,29 @@
 import { Hono } from "hono";
-import { createLinks } from "./actions";
+import { createLinks, getRootLinks, getRootLinksWithOgs } from "./actions";
 
 
 
 export const links = new Hono();
 
+links.get("/sites", async (c) => {
+  try {
+    const links = await getRootLinks()
+    return c.json(links, 200);
+  } catch (error) {
+    console.log(error)
+    return c.json([], 200);
+  }
+});
+
+links.get("/ogs", async (c) => {
+  try {
+    const links = await getRootLinksWithOgs()
+    return c.json(links, 200);
+  } catch (error) {
+    console.log(error)
+    return c.json([], 200);
+  }
+});
 
 
 links.post("/", async (c) => {
