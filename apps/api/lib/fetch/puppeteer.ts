@@ -29,7 +29,8 @@ export async function getScreenshotWithPuppeteer(url: string, fullPage = false, 
     height: 1080,
   });
 
-  await page.goto(url, { waitUntil: "networkidle2" });
+
+  await page.goto(url, { waitUntil: "networkidle2", timeout: 50000 });
 
   await wait(1000);
 

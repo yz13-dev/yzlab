@@ -32,22 +32,13 @@ indexing.post(
       const links = defaultCrawl?.links ?? [];
 
       console.log("links", links);
-      const preparedLinks = links
-        .filter((link) => link.startsWith("/"))
-        .map((link) => {
-          return {
-            domain: domain.domain,
-            pathname: link,
-          }
+
+      const existedRootLink = await getRootLink(domain.domain)
+      if (!existedRootLink) {
+        await createLink(domain.domain, {
+          domain: domain.domain,
+          pathname: "/",
         })
-      if (preparedLinks.length !== 0) {
-        const existedRootLink = await getRootLink(domain.domain)
-        if (!existedRootLink) {
-          await createLink(domain.domain, {
-            domain: domain.domain,
-            pathname: "/",
-          })
-        }
       }
 
       console.log("crawl", defaultCrawl);

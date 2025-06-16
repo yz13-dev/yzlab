@@ -12,7 +12,9 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "ui/components/tooltip";
 
 export const FiltersSkeleton = () => {
   return (
-    <Skeleton className="max-w-screen-2xl w-full mx-auto h-9" />
+    <div className="max-w-screen-2xl w-full mx-auto px-6">
+      <Skeleton className="h-12 w-full" />
+    </div>
   )
 }
 
