@@ -2,13 +2,42 @@ import { createClient } from "db/supabase/server";
 import { Hono } from "hono";
 import type { HTTPResponseError } from "hono/types";
 import { cookies } from "next/headers";
+import { createDomain } from "../domains/actions";
+import { deleteRequest, getRequest } from "./actions";
 import { requestSchema } from "./schemas";
 
 
 
 export const requests = new Hono()
 
+requests.get("/", async (c) => {
+  try {
+    const cookieStore = await cookies()
 
+    const supabase = createClient(cookieStore)
+    const { data, error } = await supabase
+      .from("index-requests")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(10)
+
+    if (error) {
+      throw new Error(error.message)
+    }
+
+    return c.json(data)
+  } catch (error) {
+    const err = error as HTTPResponseError;
+    try {
+
+      const parsedErrorMessage = JSON.parse(err.message);
+
+      return c.json({ error: parsedErrorMessage }, 500);
+    } catch (error) {
+      return c.json({ error: err.message }, 500);
+    }
+  }
+});
 
 requests.post("/", async (c) => {
   try {
@@ -53,8 +82,31 @@ requests.post("/", async (c) => {
 
 requests.post("/:id/accept", async (c) => {
   const id = c.req.param("id")
+
+  const intId = Number.parseInt(id)
+
   try {
-    return c.json({ error: "Not implemented" }, 501);
+    const request = await getRequest(intId);
+
+    if (!request) throw new Error("Request not found");
+
+    const domain = new URL(request.url).host;
+    const title = request.name;
+    const description = request.description;
+
+    const newDomain = await createDomain(domain, {
+      domain,
+      title,
+      description,
+    });
+
+    console.log("domain id:", newDomain?.id);
+
+    if (!newDomain) throw new Error("Domain not created");
+
+    await deleteRequest(intId);
+
+    return c.json({ error: null }, 501);
   } catch (error) {
     const err = error as HTTPResponseError;
     return c.json({ error: err.message }, 500);
@@ -63,8 +115,17 @@ requests.post("/:id/accept", async (c) => {
 
 requests.post("/:id/reject", async (c) => {
   const id = c.req.param("id")
+
+  const intId = Number.parseInt(id)
+
   try {
-    return c.json({ error: "Not implemented" }, 501);
+    const request = await getRequest(intId);
+
+    if (!request) throw new Error("Request not found");
+
+    await deleteRequest(intId);
+
+    return c.json({ error: null }, 200);
   } catch (error) {
     const err = error as HTTPResponseError;
     return c.json({ error: err.message }, 500);

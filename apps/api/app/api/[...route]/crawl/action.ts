@@ -3,13 +3,30 @@ import { fetchPageContent } from "@/lib/fetch/page";
 import { getScreenshotWithPuppeteer } from "@/lib/fetch/puppeteer";
 
 type CrawlProps = {
+  html: string;
   url: string;
-  js?: boolean;
 };
 
-export async function crawlDefault({ url }: { url: string }) {
+type DefaultCrawlData = {
+  domain: string;
+  title: string;
+  description: string | undefined;
+  content: string;
+  tags: {
+    name: string;
+    attributes: {
+      [name: string]: string;
+    };
+  }[];
+  links: string[];
+  error: string | null;
+  crawledAt: string;
+  favicon?: string;
+}
+
+export async function crawlDefault({ url, html: providedHtml }: { url: string, html?: string }): Promise<DefaultCrawlData | null> {
   try {
-    const html = await fetchPageContent(url);
+    const html = providedHtml ? providedHtml : await fetchPageContent(url);
     const doc = extractContent(html, url);
 
     const crawledAt = new Date().toISOString();
@@ -24,19 +41,17 @@ export async function crawlDefault({ url }: { url: string }) {
   } catch (error) {
     const err = error as { message: string | undefined };
     const message = err?.message;
-    return {
-      error: message ?? "Unknown error",
-    };
+    console.log(message)
+    return null
   }
 }
 
-export async function crawlSimple({ url }: { url: string }) {
+export async function crawlSimple({ url, html }: CrawlProps) {
   try {
     const baseUrl = new URL(url);
 
     const pathname = baseUrl.pathname;
 
-    const html = await fetchPageContent(url);
     const doc = extractContent(html, url);
 
     console.group("[CRAWLED]");
@@ -47,11 +62,9 @@ export async function crawlSimple({ url }: { url: string }) {
     const crawledAt = new Date().toISOString();
 
     console.groupEnd();
-
     return {
       error: null,
       crawledAt,
-      domain: baseUrl.host,
       pathname,
       ...doc,
     };
@@ -64,19 +77,17 @@ export async function crawlSimple({ url }: { url: string }) {
   }
 }
 
-export async function crawlSnippets({ url, js = false }: CrawlProps) {
+export async function crawlSnippets({ url, html }: CrawlProps) {
   try {
     const baseUrl = new URL(url);
 
     const pathname = baseUrl.pathname;
 
-    const html = await fetchPageContent(url, js);
-    const doc = extractSnippets(html, url);
+    const doc = extractSnippets(html);
 
     console.group("[CRAWLED]");
     console.log("URL:", baseUrl.origin);
     console.log("PATH:", baseUrl.pathname);
-    console.log("LINKS:", doc.links.length);
     console.log("SNIPPETS:", doc.snippets.length);
 
     const crawledAt = new Date().toISOString();
@@ -86,7 +97,6 @@ export async function crawlSnippets({ url, js = false }: CrawlProps) {
     return {
       error: null,
       crawledAt,
-      domain: baseUrl.host,
       pathname,
       ...doc,
     };
@@ -99,26 +109,23 @@ export async function crawlSnippets({ url, js = false }: CrawlProps) {
   }
 }
 
-export async function crawlMetadata({ url }: { url: string }) {
+export async function crawlMetadata({ url, html }: CrawlProps) {
   try {
-    const baseUrl = new URL(url);
-    const html = await fetchPageContent(url);
-    const doc = extractMetadata(html, url);
+
+    const doc = extractMetadata(html);
 
     const crawledAt = new Date().toISOString();
 
     return {
       error: null,
-      domain: baseUrl.host,
       crawledAt,
       ...doc
     };
   } catch (error) {
     const err = error as { message: string | undefined };
     const message = err?.message;
-    return {
-      error: message ?? "Unknown error",
-    };
+    console.log(message)
+    return null
   }
 }
 

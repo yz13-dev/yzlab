@@ -3,7 +3,11 @@ import { Logo } from "@/components/logo";
 import { Button } from "ui/components/button";
 import { Input } from "ui/components/input";
 
+const isDev = process.env.NODE_ENV === "development";
+
 export default function () {
+  if (!isDev) return null;
+
   return (
     <>
       <Header />

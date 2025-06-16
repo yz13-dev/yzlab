@@ -1,179 +1,146 @@
-import { API_URL } from "@/const/url";
+import { fetchPageContent } from "@/lib/fetch/page";
 import { serve } from "@upstash/workflow/hono";
-import { createClient } from "db/supabase/server";
 import { Hono } from "hono";
-import { cookies } from "next/headers";
-import {
-  getOldIndexedDomain,
-  getUnIndexedDomain,
-  getUnIndexedLinks
-} from "./action";
+import { crawlDefault, crawlMetadata, crawlScreenshot } from "../crawl/action";
+import { getNotCrawledDomain, updateDomain } from "../domains/actions";
+import { createLinks, getDomainLinks, getNotCrawledLink, updateLink } from "../links/actions";
+import { toBase64 } from "./actions";
 
 export const indexing = new Hono();
 
-// .select(
-//   `
-//   *,
-//   news_source:news_sources(*)
-//   `,
-// )
-
-indexing.get("/", async (c) => {
-  try {
-    const cookieStore = await cookies();
-    const client = createClient(cookieStore);
-    const { data, error } = await client.from("domains").select(
-      `
-        *,
-        links:links(*),
-        snippets:snippets(*)
-      `,
-    );
-    if (error) {
-      console.log(error);
-      return c.json(null, 500);
-    }
-    return c.json(data, 200);
-  } catch (error) {
-    console.error(error);
-    return c.json(null, 500);
-  }
-});
-
-indexing.get("/callback", async (c) => {
-  const body = await c.req.text();
-  const decoded = atob(body);
-
-  console.log(decoded);
-
-  return c.json(null, 200);
-});
-
-indexing.get("/:domain", async (c) => {
-  const domain = c.req.param("domain");
-
-  if (!domain) return c.json(null, 400);
-
-  try {
-    const cookieStore = await cookies();
-    const client = createClient(cookieStore);
-    const { data, error } = await client
-      .from("domains")
-      .select(
-        `
-          *,
-          links:links(*),
-          snippets:snippets(*)
-        `,
-      )
-      .eq("domain", domain)
-      .maybeSingle();
-    if (error) {
-      console.log(error);
-      return c.json(null, 500);
-    }
-    return c.json(data, 200);
-  } catch (error) {
-    console.error(error);
-    return c.json(null, 500);
-  }
-});
-
-indexing.post("/", async (c) => {
-  const url = c.req.query("url");
-  const js = c.req.query("js");
-  const asQuery = c.req.query("as");
-  const deepQuery = c.req.query("deep");
-
-  const as = asQuery ?? "domain";
-  const deep = deepQuery === "true";
-
-  const isValidAs = as === "domain" || as === "link";
-
-  const renderJS = js === "true";
-  return c.json({ error: "Not implemented" }, 501);
-});
-
 indexing.post(
-  "/workflow",
+  "/domain",
   serve(async (context) => {
     const domain = await context.run("retrieve domains", async () => {
       console.group("[DOMAINS]");
-      const unIndexedDomain = await getUnIndexedDomain();
-      const oldIndexedDomain = await getOldIndexedDomain();
+      const data = await getNotCrawledDomain();
 
-      const domain = unIndexedDomain.data ?? oldIndexedDomain.data;
+      const domain = data
 
       if (!domain) {
         await context.cancel();
         return null;
       }
 
-      console.log("INDEXING DOMAIN:", domain.domain);
-      const url = new URL("/indexing", API_URL);
-      const searchParams = url.searchParams;
-
+      const domainId = domain.id;
       const domainAsUrl = `https://${domain.domain}`;
-      const domainUrl = new URL("/", domainAsUrl);
-      searchParams.set("url", domainUrl.toString());
-      searchParams.set("as", "domain");
-      const response = await fetch(url.toString(), {
-        method: "POST",
-      });
-      const status = response.status;
-      console.log("INDEXING STATUS:", status);
 
-      console.log("DOMAIN:", domain.domain);
+      console.log("domain", domainAsUrl)
 
-      console.groupEnd();
+      const defaultCrawl = await crawlDefault({ url: domainAsUrl })
+
+      const links = defaultCrawl?.links ?? [];
+
+      console.log("links", links);
+      const preparedLinks = links.map((link) => {
+        return {
+          domain: domain.domain,
+          pathname: link,
+        }
+      })
+      if (preparedLinks.length !== 0) {
+        const existedLinks = await getDomainLinks(domain.domain)
+        if (existedLinks.length === 0) {
+          await createLinks(preparedLinks)
+        } else {
+          const filtered = preparedLinks.filter((link) => {
+            return !existedLinks.find((existedLink) => existedLink.pathname === link.pathname)
+          })
+          if (filtered.length !== 0) {
+            await createLinks(filtered)
+          }
+        }
+      }
+
+      console.log("crawl", defaultCrawl);
+
+      if (!defaultCrawl) {
+        await context.cancel();
+        return null;
+      }
+
+
+      const result = await updateDomain(domainId, {
+        last_crawled_at: defaultCrawl.crawledAt,
+        domain: domain.domain,
+        title: defaultCrawl.title,
+        description: defaultCrawl.description,
+        favicon: defaultCrawl.favicon,
+      })
+
+      console.log("result", result);
+
+      if (!result) {
+        return null;
+      }
+
       return domain;
     });
 
-    const links = await context.run("retrieve domain links", async () => {
-      console.group("[LINKS]");
-      const domainId = domain?.domain;
+    return domain;
+  }),
+);
 
-      if (!domainId) {
+indexing.post(
+  "/link",
+  serve(async (context) => {
+    const link = await context.run("retrieve domains", async () => {
+      console.group("[DOMAINS]");
+      const data = await getNotCrawledLink();
+
+      const link = data
+
+      if (!link) {
         await context.cancel();
-        return [];
+        return null;
       }
 
-      const { data: links } = await getUnIndexedLinks(domainId);
+      const linkId = link.id;
+      const pathname = link.pathname;
+      const domainAsUrl = `https://${link.domain}${pathname}`;
 
-      console.log("LINKS COUNT:", links.length);
+      console.log("domain", domainAsUrl)
 
-      console.groupEnd();
-      return links;
-    });
+      const html = await fetchPageContent(domainAsUrl)
 
-    const result = await context.run("indexing links", async () => {
-      try {
-        console.group("[INDEXING]");
+      const defaultCrawl = await crawlDefault({ url: domainAsUrl, html })
 
-        const promises = links.map((link) => {
-          console.log("INDEXING LINK:", link.domain, link.pathname);
-          const url = new URL("/indexing", API_URL);
-          const searchParams = url.searchParams;
+      const screenshotCrawl = await crawlScreenshot({ url: domainAsUrl })
 
-          const linkUrl = new URL(link.pathname, link.domain);
-          searchParams.set("url", linkUrl.toString());
-          searchParams.set("as", "link");
-          searchParams.set("deep", "true");
-          return fetch(url.toString(), {
-            method: "POST",
-          });
-        });
+      const metadataCrawl = await crawlMetadata({ url: domainAsUrl, html })
 
-        Promise.all(promises);
+      const screenshot = screenshotCrawl.screenshot;
+      const image = metadataCrawl?.image;
 
-        console.groupEnd();
-        return true;
-      } catch (error) {
-        console.error(error);
-        return false;
+      console.log("crawl", defaultCrawl);
+
+      if (!defaultCrawl) {
+        await context.cancel();
+        return null;
       }
+
+
+      const result = await updateLink(linkId, {
+        pathname,
+        last_crawled_at: defaultCrawl.crawledAt,
+        domain: link.domain,
+        title: defaultCrawl.title,
+        description: defaultCrawl.description,
+        favicon: defaultCrawl.favicon,
+        screenshot: screenshot ? toBase64(screenshot) : null,
+        og: image,
+      })
+
+      console.log("result", result);
+
+      if (!result) {
+        return null;
+      }
+
+      return link;
     });
-    return result;
+
+    return link;
   }),
 );
 

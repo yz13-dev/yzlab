@@ -9,36 +9,60 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      "api-keys": {
+        Row: {
+          created_at: string
+          expires_at: string
+          id: string
+          permissions: string
+          scopes: string[]
+        }
+        Insert: {
+          created_at?: string
+          expires_at: string
+          id?: string
+          permissions: string
+          scopes?: string[]
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          permissions?: string
+          scopes?: string[]
+        }
+        Relationships: []
+      }
       domains: {
         Row: {
           created_at: string
-          description: string
+          description: string | null
           domain: string
           favicon: string | null
           id: string
           last_crawled_at: string | null
           tags: Json[] | null
-          title: string
+          title: string | null
         }
         Insert: {
           created_at?: string
-          description: string
+          description?: string | null
           domain: string
           favicon?: string | null
           id?: string
           last_crawled_at?: string | null
           tags?: Json[] | null
-          title: string
+          title?: string | null
         }
         Update: {
           created_at?: string
-          description?: string
+          description?: string | null
           domain?: string
           favicon?: string | null
           id?: string
           last_crawled_at?: string | null
           tags?: Json[] | null
-          title?: string
+          title?: string | null
         }
         Relationships: []
       }
@@ -75,30 +99,42 @@ export type Database = {
       links: {
         Row: {
           created_at: string
-          description: string
+          description: string | null
           domain: string
+          favicon: string | null
           id: number
           last_crawled_at: string | null
+          og: string | null
           pathname: string
-          title: string
+          screenshot: string | null
+          tags: string[] | null
+          title: string | null
         }
         Insert: {
           created_at?: string
-          description: string
+          description?: string | null
           domain: string
+          favicon?: string | null
           id?: number
           last_crawled_at?: string | null
+          og?: string | null
           pathname: string
-          title: string
+          screenshot?: string | null
+          tags?: string[] | null
+          title?: string | null
         }
         Update: {
           created_at?: string
-          description?: string
+          description?: string | null
           domain?: string
+          favicon?: string | null
           id?: number
           last_crawled_at?: string | null
+          og?: string | null
           pathname?: string
-          title?: string
+          screenshot?: string | null
+          tags?: string[] | null
+          title?: string | null
         }
         Relationships: [
           {
