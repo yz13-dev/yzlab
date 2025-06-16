@@ -63,9 +63,7 @@ export function extractContent(html: string, url: string) {
   };
 }
 
-export function extractMetadata(html: string, url: string) {
-
-  const defaultData = extractContent(html, url);
+export function extractMetadata(html: string) {
 
   const $ = cheerio.load(html);
 
@@ -109,18 +107,21 @@ export function extractMetadata(html: string, url: string) {
 
   const image = imageTag?.attributes?.content;
 
+  const titleTag = tags.find(tag => tag.attributes.property === "og:title");
+  const title = titleTag?.attributes?.content;
+
+  const descriptionTag = tags.find(tag => tag.attributes.property === "og:description");
+  const description = descriptionTag?.attributes?.content;
+
   return {
-    ...defaultData,
+    title,
+    description,
     image,
     tags: onlyOgs,
   };
 }
 
-export function extractSnippets(html: string, url: string) {
-
-  const baseUrl = new URL(url);
-
-  const defaultData = extractContent(html, url);
+export function extractSnippets(html: string) {
 
   const $ = cheerio.load(html);
 
@@ -135,8 +136,6 @@ export function extractSnippets(html: string, url: string) {
 
 
   return {
-    ...defaultData,
-    domain: baseUrl.host,
     snippets,
   };
 }

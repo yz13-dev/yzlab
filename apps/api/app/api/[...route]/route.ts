@@ -1,6 +1,7 @@
 import packageJson from "@/package.json";
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
+import { auth } from "./auth/endpoint";
 import { crawl } from "./crawl/endpoint";
 import { domains } from "./domains/endpoint";
 import { indexing } from "./indexing/endpoint";
@@ -18,6 +19,7 @@ app.route("indexing", indexing);
 app.route("search", search);
 app.route("snippets", snippets);
 app.route("requests", requests);
+app.route("auth", auth);
 
 app.get("/version", (c) => {
   const version = packageJson.version;

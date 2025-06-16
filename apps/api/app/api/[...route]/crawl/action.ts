@@ -67,12 +67,11 @@ export async function crawlSnippets({ url, html }: CrawlProps) {
 
     const pathname = baseUrl.pathname;
 
-    const doc = extractSnippets(html, url);
+    const doc = extractSnippets(html);
 
     console.group("[CRAWLED]");
     console.log("URL:", baseUrl.origin);
     console.log("PATH:", baseUrl.pathname);
-    console.log("LINKS:", doc.links.length);
     console.log("SNIPPETS:", doc.snippets.length);
 
     const crawledAt = new Date().toISOString();
@@ -97,7 +96,7 @@ export async function crawlSnippets({ url, html }: CrawlProps) {
 export async function crawlMetadata({ url, html }: CrawlProps) {
   try {
 
-    const doc = extractMetadata(html, url);
+    const doc = extractMetadata(html);
 
     const crawledAt = new Date().toISOString();
 
