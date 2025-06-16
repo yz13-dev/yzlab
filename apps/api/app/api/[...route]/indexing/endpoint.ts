@@ -1,11 +1,11 @@
 import { deleteKeysByPatterns } from "@/lib/cache";
 import { fetchPageContent } from "@/lib/fetch/page";
+import { uploadScreenshot } from "@/lib/storage";
 import { serve } from "@upstash/workflow/hono";
 import { Hono } from "hono";
 import { crawlDefault, crawlMetadata, crawlScreenshot } from "../crawl/action";
 import { getNotCrawledDomain, updateDomain } from "../domains/actions";
 import { createLink, getNotCrawledLink, getRootLink, updateLink } from "../links/actions";
-import { toBase64 } from "./actions";
 
 export const indexing = new Hono();
 
@@ -103,10 +103,11 @@ indexing.post(
 
       const [defaultData, screenshotData, metadataData] = await Promise.all([defaultCrawl, screenshotCrawl, metadataCrawl])
 
-      console.log("screenshot-error", screenshotData.error)
 
-      const screenshot = screenshotData.screenshot;
+      const screenshot = screenshotData;
       const image = metadataData?.image;
+
+      const uploaded = await uploadScreenshot(link.domain, pathname, screenshot)
 
       console.log("crawl", defaultData);
 
@@ -123,7 +124,7 @@ indexing.post(
         title: defaultData.title,
         description: defaultData.description,
         favicon: defaultData.favicon,
-        screenshot: screenshot ? toBase64(screenshot) : null,
+        screenshot: uploaded?.fullPath ?? null,
         og: image,
       })
 

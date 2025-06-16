@@ -1,3 +1,4 @@
+import { imageHandler } from "@/lib/image-handler";
 import { BookmarkIcon, PlusIcon } from "lucide-react";
 import Image from "next/image";
 import type { DomainLink } from "rest-api/types/domains";
@@ -17,6 +18,8 @@ export default function ({ link }: Props) {
   const title = link.title;
   const description = link.description;
   const image = link.screenshot;
+
+  const imageURL = image ? imageHandler(image) : null;
 
   return (
     <div className="w-full h-full flex flex-col gap-2">
@@ -51,12 +54,10 @@ export default function ({ link }: Props) {
       </span>
       <div className="aspect-[640/400] w-full overflow-hidden rounded-md border relative">
         {
-          image &&
+          imageURL &&
           <Image
-            src={image}
+            src={imageURL}
             className="object-cover"
-            placeholder="blur"
-            blurDataURL={image}
             fill
             alt=""
           />

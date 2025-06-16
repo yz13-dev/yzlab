@@ -134,17 +134,12 @@ export async function crawlScreenshot({ url, fullPage = false, quality = 100 }: 
     const screenshot = await getScreenshotWithPuppeteer(url, fullPage, quality);
 
     console.groupEnd();
-    return {
-      error: null,
-      screenshot,
-    };
+    return screenshot
   } catch (error) {
     const err = error as { message: string | undefined };
     const message = err?.message;
-    return {
-      screenshot: null,
-      error: message ?? "Unknown error",
-    };
+    console.log(message)
+    return null
   }
 }
 

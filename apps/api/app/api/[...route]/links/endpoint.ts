@@ -17,7 +17,6 @@ links.get("/sites", async (c) => {
 
 links.get("/ogs", async (c) => {
   try {
-
     const links = await getRootLinksWithOgs()
     return c.json(links, 200);
   } catch (error) {
