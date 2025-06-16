@@ -121,13 +121,14 @@ indexing.post(
 
 
       const result = await updateLink(linkId, {
+        pathname,
         last_crawled_at: defaultCrawl.crawledAt,
         domain: link.domain,
         title: defaultCrawl.title,
         description: defaultCrawl.description,
         favicon: defaultCrawl.favicon,
         screenshot: screenshot ? toBase64(screenshot) : null,
-        image
+        og: image,
       })
 
       console.log("result", result);
