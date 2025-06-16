@@ -1,4 +1,5 @@
 import * as cheerio from "cheerio";
+import { checkFavicon } from "./check-favicon";
 import { detectLang } from "./code-registry/registry";
 
 export function extractContent(html: string, url: string) {
@@ -47,9 +48,19 @@ export function extractContent(html: string, url: string) {
     return false;
   });
 
-  const favicon = tags.find(tag => tag.name === "link" && tag.attributes.rel === "icon")?.attributes?.href;
+  const favicon = checkFavicon(
+    onlyMetaTags.find(
+      (tag) =>
+        tag.attributes.rel === "icon" ||
+        tag.attributes.rel === "shortcut icon" ||
+        tag.attributes.rel === "icon shortcut",
+    )?.attributes?.href ?? null,
+    baseUrl.origin,
+  );
 
-  const faviconURL = `https://${baseUrl.host}${favicon}`;
+  const isRelativeFavicon = favicon?.startsWith("/");
+
+  const faviconURL = isRelativeFavicon ? `https://${baseUrl.host}${favicon}` : favicon;
 
   const descriptionTag = tags.find(
     (tag) => tag.attributes.name === "description",
@@ -64,7 +75,7 @@ export function extractContent(html: string, url: string) {
     content: paragraphs.join("\n\n"),
     tags: onlyMetaTags,
     links: [...new Set(links)],
-    favicon: favicon ? faviconURL : undefined
+    favicon: favicon ? faviconURL ?? undefined : undefined
   };
 }
 

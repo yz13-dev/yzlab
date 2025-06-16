@@ -16,6 +16,11 @@
       "import": "./dist/const/api.mjs",
       "require": "./dist/const/api.js"
     },
+    "./links": {
+      "types": "./dist/rest/links/links.d.ts",
+      "import": "./dist/rest/links/links.mjs",
+      "require": "./dist/rest/links/links.js"
+    },
     "./requests": {
       "types": "./dist/rest/requests/requests.d.ts",
       "import": "./dist/rest/requests/requests.mjs",

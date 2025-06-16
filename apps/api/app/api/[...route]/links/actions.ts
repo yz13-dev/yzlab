@@ -172,3 +172,79 @@ export const deleteLink = async (id: number) => {
     return null;
   }
 }
+
+export const getRootLink = async (domain: string) => {
+  try {
+    const cookieStore = await cookies()
+
+    const supabase = createClient(cookieStore)
+
+    const { data, error } = await supabase
+      .from("links")
+      .select("*")
+      .eq("pathname", "/")
+      .eq("domain", domain)
+      .limit(1)
+      .maybeSingle()
+
+    if (error) {
+      throw new Error(error.message)
+    }
+
+    return data
+  } catch (error) {
+    console.log(error)
+    return null;
+  }
+}
+
+export const getRootLinks = async () => {
+  try {
+    const cookieStore = await cookies()
+
+    const supabase = createClient(cookieStore)
+
+    const { data, error } = await supabase
+      .from("links")
+      .select("*")
+      .eq("pathname", "/")
+      .not('last_crawled_at', 'is', null)
+      .not("screenshot", 'is', null)
+      .limit(20)
+
+    if (error) {
+      throw new Error(error.message)
+    }
+
+    return data ?? []
+  } catch (error) {
+    console.log(error)
+    return [];
+  }
+}
+
+export const getRootLinksWithOgs = async () => {
+  try {
+    const cookieStore = await cookies()
+
+    const supabase = createClient(cookieStore)
+
+    const { data, error } = await supabase
+      .from("links")
+      .select("*")
+      .eq("pathname", "/")
+      .not('og', 'is', null)
+      .not('last_crawled_at', 'is', null)
+      .not("og", 'is', null)
+      .limit(20)
+
+    if (error) {
+      throw new Error(error.message)
+    }
+
+    return data ?? []
+  } catch (error) {
+    console.log(error)
+    return [];
+  }
+}

@@ -3,14 +3,14 @@ import { ArrowRightIcon, BookmarkIcon, PlusIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
-import { getDomains } from "rest-api/domains";
+import { getRootLinks } from "rest-api/links";
 import Filters, { FiltersSkeleton } from "../components/filters";
 
 export default async function () {
 
-  const { data } = await getDomains()
+  const { data } = await getRootLinks()
 
-  const domains = data ?? [];
+  const links = data ?? [];
 
   return (
     <>
@@ -24,22 +24,26 @@ export default async function () {
         <div className="w-full grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6">
 
           {
-            domains.map(domain => {
-              const domainId = domain.id;
-              const favicon = domain.favicon;
+            links.map(link => {
+              const linkId = link.id;
+              const favicon = link.favicon;
 
-              const description = domain.description;
+              const domain = link.domain;
+
+              const title = link.title;
+              const description = link.description;
+              const screenshot = link.screenshot;
 
               return (
-                <div key={domainId} className="w-full h-full flex flex-col gap-2">
+                <div key={linkId} className="w-full h-full flex flex-col gap-2">
                   <div className="flex items-center justify-between">
                     <div className="w-fit items-center flex gap-2">
                       {
                         favicon
-                          ? <Image src={favicon} width={20} height={20} alt={domain.domain} />
+                          ? <Image src={favicon} width={20} height={20} alt={domain} />
                           : <div className="size-5 rounded-full bg-secondary" />
                       }
-                      <span className="text-sm text-foreground font-medium">{domain.title}</span>
+                      <span className="text-sm text-foreground line-clamp-1 font-medium">{title}</span>
                     </div>
                     <div className="w-fit items-center flex gap-2">
                       <button type="button" className="size-5 rounded-full flex items-center justify-center hover:bg-secondary">
@@ -50,10 +54,15 @@ export default async function () {
                       </button>
                     </div>
                   </div>
-                  <span className="text-xs text-muted-foreground">
+                  <span className="text-xs text-muted-foreground line-clamp-1">
                     {description ?? "Нет описания"}
                   </span>
-                  <div className="aspect-[640/400] w-full rounded-md border" />
+                  <div className="aspect-[640/400] w-full overflow-hidden rounded-md border relative">
+                    {
+                      screenshot &&
+                      <Image src={screenshot} fill alt="" />
+                    }
+                  </div>
                 </div>
               )
             })
