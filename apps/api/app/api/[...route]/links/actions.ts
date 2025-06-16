@@ -1,3 +1,4 @@
+import { expire, redis } from "@/extensions/redis"
 import { createClient } from "db/supabase/server"
 import { cookies } from "next/headers"
 import type { DomainLink, NewLink, UpdateLink } from "rest-api/types/domains"
@@ -173,6 +174,31 @@ export const deleteLink = async (id: number) => {
   }
 }
 
+export const getLinkByDomainAndPathname = async (domain: string, pathname: string) => {
+  try {
+    const cookieStore = await cookies()
+
+    const supabase = createClient(cookieStore)
+
+    const { data, error } = await supabase
+      .from("links")
+      .select("*")
+      .eq("pathname", pathname)
+      .eq("domain", domain)
+      .limit(1)
+      .maybeSingle()
+
+    if (error) {
+      throw new Error(error.message)
+    }
+
+    return data
+  } catch (error) {
+    console.log(error)
+    return null;
+  }
+}
+
 export const getRootLink = async (domain: string) => {
   try {
     const cookieStore = await cookies()
@@ -199,6 +225,13 @@ export const getRootLink = async (domain: string) => {
 }
 
 export const getRootLinks = async () => {
+
+  const key = `sites:20`
+
+  const cached = await redis.get<DomainLink[]>(key)
+
+  if (cached) return cached;
+
   try {
     const cookieStore = await cookies()
 
@@ -207,7 +240,7 @@ export const getRootLinks = async () => {
     const { data, error } = await supabase
       .from("links")
       .select("*")
-      .eq("pathname", "/")
+      // .eq("pathname", "/")
       .not('last_crawled_at', 'is', null)
       .not("screenshot", 'is', null)
       .limit(20)
@@ -215,8 +248,13 @@ export const getRootLinks = async () => {
     if (error) {
       throw new Error(error.message)
     }
+    const result = data ?? []
 
-    return data ?? []
+    if (result.length > 0) {
+      await redis.set(key, result, { ex: expire.hour })
+    }
+
+    return result
   } catch (error) {
     console.log(error)
     return [];
@@ -224,6 +262,13 @@ export const getRootLinks = async () => {
 }
 
 export const getRootLinksWithOgs = async () => {
+
+  const key = `ogs:20`
+
+  const cached = await redis.get<DomainLink[]>(key)
+
+  if (cached) return cached;
+
   try {
     const cookieStore = await cookies()
 
@@ -232,17 +277,22 @@ export const getRootLinksWithOgs = async () => {
     const { data, error } = await supabase
       .from("links")
       .select("*")
-      .eq("pathname", "/")
+      // .eq("pathname", "/")
       .not('og', 'is', null)
       .not('last_crawled_at', 'is', null)
-      .not("og", 'is', null)
       .limit(20)
 
     if (error) {
       throw new Error(error.message)
     }
 
-    return data ?? []
+    const result = data ?? []
+
+    if (result.length > 0) {
+      await redis.set(key, result, { ex: expire.hour })
+    }
+
+    return result
   } catch (error) {
     console.log(error)
     return [];

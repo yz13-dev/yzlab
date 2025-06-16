@@ -1,3 +1,4 @@
+import { deleteKeysByPatterns } from "@/lib/cache";
 import { fetchPageContent } from "@/lib/fetch/page";
 import { serve } from "@upstash/workflow/hono";
 import { Hono } from "hono";
@@ -92,20 +93,24 @@ indexing.post(
 
       const html = await fetchPageContent(domainAsUrl)
 
-      const defaultCrawl = await crawlDefault({ url: domainAsUrl, html })
+      const defaultCrawl = crawlDefault({ url: domainAsUrl, html })
 
-      const screenshotCrawl = await crawlScreenshot({ url: domainAsUrl })
+      const screenshotCrawl = crawlScreenshot({ url: domainAsUrl })
 
-      console.log("screenshot-error", screenshotCrawl.error)
 
-      const metadataCrawl = await crawlMetadata({ url: domainAsUrl, html })
+      const metadataCrawl = crawlMetadata({ url: domainAsUrl, html })
 
-      const screenshot = screenshotCrawl.screenshot;
-      const image = metadataCrawl?.image;
 
-      console.log("crawl", defaultCrawl);
+      const [defaultData, screenshotData, metadataData] = await Promise.all([defaultCrawl, screenshotCrawl, metadataCrawl])
 
-      if (!defaultCrawl) {
+      console.log("screenshot-error", screenshotData.error)
+
+      const screenshot = screenshotData.screenshot;
+      const image = metadataData?.image;
+
+      console.log("crawl", defaultData);
+
+      if (!defaultData) {
         await context.cancel();
         return null;
       }
@@ -113,11 +118,11 @@ indexing.post(
 
       const result = await updateLink(linkId, {
         pathname,
-        last_crawled_at: defaultCrawl.crawledAt,
+        last_crawled_at: defaultData.crawledAt,
         domain: link.domain,
-        title: defaultCrawl.title,
-        description: defaultCrawl.description,
-        favicon: defaultCrawl.favicon,
+        title: defaultData.title,
+        description: defaultData.description,
+        favicon: defaultData.favicon,
         screenshot: screenshot ? toBase64(screenshot) : null,
         og: image,
       })
@@ -127,6 +132,8 @@ indexing.post(
       if (!result) {
         return null;
       }
+
+      deleteKeysByPatterns(["ogs:*", "sites:*"])
 
       return link;
     });
