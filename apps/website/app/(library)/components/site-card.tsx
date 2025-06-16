@@ -1,6 +1,7 @@
 import { BookmarkIcon, PlusIcon } from "lucide-react";
 import Image from "next/image";
 import type { DomainLink } from "rest-api/types/domains";
+import { Skeleton } from "ui/components/skeleton";
 
 
 
@@ -79,7 +80,7 @@ export const CardSkeleton = () => {
         </div>
       </div>
       <div className="h-4 w-1/2 rounded-full bg-secondary" />
-      <div className="aspect-[640/400] w-full rounded-md border" />
+      <Skeleton className="aspect-[640/400] w-full rounded-md border" />
     </div>
   )
 }
