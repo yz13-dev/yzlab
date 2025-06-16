@@ -15,7 +15,7 @@ export async function fetchWithPuppeteer(url: string): Promise<string> {
   return html;
 }
 
-export async function getScreenshotWithPuppeteer(url: string, fullPage = false, quality = 100): Promise<string> {
+export async function getScreenshotWithPuppeteer(url: string, fullPage = false, quality = 100): Promise<Uint8Array<ArrayBufferLike>> {
   const browser = await puppeteer.launch({
     headless: true,
     executablePath: await chromium.executablePath(),
@@ -40,7 +40,6 @@ export async function getScreenshotWithPuppeteer(url: string, fullPage = false, 
 
   const screenshot = await page.screenshot({
     fullPage,
-    encoding: "base64",
     type: "jpeg",
     quality,
     optimizeForSpeed: true,
