@@ -1,28 +1,28 @@
-import { createClient } from "db/supabase/server";
 import { Hono } from "hono";
-import { cookies } from "next/headers";
+import { getDomainByDomain, getDomains } from "./actions";
 
 
 export const domains = new Hono();
 
+domains.get("/", async (c) => {
+  try {
+    const data = await getDomains();
+
+    return c.json(data);
+  } catch (error) {
+    console.error(error);
+    return c.json(null, 500);
+  }
+})
 
 domains.get("/:domain", async (c) => {
 
   const domain = c.req.param("domain");
 
   try {
-    const cookieStore = await cookies();
-    const client = createClient(cookieStore);
-    const { data, error } = await client
-      .from("domains")
-      .select("*")
-      .eq("domain", domain)
-      .maybeSingle();
 
-    if (error) {
-      console.log(error);
-      return c.json(null, 500);
-    }
+    const data = await getDomainByDomain(domain)
+
     return c.json(data, 200);
   } catch (error) {
     console.error(error);

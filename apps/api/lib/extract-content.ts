@@ -47,6 +47,10 @@ export function extractContent(html: string, url: string) {
     return false;
   });
 
+  const favicon = tags.find(tag => tag.name === "link" && tag.attributes.rel === "icon")?.attributes?.href;
+
+  const faviconURL = `https://${baseUrl.host}${favicon}`;
+
   const descriptionTag = tags.find(
     (tag) => tag.attributes.name === "description",
   );
@@ -60,6 +64,7 @@ export function extractContent(html: string, url: string) {
     content: paragraphs.join("\n\n"),
     tags: onlyMetaTags,
     links: [...new Set(links)],
+    favicon: favicon ? faviconURL : undefined
   };
 }
 

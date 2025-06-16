@@ -7,9 +7,26 @@ type CrawlProps = {
   url: string;
 };
 
-export async function crawlDefault({ url }: { url: string }) {
+type DefaultCrawlData = {
+  domain: string;
+  title: string;
+  description: string | undefined;
+  content: string;
+  tags: {
+    name: string;
+    attributes: {
+      [name: string]: string;
+    };
+  }[];
+  links: string[];
+  error: string | null;
+  crawledAt: string;
+  favicon?: string;
+}
+
+export async function crawlDefault({ url, html: providedHtml }: { url: string, html?: string }): Promise<DefaultCrawlData | null> {
   try {
-    const html = await fetchPageContent(url);
+    const html = providedHtml ? providedHtml : await fetchPageContent(url);
     const doc = extractContent(html, url);
 
     const crawledAt = new Date().toISOString();
@@ -24,9 +41,8 @@ export async function crawlDefault({ url }: { url: string }) {
   } catch (error) {
     const err = error as { message: string | undefined };
     const message = err?.message;
-    return {
-      error: message ?? "Unknown error",
-    };
+    console.log(message)
+    return null
   }
 }
 
@@ -108,9 +124,8 @@ export async function crawlMetadata({ url, html }: CrawlProps) {
   } catch (error) {
     const err = error as { message: string | undefined };
     const message = err?.message;
-    return {
-      error: message ?? "Unknown error",
-    };
+    console.log(message)
+    return null
   }
 }
 

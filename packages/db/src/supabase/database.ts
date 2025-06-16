@@ -101,6 +101,7 @@ export type Database = {
           created_at: string
           description: string | null
           domain: string
+          favicon: string | null
           id: number
           last_crawled_at: string | null
           og: string | null
@@ -113,6 +114,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           domain: string
+          favicon?: string | null
           id?: number
           last_crawled_at?: string | null
           og?: string | null
@@ -125,6 +127,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           domain?: string
+          favicon?: string | null
           id?: number
           last_crawled_at?: string | null
           og?: string | null

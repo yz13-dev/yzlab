@@ -5,6 +5,7 @@ import { auth } from "./auth/endpoint";
 import { crawl } from "./crawl/endpoint";
 import { domains } from "./domains/endpoint";
 import { indexing } from "./indexing/endpoint";
+import { links } from "./links/endpoint";
 import { requests } from "./requests/endpoint";
 import { search } from "./search/endpoint";
 import { snippets } from "./snippets/endpoint";
@@ -20,6 +21,7 @@ app.route("search", search);
 app.route("snippets", snippets);
 app.route("requests", requests);
 app.route("auth", auth);
+app.route("links", links);
 
 app.get("/version", (c) => {
   const version = packageJson.version;
