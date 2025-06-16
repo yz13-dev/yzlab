@@ -1,5 +1,8 @@
 import { createClient } from "db/supabase/server"
 import { cookies } from "next/headers"
+import type { Requests } from "rest-api/types/requests"
+import { createDomain, getDomainByDomain } from "../domains/actions"
+import { createLink, getLinkByDomainAndPathname } from "../links/actions"
 
 
 
@@ -61,13 +64,59 @@ export const deleteRequest = async (id: number) => {
       .delete()
       .eq("id", id)
       .select("*")
-      .single()
+      .maybeSingle()
 
     if (error) {
       throw new Error(error.message)
     }
 
     return data
+  } catch (error) {
+    console.log(error)
+    return null;
+  }
+}
+
+
+export const createFromRequest = async (request: Requests) => {
+  try {
+    const domain = new URL(request.url).host;
+    const title = request.name;
+    const description = request.description;
+
+    const existedDomain = await getDomainByDomain(domain);
+    if (!existedDomain) {
+      const newDomain = await createDomain(domain, {
+        domain,
+        title,
+        description,
+      });
+
+      console.log("domain id:", newDomain?.id);
+
+      if (!newDomain) throw new Error("Domain not created");
+    } else {
+      const url = new URL(request.url);
+
+      const domain = url.host
+      const pathname = url.pathname
+
+      const link = await getLinkByDomainAndPathname(domain, pathname)
+
+      if (!link) {
+        const newLink = await createLink(domain, {
+          domain,
+          pathname,
+          title,
+          description,
+        })
+
+        console.log("link id:", newLink?.id);
+
+        if (!newLink) throw new Error("Domain not created");
+
+      }
+    }
   } catch (error) {
     console.log(error)
     return null;

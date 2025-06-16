@@ -2,8 +2,7 @@ import { createClient } from "db/supabase/server";
 import { Hono } from "hono";
 import type { HTTPResponseError } from "hono/types";
 import { cookies } from "next/headers";
-import { createDomain } from "../domains/actions";
-import { deleteRequest, getRequest } from "./actions";
+import { createFromRequest, deleteRequest, getRequest } from "./actions";
 import { requestSchema } from "./schemas";
 
 
@@ -90,23 +89,11 @@ requests.post("/:id/accept", async (c) => {
 
     if (!request) throw new Error("Request not found");
 
-    const domain = new URL(request.url).host;
-    const title = request.name;
-    const description = request.description;
-
-    const newDomain = await createDomain(domain, {
-      domain,
-      title,
-      description,
-    });
-
-    console.log("domain id:", newDomain?.id);
-
-    if (!newDomain) throw new Error("Domain not created");
+    await createFromRequest(request);
 
     await deleteRequest(intId);
 
-    return c.json({ error: null }, 501);
+    return c.json({ error: null }, 200);
   } catch (error) {
     const err = error as HTTPResponseError;
     return c.json({ error: err.message }, 500);

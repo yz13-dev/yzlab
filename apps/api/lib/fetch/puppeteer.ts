@@ -19,22 +19,32 @@ export async function getScreenshotWithPuppeteer(url: string, fullPage = false, 
   const browser = await puppeteer.launch({
     headless: true,
     executablePath: await chromium.executablePath(),
-    args: [...chromium.args, "--no-sandbox"],
+    args: [
+      ...chromium.args,
+      "--no-sandbox",
+      ...puppeteer.defaultArgs({ headless: "shell" }),
+    ],
   });
+
   const page = await browser.newPage();
 
   // set widht and height for page
   await page.setViewport({
-    width: 1920,
-    height: 1080,
+    width: 1440,
+    height: 900,
   });
-
 
   await page.goto(url, { waitUntil: "networkidle2", timeout: 50000 });
 
   await wait(1000);
 
-  const screenshot = await page.screenshot({ fullPage, encoding: "base64", type: "jpeg", quality, optimizeForSpeed: true });
+  const screenshot = await page.screenshot({
+    fullPage,
+    encoding: "base64",
+    type: "jpeg",
+    quality,
+    optimizeForSpeed: true,
+  });
 
   await browser.close();
   return screenshot;
