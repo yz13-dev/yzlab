@@ -1,14 +1,13 @@
 import { BookmarkIcon, PlusIcon } from "lucide-react";
 import Image from "next/image";
-import { Suspense } from "react";
-import type { DomainLink } from "rest-api/types/domains";
+import type { DomainLinkWithBlur } from "rest-api/types/domains";
 import { Skeleton } from "ui/components/skeleton";
 import CardImage from "./card-image";
 
 
 
 type Props = {
-  link: DomainLink;
+  link: DomainLinkWithBlur;
 }
 
 export default function ({ link }: Props) {
@@ -21,14 +20,16 @@ export default function ({ link }: Props) {
   const description = link.description;
   const image = link.og;
 
+  const blurDataURL = link.blurImageURL;
+
   return (
     <div className="w-full h-full flex flex-col gap-2">
       <div className="flex items-center justify-between">
         <div className="w-fit items-center flex gap-2">
           {
             favicon
-              ? <Image src={favicon} width={20} height={20} alt={domain} />
-              : <div className="size-5 rounded-full bg-secondary" />
+              ? <Image src={favicon} className="shrink-0" width={20} height={20} alt={domain} />
+              : <div className="size-5 shrink-0 rounded-full bg-secondary" />
           }
           <span className="text-sm line-clamp-1 text-foreground font-medium">{title}</span>
         </div>
@@ -44,18 +45,19 @@ export default function ({ link }: Props) {
       <span className="text-xs line-clamp-1 text-muted-foreground">
         {description ?? "Нет описания"}
       </span>
-      <div className="aspect-[600/320] w-full overflow-hidden rounded-md border relative">
-        <Suspense fallback={<Skeleton className="w-full h-full" />}>
-          {
-            image &&
-            <CardImage
-              src={image}
-              className="object-cover"
-              fill
-              alt=""
-            />
-          }
-        </Suspense>
+      <div className="group/image aspect-[600/320] w-full overflow-hidden rounded-md border relative">
+        {/* <Suspense fallback={<Skeleton className="w-full h-full" />}> */}
+        {
+          image &&
+          <CardImage
+            src={image}
+            blurDataURL={blurDataURL ?? undefined}
+            className="object-cover"
+            fill
+            alt=""
+          />
+        }
+        {/* </Suspense> */}
       </div>
     </div>
   )

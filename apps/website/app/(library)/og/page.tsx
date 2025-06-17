@@ -2,15 +2,10 @@ import Header from "@/components/header";
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
-import { getRootLinksWithOgs } from "rest-api/links";
 import Filters, { FiltersSkeleton } from "../components/filters";
-import OgCard from "../components/og-card";
+import GridCards from "../components/grid-cards";
 
-export default async function () {
-
-  const { data } = await getRootLinksWithOgs()
-
-  const links = data ?? [];
+export default function () {
 
   return (
     <>
@@ -22,14 +17,7 @@ export default async function () {
 
       <div className="w-full max-w-screen-2xl mx-auto p-6">
         <div className="w-full grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6">
-
-          {
-            links.map(link => {
-              const linkId = link.id;
-              return <OgCard key={linkId} link={link} />
-            })
-          }
-
+          <GridCards type="og" />
         </div>
       </div>
       <footer className="w-full max-w-screen-2xl mx-auto p-6">

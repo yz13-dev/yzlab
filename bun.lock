@@ -17,6 +17,7 @@
       "name": "api",
       "version": "0.1.0",
       "dependencies": {
+        "@plaiceholder/next": "^3.0.0",
         "@sparticuz/chromium": "^133.0.0",
         "@upstash/qstash": "^2.8.1",
         "@upstash/redis": "^1.34.9",
@@ -25,6 +26,7 @@
         "db": "*",
         "hono": "^4.7.10",
         "next": "15.1.8",
+        "plaiceholder": "^3.0.0",
         "puppeteer": "^24.9.0",
         "rest-api": "*",
         "zod": "^3.25.64",
@@ -39,6 +41,7 @@
       "name": "website",
       "version": "0.1.0",
       "dependencies": {
+        "@plaiceholder/next": "^3.0.0",
         "@vercel/analytics": "^1.5.0",
         "ahooks": "^3.8.5",
         "lucide-react": "^0.488.0",
@@ -475,6 +478,8 @@
     "@opentelemetry/api": ["@opentelemetry/api@1.9.0", "", {}, "sha512-3giAOQvZiH5F9bMlMiv8+GSPMeqg0dbaeo58/0SlA9sxSqZhnUtxzX9/2FzyhS9sWQf5S0GJE0AKBrFqjpeYcg=="],
 
     "@pkgjs/parseargs": ["@pkgjs/parseargs@0.11.0", "", {}, "sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg=="],
+
+    "@plaiceholder/next": ["@plaiceholder/next@3.0.0", "", { "peerDependencies": { "next": ">= 10.0.0", "plaiceholder": ">=3.0.0", "sharp": ">= 0.30.6" } }, "sha512-7UK/H1X64hwo2VaxOPKMXE+OY9IgmKLPsq/xKHZ+gU07oqQSfIWWIgpVVucMB3ZgVYah+68agR15BRuSxAuMHw=="],
 
     "@puppeteer/browsers": ["@puppeteer/browsers@2.10.5", "", { "dependencies": { "debug": "^4.4.1", "extract-zip": "^2.0.1", "progress": "^2.0.3", "proxy-agent": "^6.5.0", "semver": "^7.7.2", "tar-fs": "^3.0.8", "yargs": "^17.7.2" }, "bin": { "browsers": "lib/cjs/main-cli.js" } }, "sha512-eifa0o+i8dERnngJwKrfp3dEq7ia5XFyoqB17S4gK8GhsQE4/P8nxOfQSE0zQHxzzLo/cmF+7+ywEQ7wK7Fb+w=="],
 

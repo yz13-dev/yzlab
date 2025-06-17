@@ -1,4 +1,7 @@
+import { expire, redis } from "@/extensions/redis";
+import { makeLinksImages } from "@/lib/links-images";
 import { Hono } from "hono";
+import type { DomainLinkWithBlur } from "rest-api/types/domains";
 import { createLinks, getRootLinks, getRootLinksWithOgs } from "./actions";
 
 
@@ -6,9 +9,26 @@ import { createLinks, getRootLinks, getRootLinksWithOgs } from "./actions";
 export const links = new Hono();
 
 links.get("/sites", async (c) => {
+  const blur = c.req.query("blur");
+
+  const withBlur = blur === "true";
+
   try {
+    const key = `sites:20`
+
+    const cached = await redis.get<DomainLinkWithBlur[]>(key)
+
+    if (cached) return c.json(cached, 200);
+
     const links = await getRootLinks()
-    return c.json(links, 200);
+
+    const withLinks = await makeLinksImages(links, withBlur)
+
+    if (withLinks.length > 0) {
+      await redis.set(key, withLinks, { ex: expire.hour })
+    }
+
+    return c.json(withLinks, 200);
   } catch (error) {
     console.log(error)
     return c.json([], 200);
@@ -16,9 +36,26 @@ links.get("/sites", async (c) => {
 });
 
 links.get("/ogs", async (c) => {
+  const blur = c.req.query("blur");
+
+  const withBlur = blur === "true";
+
   try {
+    const key = `ogs:20`
+
+    const cached = await redis.get<DomainLinkWithBlur[]>(key)
+
+    if (cached) return c.json(cached, 200);
+
     const links = await getRootLinksWithOgs()
-    return c.json(links, 200);
+
+    const withLinks = await makeLinksImages(links, withBlur)
+
+    if (withLinks.length > 0) {
+      await redis.set(key, withLinks, { ex: expire.hour })
+    }
+
+    return c.json(withLinks, 200);
   } catch (error) {
     console.log(error)
     return c.json([], 200);

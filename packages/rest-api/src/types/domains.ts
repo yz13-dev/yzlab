@@ -5,6 +5,10 @@ export type Domain = Tables<"domains">;
 export type DomainLink = Tables<"links">;
 export type Snippet = Tables<"snippets">;
 
+export type DomainLinkWithBlur = DomainLink & {
+  blurImageURL: string | null
+}
+
 export type DomainFull = Domain & {
   links: DomainLink[];
   snippets: Snippet[];

@@ -1,4 +1,3 @@
-import { expire, redis } from "@/extensions/redis"
 import { createClient } from "db/supabase/server"
 import { cookies } from "next/headers"
 import type { DomainLink, NewLink, UpdateLink } from "rest-api/types/domains"
@@ -226,12 +225,6 @@ export const getRootLink = async (domain: string) => {
 
 export const getRootLinks = async () => {
 
-  const key = `sites:20`
-
-  const cached = await redis.get<DomainLink[]>(key)
-
-  if (cached) return cached;
-
   try {
     const cookieStore = await cookies()
 
@@ -250,10 +243,6 @@ export const getRootLinks = async () => {
     }
     const result = data ?? []
 
-    if (result.length > 0) {
-      await redis.set(key, result, { ex: expire.hour })
-    }
-
     return result
   } catch (error) {
     console.log(error)
@@ -262,12 +251,6 @@ export const getRootLinks = async () => {
 }
 
 export const getRootLinksWithOgs = async () => {
-
-  const key = `ogs:20`
-
-  const cached = await redis.get<DomainLink[]>(key)
-
-  if (cached) return cached;
 
   try {
     const cookieStore = await cookies()
@@ -287,10 +270,6 @@ export const getRootLinksWithOgs = async () => {
     }
 
     const result = data ?? []
-
-    if (result.length > 0) {
-      await redis.set(key, result, { ex: expire.hour })
-    }
 
     return result
   } catch (error) {
