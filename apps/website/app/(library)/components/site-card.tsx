@@ -1,16 +1,15 @@
+import type { DomainLinkWithBlur } from "@/lib/links-images";
 import { BookmarkIcon, PlusIcon } from "lucide-react";
 import Image from "next/image";
-import { Suspense } from "react";
-import type { DomainLink } from "rest-api/types/domains";
 import { Skeleton } from "ui/components/skeleton";
 import CardImage from "./card-image";
 
 
 type Props = {
-  link: DomainLink;
+  link: DomainLinkWithBlur;
 }
 
-export default async function ({ link }: Props) {
+export default function ({ link }: Props) {
   const favicon = link.favicon;
 
   const domain = link.domain;
@@ -23,11 +22,11 @@ export default async function ({ link }: Props) {
     <div className="w-full h-full flex flex-col gap-2">
       <div className="flex items-center justify-between">
         <div className="w-fit items-center flex gap-2">
-          {favicon ? (
-            <Image src={favicon} width={20} height={20} alt={domain} />
-          ) : (
-            <div className="size-5 rounded-full bg-secondary" />
-          )}
+          {
+            favicon
+              ? <Image src={favicon} className="shrink-0" width={20} height={20} alt={domain} />
+              : <div className="size-5 shrink-0 rounded-full bg-secondary" />
+          }
           <span className="text-sm text-foreground line-clamp-1 font-medium">
             {title}
           </span>
@@ -51,17 +50,18 @@ export default async function ({ link }: Props) {
         {description ?? "Нет описания"}
       </span>
       <div className="aspect-[640/400] w-full overflow-hidden rounded-md border relative">
-        <Suspense fallback={<Skeleton className="w-full h-full" />}>
-          {
-            image &&
-            <CardImage
-              src={image}
-              className="object-cover"
-              fill
-              alt=""
-            />
-          }
-        </Suspense>
+        {/* <Suspense fallback={<Skeleton className="w-full h-full" />}> */}
+        {
+          image &&
+          <CardImage
+            src={image}
+            blurDataURL={link.blurImageURL ?? undefined}
+            className="object-cover"
+            fill
+            alt=""
+          />
+        }
+        {/* </Suspense> */}
       </div>
     </div>
   );

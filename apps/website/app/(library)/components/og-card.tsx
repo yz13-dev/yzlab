@@ -1,14 +1,13 @@
+import type { DomainLinkWithBlur } from "@/lib/links-images";
 import { BookmarkIcon, PlusIcon } from "lucide-react";
 import Image from "next/image";
-import { Suspense } from "react";
-import type { DomainLink } from "rest-api/types/domains";
 import { Skeleton } from "ui/components/skeleton";
 import CardImage from "./card-image";
 
 
 
 type Props = {
-  link: DomainLink;
+  link: DomainLinkWithBlur;
 }
 
 export default function ({ link }: Props) {
@@ -27,8 +26,8 @@ export default function ({ link }: Props) {
         <div className="w-fit items-center flex gap-2">
           {
             favicon
-              ? <Image src={favicon} width={20} height={20} alt={domain} />
-              : <div className="size-5 rounded-full bg-secondary" />
+              ? <Image src={favicon} className="shrink-0" width={20} height={20} alt={domain} />
+              : <div className="size-5 shrink-0 rounded-full bg-secondary" />
           }
           <span className="text-sm line-clamp-1 text-foreground font-medium">{title}</span>
         </div>
@@ -44,18 +43,19 @@ export default function ({ link }: Props) {
       <span className="text-xs line-clamp-1 text-muted-foreground">
         {description ?? "Нет описания"}
       </span>
-      <div className="aspect-[600/320] w-full overflow-hidden rounded-md border relative">
-        <Suspense fallback={<Skeleton className="w-full h-full" />}>
-          {
-            image &&
-            <CardImage
-              src={image}
-              className="object-cover"
-              fill
-              alt=""
-            />
-          }
-        </Suspense>
+      <div className="group/image aspect-[600/320] w-full overflow-hidden rounded-md border relative">
+        {/* <Suspense fallback={<Skeleton className="w-full h-full" />}> */}
+        {
+          image &&
+          <CardImage
+            src={image}
+            blurDataURL={link.blurImageURL ?? undefined}
+            className="object-cover"
+            fill
+            alt=""
+          />
+        }
+        {/* </Suspense> */}
       </div>
     </div>
   )
