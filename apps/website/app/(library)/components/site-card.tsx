@@ -1,6 +1,6 @@
-import type { DomainLinkWithBlur } from "@/lib/links-images";
 import { BookmarkIcon, PlusIcon } from "lucide-react";
 import Image from "next/image";
+import type { DomainLinkWithBlur } from "rest-api/types/domains";
 import { Skeleton } from "ui/components/skeleton";
 import CardImage from "./card-image";
 
@@ -17,6 +17,8 @@ export default function ({ link }: Props) {
   const title = link.title;
   const description = link.description;
   const image = link.screenshot;
+
+  const blurDataURL = link.blurImageURL;
 
   return (
     <div className="w-full h-full flex flex-col gap-2">
@@ -55,7 +57,7 @@ export default function ({ link }: Props) {
           image &&
           <CardImage
             src={image}
-            blurDataURL={link.blurImageURL ?? undefined}
+            blurDataURL={blurDataURL ?? undefined}
             className="object-cover"
             fill
             alt=""

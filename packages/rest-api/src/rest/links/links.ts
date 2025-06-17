@@ -1,14 +1,32 @@
 "use server"
 
-import { customFetch } from "@/const/fetch"
-import type { DomainLink } from "@/types/domains"
+import { customFetch } from "@/const/fetch";
+import type { DomainLinkWithBlur } from "@/types/domains";
 
 
 
-export async function getRootLinks() {
-  return await customFetch<DomainLink[]>("/links/sites")
+export async function getRootLinks(blur?: boolean) {
+
+  const searchParams = new URLSearchParams();
+
+  if (typeof blur === "boolean") {
+    searchParams.set("blur", blur.toString())
+  }
+
+  const path = `/links/sites?${searchParams.toString()}`
+
+  return await customFetch<DomainLinkWithBlur[]>(path)
 }
 
-export async function getRootLinksWithOgs() {
-  return await customFetch<DomainLink[]>("/links/ogs")
+export async function getRootLinksWithOgs(blur?: boolean) {
+
+  const searchParams = new URLSearchParams();
+
+  if (typeof blur === "boolean") {
+    searchParams.set("blur", blur.toString())
+  }
+
+  const path = `/links/ogs?${searchParams.toString()}`
+
+  return await customFetch<DomainLinkWithBlur[]>(path)
 }

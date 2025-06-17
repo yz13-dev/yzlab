@@ -17,6 +17,7 @@
       "name": "api",
       "version": "0.1.0",
       "dependencies": {
+        "@plaiceholder/next": "^3.0.0",
         "@sparticuz/chromium": "^133.0.0",
         "@upstash/qstash": "^2.8.1",
         "@upstash/redis": "^1.34.9",
@@ -25,6 +26,7 @@
         "db": "*",
         "hono": "^4.7.10",
         "next": "15.1.8",
+        "plaiceholder": "^3.0.0",
         "puppeteer": "^24.9.0",
         "rest-api": "*",
         "zod": "^3.25.64",
