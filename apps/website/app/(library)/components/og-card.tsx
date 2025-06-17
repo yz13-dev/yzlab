@@ -1,7 +1,9 @@
 import { BookmarkIcon, PlusIcon } from "lucide-react";
 import Image from "next/image";
+import { Suspense } from "react";
 import type { DomainLink } from "rest-api/types/domains";
 import { Skeleton } from "ui/components/skeleton";
+import CardImage from "./card-image";
 
 
 
@@ -43,17 +45,17 @@ export default function ({ link }: Props) {
         {description ?? "Нет описания"}
       </span>
       <div className="aspect-[600/320] w-full overflow-hidden rounded-md border relative">
-        {
-          image &&
-          <Image
-            src={image}
-            className="object-cover"
-            placeholder="blur"
-            blurDataURL={image}
-            fill
-            alt=""
-          />
-        }
+        <Suspense fallback={<Skeleton className="w-full h-full" />}>
+          {
+            image &&
+            <CardImage
+              src={image}
+              className="object-cover"
+              fill
+              alt=""
+            />
+          }
+        </Suspense>
       </div>
     </div>
   )

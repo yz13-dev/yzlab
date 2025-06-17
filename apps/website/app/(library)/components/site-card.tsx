@@ -1,16 +1,16 @@
-import { imageHandler } from "@/lib/image-handler";
 import { BookmarkIcon, PlusIcon } from "lucide-react";
 import Image from "next/image";
+import { Suspense } from "react";
 import type { DomainLink } from "rest-api/types/domains";
 import { Skeleton } from "ui/components/skeleton";
-
+import CardImage from "./card-image";
 
 
 type Props = {
   link: DomainLink;
 }
 
-export default function ({ link }: Props) {
+export default async function ({ link }: Props) {
   const favicon = link.favicon;
 
   const domain = link.domain;
@@ -18,8 +18,6 @@ export default function ({ link }: Props) {
   const title = link.title;
   const description = link.description;
   const image = link.screenshot;
-
-  const imageURL = image ? imageHandler(image) : null;
 
   return (
     <div className="w-full h-full flex flex-col gap-2">
@@ -53,15 +51,17 @@ export default function ({ link }: Props) {
         {description ?? "Нет описания"}
       </span>
       <div className="aspect-[640/400] w-full overflow-hidden rounded-md border relative">
-        {
-          imageURL &&
-          <Image
-            src={imageURL}
-            className="object-cover"
-            fill
-            alt=""
-          />
-        }
+        <Suspense fallback={<Skeleton className="w-full h-full" />}>
+          {
+            image &&
+            <CardImage
+              src={image}
+              className="object-cover"
+              fill
+              alt=""
+            />
+          }
+        </Suspense>
       </div>
     </div>
   );
