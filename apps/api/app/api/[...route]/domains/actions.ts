@@ -83,7 +83,7 @@ export const getDomains = async () => {
       .from("domains")
       .select("*")
       .order("created_at", { ascending: false })
-      .limit(10)
+      .limit(20)
 
     if (error) {
       throw new Error(error.message)

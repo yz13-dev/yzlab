@@ -1,5 +1,6 @@
 import { extractContent, extractMetadata, extractSnippets } from "@/lib/extract-content";
 import { fetchPageContent } from "@/lib/fetch/page";
+import { getScreenshotWithPlaywright } from "@/lib/fetch/playwright";
 import { getScreenshotWithPuppeteer } from "@/lib/fetch/puppeteer";
 
 type CrawlProps = {
@@ -131,7 +132,8 @@ export async function crawlMetadata({ url, html }: CrawlProps) {
 
 export async function crawlScreenshot({ url, fullPage = false, quality = 100 }: { url: string, fullPage?: boolean, quality?: number }) {
   try {
-    const screenshot = await getScreenshotWithPuppeteer(url, fullPage, quality);
+    const screenshot = await getScreenshotWithPlaywright(url, fullPage, quality);
+    // const screenshot = await getScreenshotWithPuppeteer(url, fullPage, quality);
 
     console.groupEnd();
     return screenshot

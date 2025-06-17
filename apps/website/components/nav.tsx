@@ -70,7 +70,9 @@ export default function () {
   const searchParams = useSearchParams()
 
   const makeLink = (href: string) => {
-    return `${href}?${searchParams.toString()}`
+    const searchString = searchParams.toString()
+    if (searchString) return `${href}?${searchParams.toString()}`
+    return href;
   }
 
   return (

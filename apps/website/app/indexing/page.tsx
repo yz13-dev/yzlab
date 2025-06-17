@@ -1,16 +1,22 @@
 import Header from "@/components/header";
-import { ArrowRightIcon, ExternalLinkIcon } from "lucide-react";
+import { ArrowRightIcon, ConstructionIcon, ExternalLinkIcon } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
+import { getDomains } from "rest-api/domains";
 import { Badge } from "ui/components/badge";
 import { Input } from "ui/components/input";
-import { Skeleton } from "ui/components/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "ui/components/table";
 
-export default function () {
+export default async function () {
+
+  const { data } = await getDomains()
+
+  const domains = data ?? [];
+
   return (
     <>
       <Header />
-      <div className="w-full max-w-2xl mx-auto p-6 min-h-dvh">
+      <div className="w-full max-w-4xl mx-auto p-6 min-h-dvh">
         <div className="w-full aspect-video flex items-center justify-center flex-col gap-10">
           <div className="flex flex-col items-center justify-center gap-4">
             <h1 className="text-4xl font-semibold text-center">
@@ -19,7 +25,10 @@ export default function () {
             <p className="text-lg text-muted-foreground text-center">
               Проверьте, есть сайт который вы ищете или нет.
             </p>
-            <Input placeholder="Поиск" />
+            {
+              false &&
+              <Input placeholder="Поиск" />
+            }
           </div>
         </div>
         <Table>
@@ -37,76 +46,54 @@ export default function () {
             </TableRow>
           </TableHeader>
           <TableBody>
-            <TableRow>
-              <TableCell>
-                <Skeleton className="size-11" />
-              </TableCell>
-              <TableCell>
-                <div className="h-fit flex flex-col">
-                  <span className="text-base font-medium">Название</span>
-                  <span className="text-muted-foreground">Описание для сайта</span>
-                </div>
-              </TableCell>
-              <TableCell>
-                <Badge variant="secondary">yz13.ru<ExternalLinkIcon /></Badge>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>
-                <Skeleton className="size-11" />
-              </TableCell>
-              <TableCell>
-                <div className="h-fit flex flex-col">
-                  <span className="text-base font-medium">Название</span>
-                  <span className="text-muted-foreground">Описание для сайта</span>
-                </div>
-              </TableCell>
-              <TableCell>
-                <Badge variant="secondary">yz13.ru<ExternalLinkIcon /></Badge>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>
-                <Skeleton className="size-11" />
-              </TableCell>
-              <TableCell>
-                <div className="h-fit flex flex-col">
-                  <span className="text-base font-medium">Название</span>
-                  <span className="text-muted-foreground">Описание для сайта</span>
-                </div>
-              </TableCell>
-              <TableCell>
-                <Badge variant="secondary">yz13.ru<ExternalLinkIcon /></Badge>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>
-                <Skeleton className="size-11" />
-              </TableCell>
-              <TableCell>
-                <div className="h-fit flex flex-col">
-                  <span className="text-base font-medium">Название</span>
-                  <span className="text-muted-foreground">Описание для сайта</span>
-                </div>
-              </TableCell>
-              <TableCell>
-                <Badge variant="secondary">yz13.ru<ExternalLinkIcon /></Badge>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>
-                <Skeleton className="size-11" />
-              </TableCell>
-              <TableCell>
-                <div className="h-fit flex flex-col">
-                  <span className="text-base font-medium">Название</span>
-                  <span className="text-muted-foreground">Описание для сайта</span>
-                </div>
-              </TableCell>
-              <TableCell>
-                <Badge variant="secondary">yz13.ru<ExternalLinkIcon /></Badge>
-              </TableCell>
-            </TableRow>
+            {
+              domains.map(domain => {
+
+                const favicon = domain.favicon;
+                const title = domain.title;
+                const description = domain.description;
+
+                const domainName = domain.domain;
+
+                return (
+                  <TableRow key={domain.id}>
+                    <TableCell>
+                      <div className="flex items-center border overflow-hidden rounded-lg justify-center size-11">
+                        {
+                          favicon
+                            ?
+                            <Image
+                              src={favicon}
+                              width={24}
+                              height={24}
+                              alt={domain.domain}
+                            />
+                            : <ConstructionIcon size={24} />
+                        }
+                      </div>
+                    </TableCell>
+                    <TableCell className="max-w-sm w-full">
+                      <div className="h-fit w-full *:block">
+                        <span className="line-clamp-1 text-base font-medium">{title}</span>
+                        <span className="line-clamp-1 text-muted-foreground">
+                          {description ?? "Нет описания"}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="secondary" asChild>
+                        <Link
+                          href={`https://${domainName}`}
+                          target="_blank"
+                        >
+                          {domainName}<ExternalLinkIcon />
+                        </Link>
+                      </Badge>
+                    </TableCell>
+                  </TableRow>
+                )
+              })
+            }
           </TableBody>
         </Table>
       </div>
