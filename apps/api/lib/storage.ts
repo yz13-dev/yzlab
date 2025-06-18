@@ -17,7 +17,7 @@ export const uploadScreenshot = async (domain: string, pathname: string, screens
 
     const { data, error } = await storage
       .from("screenshots")
-      .upload(path, screenshot, { contentType: "image/jpeg" })
+      .upload(path, screenshot, { contentType: "image/jpeg", upsert: true })
 
     if (error) {
       console.error(error)

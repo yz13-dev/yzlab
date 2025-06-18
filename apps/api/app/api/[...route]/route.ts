@@ -1,5 +1,6 @@
 import packageJson from "@/package.json";
-import { Hono } from "hono";
+import { compress } from 'hono/compress';
+import { Hono } from "hono/quick";
 import { handle } from "hono/vercel";
 import { auth } from "./auth/endpoint";
 import { crawl } from "./crawl/endpoint";
@@ -13,6 +14,8 @@ import { snippets } from "./snippets/endpoint";
 export const runtime = "nodejs";
 
 const app = new Hono().basePath("/");
+
+app.use(compress())
 
 app.route("crawl", crawl);
 app.route("domains", domains);
