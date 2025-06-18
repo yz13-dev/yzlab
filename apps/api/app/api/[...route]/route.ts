@@ -1,5 +1,5 @@
 import packageJson from "@/package.json";
-import { Hono } from "hono";
+import { Hono } from "hono/quick";
 import { handle } from "hono/vercel";
 import { auth } from "./auth/endpoint";
 import { crawl } from "./crawl/endpoint";

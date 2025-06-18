@@ -14,7 +14,7 @@ export async function getScreenshotWithPlaywright(url: string, fullPage = false,
   const page = await browser.newPage();
 
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto(url, { waitUntil: 'domcontentloaded' });
+  await page.goto(url, { waitUntil: 'networkidle' });
 
   const screenshot = await page.screenshot({
     timeout: 50000,

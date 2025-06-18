@@ -6,6 +6,7 @@ import { Hono } from "hono";
 import { crawlDefault, crawlMetadata, crawlScreenshot } from "../crawl/action";
 import { getNotCrawledDomain, updateDomain } from "../domains/actions";
 import { createLink, getNotCrawledLink, getRootLink, updateLink } from "../links/actions";
+import { reCacheLinks } from "./actions";
 
 export const indexing = new Hono();
 
@@ -147,6 +148,9 @@ indexing.post(
       }
 
       deleteKeysByPatterns(["ogs:*", "sites:*"])
+
+
+      reCacheLinks()
 
       return link;
     });
