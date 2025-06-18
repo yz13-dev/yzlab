@@ -1,5 +1,6 @@
 import * as cheerio from "cheerio";
 import { checkFavicon } from "./check-favicon";
+import { checkOg } from "./check-og";
 import { detectLang } from "./code-registry/registry";
 
 export function extractContent(html: string, url: string) {
@@ -79,7 +80,9 @@ export function extractContent(html: string, url: string) {
   };
 }
 
-export function extractMetadata(html: string) {
+export function extractMetadata(html: string, url: string) {
+
+  const baseUrl = new URL(url);
 
   const $ = cheerio.load(html);
 
@@ -119,9 +122,9 @@ export function extractMetadata(html: string) {
   })
 
 
-  const imageTag = tags.find(tag => tag.attributes.property === "og:image");
+  const imageTag = tags.find(tag => tag.attributes.property === "og:image")
 
-  const image = imageTag?.attributes?.content;
+  const image = checkOg(imageTag?.attributes?.content ?? null, baseUrl.origin);
 
   const titleTag = tags.find(tag => tag.attributes.property === "og:title");
   const title = titleTag?.attributes?.content;

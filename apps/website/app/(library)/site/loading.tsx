@@ -1,7 +1,6 @@
 import Header from "@/components/header";
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
-import { FiltersSkeleton } from "../components/filters";
 import { CardSkeleton } from "../components/site-card";
 
 
@@ -13,7 +12,7 @@ export default function () {
     <>
       <Header />
 
-      <FiltersSkeleton />
+      {/* <FiltersSkeleton /> */}
 
       <div className="w-full max-w-screen-2xl mx-auto p-6">
         <div className="w-full grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6">

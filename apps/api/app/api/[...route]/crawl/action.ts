@@ -113,7 +113,7 @@ export async function crawlSnippets({ url, html }: CrawlProps) {
 export async function crawlMetadata({ url, html }: CrawlProps) {
   try {
 
-    const doc = extractMetadata(html);
+    const doc = extractMetadata(html, url);
 
     const crawledAt = new Date().toISOString();
 

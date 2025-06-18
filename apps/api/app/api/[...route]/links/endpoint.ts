@@ -2,7 +2,7 @@ import { expire, redis } from "@/extensions/redis";
 import { makeLinksImages } from "@/lib/links-images";
 import { Hono } from "hono/quick";
 import type { DomainLinkWithBlur } from "rest-api/types/domains";
-import { createLinks, getRootLinks, getRootLinksWithOgs } from "./actions";
+import { createLinks, getOgsByTag, getRecentOgs, getRecentSites, getRootLinks, getRootLinksWithOgs, getSitesByTag } from "./actions";
 
 
 
@@ -98,6 +98,119 @@ links.get("/ogs", async (c) => {
   }
 });
 
+links.get("/sites/recent", async (c) => {
+
+  const key = "sites:recent"
+  try {
+
+    const cached = await redis.get<DomainLinkWithBlur[]>(key)
+    if (cached) {
+      return c.json(cached, 200);
+    }
+
+    const links = await getRecentSites()
+
+    const withLinks = await makeLinksImages(links, true)
+
+
+    if (withLinks.length > 0) {
+      await redis.set(key, withLinks, { ex: expire.day })
+    }
+
+    return c.json(withLinks, 200);
+  } catch (error) {
+    console.log(error)
+    return c.json([], 200);
+  }
+})
+
+links.get("/ogs/recent", async (c) => {
+
+  const key = "ogs:recent"
+  try {
+
+    const cached = await redis.get<DomainLinkWithBlur[]>(key)
+    if (cached) {
+      return c.json(cached, 200);
+    }
+
+    const links = await getRecentOgs()
+
+    const withLinks = await makeLinksImages(links, true)
+
+
+    if (withLinks.length > 0) {
+      await redis.set(key, withLinks, { ex: expire.day })
+    }
+
+    return c.json(withLinks, 200);
+  } catch (error) {
+    console.log(error)
+    return c.json([], 200);
+  }
+})
+
+links.get("/sites/tag/:tag", async (c) => {
+
+  const tag = c.req.param("tag");
+
+  console.log(tag)
+
+  if (!tag) return c.json([], 200);
+
+  const key = `sites:${tag}`
+  try {
+
+    const cached = await redis.get<DomainLinkWithBlur[]>(key)
+    if (cached) {
+      return c.json(cached, 200);
+    }
+
+    const links = await getSitesByTag(tag)
+
+    const withLinks = await makeLinksImages(links, true)
+
+
+    if (withLinks.length > 0) {
+      await redis.set(key, withLinks, { ex: expire.day })
+    }
+
+    return c.json(withLinks, 200);
+  } catch (error) {
+    console.log(error)
+    return c.json([], 200);
+  }
+})
+
+links.get("/ogs/tag/:tag", async (c) => {
+
+  const tag = c.req.param("tag");
+
+  if (!tag) return c.json([], 200);
+
+  const key = `ogs:${tag}`
+  try {
+
+    const cached = await redis.get<DomainLinkWithBlur[]>(key)
+    if (cached) {
+      return c.json(cached, 200);
+    }
+
+    const links = await getOgsByTag(tag)
+
+    const withLinks = await makeLinksImages(links, true)
+
+
+    if (withLinks.length > 0) {
+      await redis.set(key, withLinks, { ex: expire.day })
+    }
+
+    return c.json(withLinks, 200);
+  } catch (error) {
+    console.log(error)
+    return c.json([], 200);
+  }
+})
 
 links.post("/", async (c) => {
   const links = c.req.query("links");

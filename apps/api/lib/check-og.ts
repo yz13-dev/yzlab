@@ -1,4 +1,4 @@
-export function checkFavicon(url: string | null, baseUrl?: string) {
+export function checkOg(url: string | null, baseUrl?: string) {
   if (!url) return null;
   const isRelative = url.startsWith("/");
   if (isRelative) {

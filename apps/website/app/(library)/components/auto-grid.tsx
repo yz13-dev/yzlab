@@ -25,8 +25,6 @@ export default function ({ defaultLinks = [], type = "site" }: { defaultLinks?: 
 
       const newLinks = data ?? []
 
-      console.log(data)
-
       if (newLinks.length !== 0) {
         setLinks((prev) => [...prev, ...newLinks])
         setOffset(newOffset)
