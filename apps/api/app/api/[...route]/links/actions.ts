@@ -223,7 +223,14 @@ export const getRootLink = async (domain: string) => {
   }
 }
 
-export const getRootLinks = async () => {
+export const getRootLinks = async (offset?: number) => {
+
+  const step = 15;
+
+  const range = {
+    from: offset ?? 0,
+    to: (offset ?? 0) + step,
+  }
 
   try {
     const cookieStore = await cookies()
@@ -236,7 +243,8 @@ export const getRootLinks = async () => {
       // .eq("pathname", "/")
       .not('last_crawled_at', 'is', null)
       .not("screenshot", 'is', null)
-      .limit(20)
+      .order("created_at", { ascending: false })
+      .range(range.from, range.to)
 
     if (error) {
       throw new Error(error.message)
@@ -250,7 +258,14 @@ export const getRootLinks = async () => {
   }
 }
 
-export const getRootLinksWithOgs = async () => {
+export const getRootLinksWithOgs = async (offset?: number) => {
+
+  const step = 15;
+
+  const range = {
+    from: offset ?? 0,
+    to: (offset ?? 0) + step,
+  }
 
   try {
     const cookieStore = await cookies()
@@ -263,7 +278,8 @@ export const getRootLinksWithOgs = async () => {
       // .eq("pathname", "/")
       .not('og', 'is', null)
       .not('last_crawled_at', 'is', null)
-      .limit(20)
+      .order("created_at", { ascending: false })
+      .range(range.from, range.to)
 
     if (error) {
       throw new Error(error.message)

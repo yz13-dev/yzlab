@@ -12,15 +12,18 @@ links.get("/sites", async (c) => {
   const blur = c.req.query("blur");
 
   const withBlur = blur === "true";
+  const offset = c.req.query("offset");
 
   try {
-    const key = `sites:20`
+    const offsetInt = offset ? parseInt(offset) : 0;
+    const key = `sites:${offsetInt}`
+    console.log(key)
 
     const cached = await redis.get<DomainLinkWithBlur[]>(key)
 
     if (cached) return c.json(cached, 200);
 
-    const links = await getRootLinks()
+    const links = await getRootLinks(offsetInt)
 
     const withLinks = await makeLinksImages(links, withBlur)
 
@@ -39,15 +42,18 @@ links.get("/ogs", async (c) => {
   const blur = c.req.query("blur");
 
   const withBlur = blur === "true";
+  const offset = c.req.query("offset");
 
   try {
-    const key = `ogs:20`
+    const offsetInt = offset ? parseInt(offset) : 0;
+    const key = `ogs:${offsetInt}`
+    console.log(key)
 
     const cached = await redis.get<DomainLinkWithBlur[]>(key)
 
     if (cached) return c.json(cached, 200);
 
-    const links = await getRootLinksWithOgs()
+    const links = await getRootLinksWithOgs(offsetInt)
 
     const withLinks = await makeLinksImages(links, withBlur)
 

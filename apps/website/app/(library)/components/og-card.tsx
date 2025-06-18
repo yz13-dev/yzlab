@@ -1,9 +1,11 @@
+import { parseISO } from "date-fns";
+import { differenceInDays } from "date-fns/fp";
 import { BookmarkIcon, PlusIcon } from "lucide-react";
 import Image from "next/image";
 import type { DomainLinkWithBlur } from "rest-api/types/domains";
+import { Badge } from "ui/components/badge";
 import { Skeleton } from "ui/components/skeleton";
 import CardImage from "./card-image";
-
 
 
 type Props = {
@@ -22,8 +24,12 @@ export default function ({ link }: Props) {
 
   const blurDataURL = link.blurImageURL;
 
+  const createdAt = parseISO(link.created_at);
+
+  const wasCreatedMoreThanTwoDays = differenceInDays(createdAt, new Date()) > 2;
+
   return (
-    <div className="w-full h-full flex flex-col gap-2">
+    <div className="w-full h-full flex flex-col gap-2 relative">
       <div className="flex items-center justify-between">
         <div className="w-fit items-center flex gap-2">
           {
@@ -45,6 +51,10 @@ export default function ({ link }: Props) {
       <span className="text-xs line-clamp-1 text-muted-foreground">
         {description ?? "Нет описания"}
       </span>
+      {
+        !wasCreatedMoreThanTwoDays &&
+        <Badge variant="secondary" className="absolute top-14 -right-3 rotate-[30deg] z-30">Новое</Badge>
+      }
       <div className="group/image aspect-[600/320] w-full overflow-hidden rounded-md border relative">
         {/* <Suspense fallback={<Skeleton className="w-full h-full" />}> */}
         {

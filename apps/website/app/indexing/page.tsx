@@ -31,73 +31,77 @@ export default async function () {
             }
           </div>
         </div>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-16">
-                Иконка
-              </TableHead>
-              <TableHead>
-                Название
-              </TableHead>
-              <TableHead>
-                Домен
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {
-              domains.map(domain => {
+        <div className="mb-24">
+          <div className="bg-card border rounded-lg overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-16">
+                    Иконка
+                  </TableHead>
+                  <TableHead>
+                    Название
+                  </TableHead>
+                  <TableHead>
+                    Домен
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {
+                  domains.map(domain => {
 
-                const favicon = domain.favicon;
-                const title = domain.title;
-                const description = domain.description;
+                    const favicon = domain.favicon;
+                    const title = domain.title;
+                    const description = domain.description;
 
-                const domainName = domain.domain;
+                    const domainName = domain.domain;
 
-                return (
-                  <TableRow key={domain.id}>
-                    <TableCell>
-                      <div className="flex items-center border overflow-hidden rounded-lg justify-center size-11">
-                        {
-                          favicon
-                            ?
-                            <Image
-                              src={favicon}
-                              width={24}
-                              height={24}
-                              alt={domain.domain}
-                            />
-                            : <ConstructionIcon size={24} />
-                        }
-                      </div>
-                    </TableCell>
-                    <TableCell className="max-w-sm w-full">
-                      <div className="h-fit w-full *:block">
-                        <span className="line-clamp-1 text-base font-medium">{title}</span>
-                        <span className="line-clamp-1 text-muted-foreground">
-                          {description ?? "Нет описания"}
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="secondary" asChild>
-                        <Link
-                          href={`https://${domainName}`}
-                          target="_blank"
-                        >
-                          {domainName}<ExternalLinkIcon />
-                        </Link>
-                      </Badge>
-                    </TableCell>
-                  </TableRow>
-                )
-              })
-            }
-          </TableBody>
-        </Table>
+                    return (
+                      <TableRow key={domain.id}>
+                        <TableCell>
+                          <div className="flex items-center border overflow-hidden rounded-lg justify-center size-11">
+                            {
+                              favicon
+                                ?
+                                <Image
+                                  src={favicon}
+                                  width={24}
+                                  height={24}
+                                  alt={domain.domain}
+                                />
+                                : <ConstructionIcon size={24} />
+                            }
+                          </div>
+                        </TableCell>
+                        <TableCell className="max-w-sm w-full">
+                          <div className="h-fit w-full *:block">
+                            <span className="line-clamp-1 text-base font-medium">{title}</span>
+                            <span className="line-clamp-1 text-muted-foreground">
+                              {description ?? "Нет описания"}
+                            </span>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="secondary" asChild>
+                            <Link
+                              href={`https://${domainName}`}
+                              target="_blank"
+                            >
+                              {domainName}<ExternalLinkIcon />
+                            </Link>
+                          </Badge>
+                        </TableCell>
+                      </TableRow>
+                    )
+                  })
+                }
+              </TableBody>
+            </Table>
+          </div>
+        </div>
       </div>
-      <footer className="w-full max-w-screen-2xl mx-auto p-6">
+      <footer className="w-full max-w-4xl mx-auto p-6">
         <div className="flex items-center gap-2 *:w-1/3 justify-between w-full">
           <span className="text-sm text-start text-muted-foreground">Build with Love by YZ13</span>
           <span className="text-sm text-center text-muted-foreground">©2025 YZ13</span>
