@@ -13,7 +13,7 @@ indexing.post(
   "/domain",
   serve(async (context) => {
     const domain = await context.run("retrieve domains", async () => {
-      console.group("[DOMAINS]");
+      console.group("[DOMAIN]");
       const data = await getNotCrawledDomain();
 
       const domain = data
@@ -29,6 +29,12 @@ indexing.post(
       console.log("domain", domainAsUrl)
 
       const defaultCrawl = await crawlDefault({ url: domainAsUrl })
+
+      const tags = defaultCrawl?.tags ?? [];
+
+      const keywords = tags.find(tag => tag.attributes.name === "keywords")
+
+      console.log("keywords", (keywords ?? []))
 
       const links = defaultCrawl?.links ?? [];
 
@@ -75,7 +81,7 @@ indexing.post(
   "/link",
   serve(async (context) => {
     const link = await context.run("retrieve domains", async () => {
-      console.group("[DOMAINS]");
+      console.group("[LINK]");
       const data = await getNotCrawledLink();
 
       const link = data
@@ -102,6 +108,12 @@ indexing.post(
 
 
       const [defaultData, screenshotData, metadataData] = await Promise.all([defaultCrawl, screenshotCrawl, metadataCrawl])
+
+      const tags = defaultData?.tags ?? [];
+
+      const keywords = tags.find(tag => tag.attributes.name === "keywords")
+
+      console.log("keywords", (keywords ?? []))
 
 
       const screenshot = screenshotData;
