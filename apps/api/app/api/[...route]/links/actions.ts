@@ -39,7 +39,7 @@ export const getNotCrawledLink = async () => {
     const { data, error } = await supabase
       .from("links")
       .select("*")
-      .is("last_crawled_at", null)
+      .or("last_crawled_at.is.null,screenshot.is.null")
       .limit(1)
       .maybeSingle()
 

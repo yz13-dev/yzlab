@@ -81,22 +81,29 @@ indexing.post(
 indexing.post(
   "/link",
   serve(async (context) => {
-    const link = await context.run("retrieve domains", async () => {
+    const link = await context.run("retrieve link", async () => {
       console.group("[LINK]");
       const data = await getNotCrawledLink();
 
-      const link = data
-
-      if (!link) {
+      if (!data) {
         await context.cancel();
         return null;
       }
 
-      const linkId = link.id;
+      return data
+    });
+
+    const crawl = await context.run("do crawl magic", async () => {
+
+      if (!link) {
+        await context.cancel();
+        return { data: null, screenshot: null, og: null }
+      }
+
       const pathname = link.pathname;
       const domainAsUrl = `https://${link.domain}${pathname}`;
 
-      console.log("domain", domainAsUrl)
+      console.log("link", domainAsUrl)
 
       const html = await fetchPageContent(domainAsUrl)
 
@@ -108,54 +115,74 @@ indexing.post(
       const metadataCrawl = crawlMetadata({ url: domainAsUrl, html })
 
 
-      const [defaultData, screenshotData, metadataData] = await Promise.all([defaultCrawl, screenshotCrawl, metadataCrawl])
+      const [data, screenshot, metadata] = await Promise.all([defaultCrawl, screenshotCrawl, metadataCrawl])
 
-      const tags = defaultData?.tags ?? [];
+      const tags = data?.tags ?? [];
 
       const keywords = tags.find(tag => tag.attributes.name === "keywords")
 
       console.log("keywords", (keywords ?? []))
 
 
-      const screenshot = screenshotData;
-      const image = metadataData?.image;
+      const og = metadata?.image;
 
-      const uploaded = await uploadScreenshot(link.domain, pathname, screenshot)
+      if (!link.screenshot && screenshot) {
 
-      console.log("crawl", defaultData);
+        const uploaded = await uploadScreenshot(link.domain, pathname, screenshot)
 
-      if (!defaultData) {
+        if (uploaded) {
+
+          return { data, screenshot: uploaded.fullPath, og }
+        }
+      }
+
+
+      if (!data) {
+        await context.cancel();
+        return { data: null, screenshot: null, og }
+      }
+
+      return { data, screenshot: link.screenshot, og }
+    })
+
+    const result = await context.run("update link", async () => {
+
+      const { data, screenshot, og } = crawl;
+
+      if (!link) {
+        console.log("cancel because link is null")
+        await context.cancel();
+        return null;
+      }
+      if (!data) {
+        console.log("cancel because data is null")
         await context.cancel();
         return null;
       }
 
+      const linkId = link.id;
+      const pathname = link.pathname;
 
-      const result = await updateLink(linkId, {
+      const response = await updateLink(linkId, {
         pathname,
-        last_crawled_at: defaultData.crawledAt,
+        last_crawled_at: data.crawledAt,
         domain: link.domain,
-        title: defaultData.title,
-        description: defaultData.description,
-        favicon: defaultData.favicon,
-        screenshot: uploaded?.fullPath ?? null,
-        og: image,
+        title: data.title,
+        description: data.description,
+        favicon: data.favicon,
+        screenshot: screenshot ?? null,
+        og: og,
       })
-
-      console.log("result", result);
-
-      if (!result) {
-        return null;
-      }
 
       deleteKeysByPatterns(["ogs:*", "sites:*"])
 
 
       reCacheLinks()
 
-      return link;
-    });
+      return response;
+    })
 
-    return link;
+    return result
   }),
 );
 
