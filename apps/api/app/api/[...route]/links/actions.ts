@@ -293,3 +293,121 @@ export const getRootLinksWithOgs = async (offset?: number) => {
     return [];
   }
 }
+
+export const getRecentSites = async () => {
+  try {
+    const cookieStore = await cookies()
+
+    const supabase = createClient(cookieStore)
+
+    const { data, error } = await supabase
+      .from("links")
+      .select("*")
+      // .eq("pathname", "/")
+      .not('screenshot', 'is', null)
+      .not('last_crawled_at', 'is', null)
+      .order("created_at", { ascending: false })
+      .limit(8)
+
+    if (error) {
+      throw new Error(error.message)
+    }
+
+    const result = data ?? []
+
+    return result
+
+  } catch (error) {
+    console.log(error)
+    return [];
+  }
+}
+
+export const getRecentOgs = async () => {
+  try {
+    const cookieStore = await cookies()
+
+    const supabase = createClient(cookieStore)
+
+    const { data, error } = await supabase
+      .from("links")
+      .select("*")
+      // .eq("pathname", "/")
+      .not('og', 'is', null)
+      .not('last_crawled_at', 'is', null)
+      .order("created_at", { ascending: false })
+      .limit(8)
+
+    if (error) {
+      throw new Error(error.message)
+    }
+
+    const result = data ?? []
+
+    return result
+
+  } catch (error) {
+    console.log(error)
+    return [];
+  }
+}
+
+export const getSitesByTag = async (tag: string) => {
+  try {
+    const cookieStore = await cookies()
+
+    const supabase = createClient(cookieStore)
+
+    const { data, error } = await supabase
+      .from("links")
+      .select("*")
+      .contains("tags", [tag])
+      .not('screenshot', 'is', null)
+      .not('last_crawled_at', 'is', null)
+      .order("created_at", { ascending: false })
+      .limit(8)
+
+    if (error) {
+      throw new Error(error.message)
+    }
+
+    const result = data ?? []
+
+    return result
+
+  } catch (error) {
+    console.log(error)
+    return [];
+  }
+}
+
+export const getOgsByTag = async (tag: string) => {
+  try {
+    const cookieStore = await cookies()
+
+    const supabase = createClient(cookieStore)
+
+    const { data, error } = await supabase
+      .from("links")
+      .select("*")
+      .contains("tags", [tag])
+      .not('og', 'is', null)
+      .not('last_crawled_at', 'is', null)
+      .order("created_at", { ascending: false })
+      .limit(8)
+
+    console.log(tag, data, error)
+
+    if (error) {
+      throw new Error(error.message)
+    }
+
+    const result = data ?? []
+
+    return result
+
+  } catch (error) {
+    console.log(error)
+    return [];
+  }
+}

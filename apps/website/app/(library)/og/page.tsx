@@ -1,8 +1,6 @@
 import Header from "@/components/header";
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
-import { Suspense } from "react";
-import Filters, { FiltersSkeleton } from "../components/filters";
 import GridCards from "../components/grid-cards";
 
 export default function () {
@@ -11,9 +9,9 @@ export default function () {
     <>
       <Header />
 
-      <Suspense fallback={<FiltersSkeleton />}>
+      {/* <Suspense fallback={<FiltersSkeleton />}>
         <Filters />
-      </Suspense>
+      </Suspense> */}
 
       <div className="w-full max-w-screen-2xl mx-auto p-6">
         <div className="w-full grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6">

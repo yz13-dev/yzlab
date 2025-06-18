@@ -10,9 +10,10 @@ import CardImage from "./card-image";
 
 type Props = {
   link: DomainLinkWithBlur;
+  hideImage?: boolean;
 }
 
-export default function ({ link }: Props) {
+export default function ({ link, hideImage = false }: Props) {
 
   const favicon = link.favicon;
 
@@ -52,28 +53,31 @@ export default function ({ link }: Props) {
         {description ?? "Нет описания"}
       </span>
       {
-        !wasCreatedMoreThanTwoDays &&
-        <Badge variant="secondary" className="absolute top-14 -right-3 rotate-[30deg] z-30">Новое</Badge>
+        !hideImage &&
+        <>
+          {
+            !wasCreatedMoreThanTwoDays &&
+            <Badge variant="secondary" className="absolute top-14 -right-3 rotate-[30deg] z-30">Новое</Badge>
+          }
+          <div className="group/image aspect-[600/320] w-full overflow-hidden rounded-md border relative">
+            {
+              image &&
+              <CardImage
+                src={image}
+                blurDataURL={blurDataURL ?? undefined}
+                className="object-cover"
+                fill
+                alt=""
+              />
+            }
+          </div>
+        </>
       }
-      <div className="group/image aspect-[600/320] w-full overflow-hidden rounded-md border relative">
-        {/* <Suspense fallback={<Skeleton className="w-full h-full" />}> */}
-        {
-          image &&
-          <CardImage
-            src={image}
-            blurDataURL={blurDataURL ?? undefined}
-            className="object-cover"
-            fill
-            alt=""
-          />
-        }
-        {/* </Suspense> */}
-      </div>
     </div>
   )
 }
 
-export const CardSkeleton = () => {
+export const CardSkeleton = ({ hideImage = false }: { hideImage?: boolean }) => {
   return (
     <div className="w-full h-full flex flex-col gap-2">
       <div className="flex items-center justify-between">
@@ -87,7 +91,10 @@ export const CardSkeleton = () => {
         </div>
       </div>
       <div className="h-4 w-1/2 rounded-full bg-secondary" />
-      <Skeleton className="aspect-[600/320] w-full rounded-md border" />
+      {
+        !hideImage &&
+        <Skeleton className="aspect-[600/320] w-full rounded-md border" />
+      }
     </div>
   )
 }

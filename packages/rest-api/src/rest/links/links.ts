@@ -36,3 +36,20 @@ export async function getRootLinksWithOgs(blur?: boolean, offset?: number) {
 
   return await customFetch<DomainLinkWithBlur[]>(path)
 }
+
+
+export async function getRecentSites() {
+  return await customFetch<DomainLinkWithBlur[]>("/links/sites/recent")
+}
+
+export async function getRecentOgs() {
+  return await customFetch<DomainLinkWithBlur[]>("/links/ogs/recent")
+}
+
+export async function getSitesByTag(tag: string) {
+  return await customFetch<DomainLinkWithBlur[]>(`/links/sites/tag/${tag}`)
+}
+
+export async function getOgsByTag(tag: string) {
+  return await customFetch<DomainLinkWithBlur[]>(`/links/ogs/tag/${tag}`)
+}
