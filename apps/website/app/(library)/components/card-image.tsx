@@ -3,8 +3,7 @@ import { cn } from "ui/cn";
 
 
 type Props = ImageProps
-export default async function ({ className = "", src, alt, placeholder = "empty", blurDataURL, ...props }: Props) {
-
+export default function ({ className = "", src, alt, placeholder = "empty", blurDataURL, ...props }: Props) {
   return (
     <Image
       loading="lazy"

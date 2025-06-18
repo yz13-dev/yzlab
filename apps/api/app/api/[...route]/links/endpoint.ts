@@ -1,6 +1,6 @@
 import { expire, redis } from "@/extensions/redis";
 import { makeLinksImages } from "@/lib/links-images";
-import { Hono } from "hono";
+import { Hono } from "hono/quick";
 import type { DomainLinkWithBlur } from "rest-api/types/domains";
 import { createLinks, getRootLinks, getRootLinksWithOgs } from "./actions";
 
@@ -14,6 +14,8 @@ links.get("/sites", async (c) => {
   const withBlur = blur === "true";
   const offset = c.req.query("offset");
 
+  const start = performance.now()
+
   try {
     const offsetInt = offset ? parseInt(offset) : 0;
     const key = `sites:${offsetInt}`
@@ -21,19 +23,32 @@ links.get("/sites", async (c) => {
 
     const cached = await redis.get<DomainLinkWithBlur[]>(key)
 
-    if (cached) return c.json(cached, 200);
+    if (cached) {
+
+      const end = performance.now()
+      console.log(`Time taken to generate sites: ${end - start}`)
+
+      return c.json(cached, 200);
+    }
 
     const links = await getRootLinks(offsetInt)
 
     const withLinks = await makeLinksImages(links, withBlur)
 
     if (withLinks.length > 0) {
-      await redis.set(key, withLinks, { ex: expire.hour })
+      await redis.set(key, withLinks, { ex: expire.day })
     }
+
+    const end = performance.now()
+    console.log(`Time taken to generate sites: ${end - start}`)
 
     return c.json(withLinks, 200);
   } catch (error) {
     console.log(error)
+
+    const end = performance.now()
+    console.log(`Time taken to generate sites: ${end - start}`)
+
     return c.json([], 200);
   }
 });
@@ -44,6 +59,8 @@ links.get("/ogs", async (c) => {
   const withBlur = blur === "true";
   const offset = c.req.query("offset");
 
+  const start = performance.now()
+
   try {
     const offsetInt = offset ? parseInt(offset) : 0;
     const key = `ogs:${offsetInt}`
@@ -51,19 +68,32 @@ links.get("/ogs", async (c) => {
 
     const cached = await redis.get<DomainLinkWithBlur[]>(key)
 
-    if (cached) return c.json(cached, 200);
+    if (cached) {
+
+      const end = performance.now()
+      console.log(`Time taken to generate ogs: ${end - start}`)
+
+      return c.json(cached, 200);
+    }
 
     const links = await getRootLinksWithOgs(offsetInt)
 
     const withLinks = await makeLinksImages(links, withBlur)
 
     if (withLinks.length > 0) {
-      await redis.set(key, withLinks, { ex: expire.hour })
+      await redis.set(key, withLinks, { ex: expire.day })
     }
+
+    const end = performance.now()
+    console.log(`Time taken to generate ogs: ${end - start}`)
 
     return c.json(withLinks, 200);
   } catch (error) {
     console.log(error)
+
+    const end = performance.now()
+    console.log(`Time taken to generate ogs: ${end - start}`)
+
     return c.json([], 200);
   }
 });
