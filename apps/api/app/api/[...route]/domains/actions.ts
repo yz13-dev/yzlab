@@ -1,6 +1,6 @@
-import { createClient } from "db/supabase/server"
+import type { NewDomain, UpdateDomain } from "@yzlab/api/types/domains"
+import { createClient } from "@yzlab/supabase/supabase/server"
 import { cookies } from "next/headers"
-import type { NewDomain, UpdateDomain } from "rest-api/types/domains"
 
 export const getDomain = async (id: string) => {
   try {

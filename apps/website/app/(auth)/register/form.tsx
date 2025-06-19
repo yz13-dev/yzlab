@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "ui/components/button";
-import { Input } from "ui/components/input";
+import { Button } from "@yzlab/ui/components/button";
+import { Input } from "@yzlab/ui/components/input";
 
 
 export default function () {

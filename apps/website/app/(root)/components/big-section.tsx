@@ -1,4 +1,4 @@
-import { Skeleton } from "ui/components/skeleton"
+import { Skeleton } from "@yzlab/ui/components/skeleton"
 
 
 export const SectionSkeleton = ({ children = [], }: { children?: React.ReactNode }) => {

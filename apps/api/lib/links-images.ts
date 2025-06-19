@@ -1,4 +1,4 @@
-import type { DomainLink } from "rest-api/types/domains";
+import type { DomainLink } from "@yzlab/api/types/domains";
 import { imageHandler } from "./image-handler";
 import { imgBlur } from "./img-blur";
 

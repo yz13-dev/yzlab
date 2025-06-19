@@ -1,11 +1,11 @@
+import type { DomainLinkWithBlur } from "@yzlab/api/types/domains";
+import { Badge } from "@yzlab/ui/components/badge";
+import { Skeleton } from "@yzlab/ui/components/skeleton";
 import { parseISO } from "date-fns";
 import { differenceInDays } from "date-fns/fp";
 import { BookmarkIcon, PlusIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import type { DomainLinkWithBlur } from "rest-api/types/domains";
-import { Badge } from "ui/components/badge";
-import { Skeleton } from "ui/components/skeleton";
 import CardImage from "./card-image";
 
 

@@ -1,8 +1,8 @@
-import Header from "@/components/header";
+import Header from "@/components/header/header";
+import { Skeleton } from "@yzlab/ui/components/skeleton";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@yzlab/ui/components/table";
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
-import { Skeleton } from "ui/components/skeleton";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "ui/components/table";
 
 const RowSkeleton = () => {
   return (

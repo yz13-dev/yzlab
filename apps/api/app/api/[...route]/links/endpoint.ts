@@ -1,7 +1,7 @@
 import { expire, redis } from "@/extensions/redis";
 import { makeLinksImages } from "@/lib/links-images";
+import type { DomainLinkWithBlur } from "@yzlab/api/types/domains";
 import { Hono } from "hono/quick";
-import type { DomainLinkWithBlur } from "rest-api/types/domains";
 import { createLinks, getOgsByTag, getRecentOgs, getRecentSites, getRootLinks, getRootLinksWithOgs, getSitesByTag } from "./actions";
 
 

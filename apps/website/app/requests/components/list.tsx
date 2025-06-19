@@ -1,11 +1,11 @@
 "use client";
+import { acceptRequest, getRequests, rejectRequest } from "@yzlab/api/requests";
+import type { Requests } from "@yzlab/api/types/requests";
+import { Badge } from "@yzlab/ui/components/badge";
+import { Button } from "@yzlab/ui/components/button";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@yzlab/ui/components/table";
 import { CheckIcon, Loader2Icon, XIcon } from "lucide-react";
 import { useState } from "react";
-import { acceptRequest, getRequests, rejectRequest } from "rest-api/requests";
-import type { Requests } from "rest-api/types/requests";
-import { Badge } from "ui/components/badge";
-import { Button } from "ui/components/button";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "ui/components/table";
 
 
 export default function ({ requests: defaultRequests = [] }: { requests?: Requests[] }) {

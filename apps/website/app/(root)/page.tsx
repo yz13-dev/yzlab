@@ -1,5 +1,6 @@
 import Footer from "@/components/footer";
-import Header from "@/components/header";
+import Header from "@/components/header/header";
+import { showEmailSubscribe } from "@yzlab/flags";
 import { Suspense } from "react";
 import EmailSubcribe from "./components/email-subcribe";
 import OgRecentSection, { SectionSkeleton as OgRecentSectionSkeleton } from "./components/sections/recent-og-section";
@@ -7,7 +8,9 @@ import SiteRecentSection, { SectionSkeleton as SiteRecentSectionSkeleton } from 
 import SpotlightedOgSection, { SectionSkeleton as SpotlightedOgSectionSkeleton } from "./components/sections/spotlighted-og-section";
 import SpotlightedSiteSection, { SectionSkeleton as SpotlightedSiteSectionSkeleton } from "./components/sections/spotlighted-site-section";
 
-export default function () {
+export default async function () {
+
+  const showEmail = await showEmailSubscribe()
 
   return (
     <>
@@ -23,7 +26,10 @@ export default function () {
               Сайты, ресурсы. Всё в одном месте.
             </p>
           </main>
-          <EmailSubcribe />
+          {
+            showEmail &&
+            <EmailSubcribe />
+          }
         </div>
       </div>
 

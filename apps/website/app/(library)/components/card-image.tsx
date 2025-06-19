@@ -1,5 +1,5 @@
+import { cn } from "@yzlab/ui/cn";
 import Image, { type ImageProps } from "next/image";
-import { cn } from "ui/cn";
 
 
 type Props = ImageProps

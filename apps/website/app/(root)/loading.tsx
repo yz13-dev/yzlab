@@ -1,7 +1,7 @@
-import Header from "@/components/header";
+import Header from "@/components/header/header";
 import { Logo } from "@/components/logo";
-import { Button } from "ui/components/button";
-import { Input } from "ui/components/input";
+import { Button } from "@yzlab/ui/components/button";
+import { Input } from "@yzlab/ui/components/input";
 import { SectionSkeleton as OgRecentSectionSkeleton } from "./components/sections/recent-og-section";
 import { SectionSkeleton as SiteRecentSectionSkeleton } from "./components/sections/recent-site-section";
 import { SectionSkeleton as SpotlightedOgSectionSkeleton } from "./components/sections/spotlighted-og-section";

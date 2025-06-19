@@ -1,10 +1,10 @@
 "use client"
 
+import { getRootLinksWithOgs } from "@yzlab/api/links";
+import type { DomainLinkWithBlur } from "@yzlab/api/types/domains";
+import { Button } from "@yzlab/ui/components/button";
 import { Loader2Icon } from "lucide-react";
 import { useState } from "react";
-import { getRootLinksWithOgs } from "rest-api/links";
-import type { DomainLinkWithBlur } from "rest-api/types/domains";
-import { Button } from "ui/components/button";
 import OgCard from "./og-card";
 import SiteCard from "./site-card";
 

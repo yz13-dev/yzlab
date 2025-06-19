@@ -1,8 +1,8 @@
 import { expire, redis } from "@/extensions/redis";
-import { createClient } from "db/supabase/server";
+import type { Snippet } from "@yzlab/api/types/domains";
+import { createClient } from "@yzlab/supabase/supabase/server";
 import { Hono } from "hono";
 import { cookies } from "next/headers";
-import type { Snippet } from "rest-api/types/domains";
 
 export const search = new Hono();
 

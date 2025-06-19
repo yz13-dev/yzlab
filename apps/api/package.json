@@ -15,14 +15,14 @@
     "@upstash/redis": "^1.34.9",
     "@upstash/workflow": "^0.2.13",
     "cheerio": "^1.0.0",
-    "db": "*",
+    "@yzlab/supabase": "*",
     "hono": "^4.7.10",
     "next": "15.1.8",
     "plaiceholder": "^3.0.0",
     "playwright": "^1.53.0",
     "puppeteer": "^24.9.0",
     "resend": "^4.6.0",
-    "rest-api": "*",
+    "@yzlab/api": "*",
     "zod": "^3.25.64"
   },
   "devDependencies": {

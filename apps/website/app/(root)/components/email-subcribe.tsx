@@ -1,10 +1,10 @@
 "use client"
 
+import { subscribeEmail } from "@yzlab/api/email"
+import { Button } from "@yzlab/ui/components/button"
+import { Input } from "@yzlab/ui/components/input"
 import { Loader2Icon } from "lucide-react"
 import { useState } from "react"
-import { subscribeEmail } from "rest-api/email"
-import { Button } from "ui/components/button"
-import { Input } from "ui/components/input"
 
 
 export default function () {

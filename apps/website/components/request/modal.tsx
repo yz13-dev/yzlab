@@ -1,12 +1,12 @@
 "use client"
+import { createRequest } from "@yzlab/api/requests";
+import { Button } from "@yzlab/ui/components/button";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogTrigger } from "@yzlab/ui/components/dialog";
+import { Input } from "@yzlab/ui/components/input";
+import { toast } from "@yzlab/ui/components/sonner";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@yzlab/ui/components/tabs";
 import { Loader2Icon } from "lucide-react";
 import { useState } from "react";
-import { createRequest } from "rest-api/requests";
-import { Button } from "ui/components/button";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogTrigger } from "ui/components/dialog";
-import { Input } from "ui/components/input";
-import { toast } from "ui/components/sonner";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "ui/components/tabs";
 
 
 type Props = {

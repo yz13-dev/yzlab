@@ -1,5 +1,5 @@
-import { Command, CommandEmpty, CommandInput, CommandList } from "ui/components/command";
-import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "ui/components/dialog";
+import { Command, CommandEmpty, CommandInput, CommandList } from "@yzlab/ui/components/command";
+import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "@yzlab/ui/components/dialog";
 
 
 

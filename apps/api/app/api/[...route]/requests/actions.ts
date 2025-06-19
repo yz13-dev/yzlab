@@ -1,6 +1,6 @@
-import { createClient } from "db/supabase/server"
+import type { Requests } from "@yzlab/api/types/requests"
+import { createClient } from "@yzlab/supabase/supabase/server"
 import { cookies } from "next/headers"
-import type { Requests } from "rest-api/types/requests"
 import { createDomain, getDomainByDomain } from "../domains/actions"
 import { createLink, getLinkByDomainAndPathname } from "../links/actions"
 
