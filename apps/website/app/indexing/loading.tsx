@@ -43,28 +43,32 @@ export default function () {
             </p>
           </div>
         </div>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-16">
-                Иконка
-              </TableHead>
-              <TableHead>
-                Название
-              </TableHead>
-              <TableHead>
-                Домен
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {
-              rows.map(row => {
-                return <RowSkeleton key={row} />
-              })
-            }
-          </TableBody>
-        </Table>
+        <div className="mb-24">
+          <div className="bg-card border rounded-lg overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-16">
+                    Иконка
+                  </TableHead>
+                  <TableHead>
+                    Название
+                  </TableHead>
+                  <TableHead>
+                    Домен
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {
+                  rows.map(row => {
+                    return <RowSkeleton key={row} />
+                  })
+                }
+              </TableBody>
+            </Table>
+          </div>
+        </div>
       </div>
       <footer className="w-full max-w-screen-2xl mx-auto p-6">
         <div className="flex items-center gap-2 *:w-1/3 justify-between w-full">

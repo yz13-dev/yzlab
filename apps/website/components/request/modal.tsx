@@ -46,9 +46,18 @@ export default function ({ children }: Props) {
         toast("Запрос отправлен");
       }
     } catch (error) {
+      console.log(error)
     } finally {
       setLoading(false);
+      clearForm();
     }
+  }
+
+  const clearForm = () => {
+    setUrl("");
+    setName("");
+    setDescription("");
+    setEmail("");
   }
 
   return (

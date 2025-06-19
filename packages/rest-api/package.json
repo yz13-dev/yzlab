@@ -50,6 +50,11 @@
       "types": "./dist/rest/search/filters.d.ts",
       "import": "./dist/rest/search/filters.mjs",
       "require": "./dist/rest/search/filters.js"
+    },
+    "./email": {
+      "types": "./dist/rest/email/email.d.ts",
+      "import": "./dist/rest/email/email.mjs",
+      "require": "./dist/rest/email/email.js"
     }
   },
   "files": [

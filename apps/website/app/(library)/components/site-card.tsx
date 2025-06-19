@@ -2,6 +2,7 @@ import { parseISO } from "date-fns";
 import { differenceInDays } from "date-fns/fp";
 import { BookmarkIcon, PlusIcon } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import type { DomainLinkWithBlur } from "rest-api/types/domains";
 import { Badge } from "ui/components/badge";
 import { Skeleton } from "ui/components/skeleton";
@@ -27,6 +28,8 @@ export default function ({ link, hideImage = false }: Props) {
   const createdAt = parseISO(link.created_at);
 
   const wasCreatedMoreThanTwoDays = differenceInDays(createdAt, new Date()) > 2;
+
+  const domainLink = `/site/${domain}`;
 
   return (
     <div className="w-full h-full flex flex-col gap-2 relative">
@@ -66,7 +69,8 @@ export default function ({ link, hideImage = false }: Props) {
             !wasCreatedMoreThanTwoDays &&
             <Badge variant="secondary" className="absolute top-14 -right-3 rotate-[30deg] z-30">Новое</Badge>
           }
-          <div className="group/image aspect-[600/320] w-full overflow-hidden rounded-md border relative">
+          <div className="group/image aspect-[600/400] w-full overflow-hidden rounded-md border relative">
+            <Link href={domainLink} className="absolute indent-0 w-full h-full z-30" />
             {
               image &&
               <CardImage
