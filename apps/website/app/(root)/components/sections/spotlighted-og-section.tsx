@@ -1,5 +1,5 @@
 import OgCard, { CardSkeleton } from "@/app/(library)/components/og-card";
-import { getOgsByTag } from "rest-api/links";
+import { getOgsByTag } from "@yzlab/api/links";
 import Section, { SectionSkeleton as SmallSectionSkeleton } from "../small-section";
 
 

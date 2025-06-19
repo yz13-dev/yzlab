@@ -1,5 +1,5 @@
 import SiteCard, { CardSkeleton } from "@/app/(library)/components/site-card";
-import { getSitesByTag } from "rest-api/links";
+import { getSitesByTag } from "@yzlab/api/links";
 import Section, { SectionSkeleton as SmallSectionSkeleton } from "../small-section";
 
 

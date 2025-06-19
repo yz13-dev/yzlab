@@ -1,6 +1,6 @@
-import { createClient } from "db/supabase/server"
+import type { DomainLink, NewLink, UpdateLink } from "@yzlab/api/types/domains"
+import { createClient } from "@yzlab/supabase/supabase/server"
 import { cookies } from "next/headers"
-import type { DomainLink, NewLink, UpdateLink } from "rest-api/types/domains"
 
 
 

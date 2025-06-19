@@ -1,4 +1,4 @@
-import type { Tables, TablesInsert } from "db/supabase/database";
+import type { Tables, TablesInsert } from "@yzlab/supabase/supabase/database";
 
 export type Domain = Tables<"domains">;
 

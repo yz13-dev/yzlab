@@ -5,6 +5,7 @@ import { handle } from "hono/vercel";
 import { auth } from "./auth/endpoint";
 import { crawl } from "./crawl/endpoint";
 import { domains } from "./domains/endpoint";
+import { email } from "./email/endpoint";
 import { indexing } from "./indexing/endpoint";
 import { links } from "./links/endpoint";
 import { requests } from "./requests/endpoint";
@@ -25,6 +26,7 @@ app.route("snippets", snippets);
 app.route("requests", requests);
 app.route("auth", auth);
 app.route("links", links);
+app.route("email", email);
 
 app.get("/version", (c) => {
   const version = packageJson.version;

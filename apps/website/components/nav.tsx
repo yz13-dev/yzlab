@@ -1,10 +1,10 @@
 "use client"
+import { cn } from "@yzlab/ui/cn";
+import { Button } from "@yzlab/ui/components/button";
+import { Skeleton } from "@yzlab/ui/components/skeleton";
 import { AppWindowIcon, BookMarkedIcon, ImageIcon, LayoutGridIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { cn } from "ui/cn";
-import { Button } from "ui/components/button";
-import { Skeleton } from "ui/components/skeleton";
 
 type NavLink = {
   type: "link"

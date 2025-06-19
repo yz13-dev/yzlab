@@ -1,4 +1,4 @@
-import { getRootLinks, getRootLinksWithOgs } from "rest-api/links";
+import { getRootLinks, getRootLinksWithOgs } from "@yzlab/api/links";
 import AutoGrid from "./auto-grid";
 import { CardSkeleton as OgCardSkeleton } from "./og-card";
 import { CardSkeleton as SiteCardSkeleton } from "./site-card";

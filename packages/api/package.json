@@ -1,7 +1,7 @@
 {
-  "name": "rest-api",
+  "name": "@yzlab/api",
   "version": "0.0.0",
-  "description": "Package with rest-api endpoints for current monorepo",
+  "description": "Package with @yzlab/api endpoints for current monorepo",
   "exports": {
     "./lib/avatar-url": {
       "types": "./dist/lib/avatar-url.d.ts",
@@ -50,6 +50,11 @@
       "types": "./dist/rest/search/filters.d.ts",
       "import": "./dist/rest/search/filters.mjs",
       "require": "./dist/rest/search/filters.js"
+    },
+    "./email": {
+      "types": "./dist/rest/email/email.d.ts",
+      "import": "./dist/rest/email/email.mjs",
+      "require": "./dist/rest/email/email.js"
     }
   },
   "files": [
@@ -62,7 +67,7 @@
   },
   "keywords": [
     "package",
-    "rest-api"
+    "@yzlab/api"
   ],
   "author": "YZ13-dev",
   "license": "ISC",
@@ -70,7 +75,7 @@
     "@types/node": "^22.14.1",
     "@types/react": "^19.1.1",
     "typescript": "^5.8.3",
-    "db": "*"
+    "@yzlab/supabase": "*"
   },
   "dependencies": {
     "date-fns": "^4.1.0",

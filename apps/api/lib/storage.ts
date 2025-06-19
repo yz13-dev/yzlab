@@ -1,4 +1,4 @@
-import { createClient } from "db/supabase/server"
+import { createClient } from "@yzlab/supabase/supabase/server"
 import { cookies } from "next/headers"
 
 

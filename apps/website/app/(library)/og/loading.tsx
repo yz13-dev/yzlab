@@ -1,4 +1,4 @@
-import Header from "@/components/header";
+import Header from "@/components/header/header";
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import { CardSkeleton } from "../components/og-card";

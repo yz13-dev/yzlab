@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  transpilePackages: ["ui"],
+  transpilePackages: ["@yzlab/ui"],
   compress: true,
   experimental: {
     inlineCss: true,

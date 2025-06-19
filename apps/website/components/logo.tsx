@@ -1,9 +1,9 @@
+import { cn } from "@yzlab/ui/cn";
 import Image from "next/image";
 import logo_dark from "public/logo-dark.png";
 import logo_full_dark from "public/logo-full-dark.png";
 import logo_full_light from "public/logo-full-light.png";
 import logo_light from "public/logo-light.png";
-import { cn } from "ui/cn";
 
 const Logo = ({
   label,

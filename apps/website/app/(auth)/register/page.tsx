@@ -1,6 +1,6 @@
+import { Button } from "@yzlab/ui/components/button";
 import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
-import { Button } from "ui/components/button";
 import Form from "./form";
 
 

@@ -1,4 +1,4 @@
-import { createClient } from "db/supabase/server";
+import { createClient } from "@yzlab/supabase/supabase/server";
 import { Hono } from "hono";
 import type { HTTPResponseError } from "hono/types";
 import { cookies } from "next/headers";

@@ -1,4 +1,4 @@
-import type { Tables, TablesInsert, TablesUpdate } from "db/supabase/database";
+import type { Tables, TablesInsert, TablesUpdate } from "@yzlab/supabase/supabase/database";
 
 
 

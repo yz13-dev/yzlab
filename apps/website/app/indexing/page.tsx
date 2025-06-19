@@ -1,11 +1,11 @@
-import Header from "@/components/header";
+import Header from "@/components/header/header";
+import { getDomains } from "@yzlab/api/domains";
+import { Badge } from "@yzlab/ui/components/badge";
+import { Input } from "@yzlab/ui/components/input";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@yzlab/ui/components/table";
 import { ArrowRightIcon, ConstructionIcon, ExternalLinkIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { getDomains } from "rest-api/domains";
-import { Badge } from "ui/components/badge";
-import { Input } from "ui/components/input";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "ui/components/table";
 
 export default async function () {
 

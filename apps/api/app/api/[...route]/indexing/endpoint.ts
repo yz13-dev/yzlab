@@ -1,4 +1,4 @@
-import { deleteKeysByPatterns } from "@/lib/cache";
+import { clearLinksCache } from "@/lib/cache";
 import { fetchPageContent } from "@/lib/fetch/page";
 import { uploadScreenshot } from "@/lib/storage";
 import { serve } from "@upstash/workflow/hono";
@@ -174,8 +174,7 @@ indexing.post(
         og: og,
       })
 
-      deleteKeysByPatterns(["ogs:*", "sites:*"])
-
+      clearLinksCache()
 
       reCacheLinks()
 
