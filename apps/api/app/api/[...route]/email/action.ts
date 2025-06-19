@@ -18,7 +18,7 @@ export const checkEmail = (email: string) => {
 
 
 export const sendWelcomeEmail = async (email: string) => {
-  return await resend.emails.send({
+  return (await resend()).emails.send({
     from: "yz13@yz13.ru",
     to: email,
     subject: "Спасибо за подписку!",

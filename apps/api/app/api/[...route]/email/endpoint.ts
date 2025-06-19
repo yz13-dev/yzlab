@@ -1,4 +1,5 @@
-import { audienceId, resend } from "@/extensions/resend";
+import { audienceId } from "@/const/audience";
+import { resend } from "@/extensions/resend";
 import { Hono } from "hono";
 import { checkEmail, sendWelcomeEmail } from "./action";
 
@@ -23,7 +24,7 @@ email.post("/subscribe", async (c) => {
   if (!checked.email) return c.json(null);
 
   try {
-    const contacts = resend.contacts;
+    const contacts = (await resend()).contacts;
 
     const contact = await contacts.create({
       email: checked.email,
@@ -51,7 +52,7 @@ email.post("/unsubscribe", async (c) => {
   if (!checked.email) return c.json(null);
 
   try {
-    const contacts = resend.contacts;
+    const contacts = (await resend()).contacts;
 
     const contact = await contacts.remove({
       email: checked.email,
