@@ -2,7 +2,7 @@ import { createClient } from "@yzlab/supabase/supabase/server";
 import { Hono } from "hono";
 import type { HTTPResponseError } from "hono/types";
 import { cookies } from "next/headers";
-import { createFromRequest, deleteRequest, getRequest } from "./actions";
+import { createFromRequest, deleteRequest, getRequest, getRequestByLink } from "./actions";
 import { requestSchema } from "./schemas";
 
 
@@ -75,6 +75,21 @@ requests.post("/", async (c) => {
     } catch (error) {
       return c.json({ error: err.message }, 500);
     }
+  }
+})
+
+requests.get("/link", async (c) => {
+  const url = c.req.query("url")
+
+  if (!url) return c.json(null, 400);
+
+  try {
+
+    const link = await getRequestByLink(url)
+
+    return c.json(link)
+  } catch (error) {
+    return c.json(null, 500);
   }
 })
 

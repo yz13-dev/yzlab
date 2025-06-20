@@ -29,6 +29,30 @@ export const getRequest = async (id: number) => {
   }
 }
 
+export const getRequestByLink = async (link: string) => {
+  try {
+    const cookieStore = await cookies()
+
+    const supabase = createClient(cookieStore)
+
+    const { data, error } = await supabase
+      .from("index-requests")
+      .select("*")
+      .eq("url", link)
+      .limit(1)
+      .single()
+
+    if (error) {
+      throw new Error(error.message)
+    }
+
+    return data
+  } catch (error) {
+    console.log(error)
+    return null;
+  }
+}
+
 export const getRequests = async () => {
   try {
     const cookieStore = await cookies()

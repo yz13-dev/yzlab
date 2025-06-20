@@ -1,12 +1,14 @@
 import { getIndexingPreview } from "@yzlab/api/indexing";
 import { getLinkByDomainAndPathname } from "@yzlab/api/links";
+import { getRequestByLink } from "@yzlab/api/requests";
 import { cn } from "@yzlab/ui/cn";
 import { Badge } from "@yzlab/ui/components/badge";
 import { format, parseISO } from "date-fns";
 import { ru } from "date-fns/locale";
-import { CheckIcon, ImageIcon, TimerIcon, XIcon } from "lucide-react";
+import { CheckIcon, ImageIcon, Loader2Icon, TimerIcon, XIcon } from "lucide-react";
 import Image from "next/image";
 import CardImage from "../(library)/components/card-image";
+import IndexRequestButton from "./index-request-button";
 import UrlInput from "./url-input";
 
 
@@ -33,9 +35,11 @@ export default async function ({ searchParams }: PageProps) {
 
   if (!domain || !pathname) return null;
 
-  const { data: link } = await getLinkByDomainAndPathname(domain, pathname)
+  const [{ data: link }, { data: request }] = await Promise.all([getLinkByDomainAndPathname(domain, pathname), getRequestByLink(url.toString())])
 
-  const createdAt = link ? parseISO(link?.created_at) : null
+  const requested = !!request
+
+  const createdAt = link ? parseISO(link.created_at) : null
 
   const favicon = preview?.favicon;
 
@@ -53,8 +57,12 @@ export default async function ({ searchParams }: PageProps) {
 
   return (
     <>
-      <div className="w-full px-6 py-12 max-w-6xl mx-auto">
+      <div className="w-full px-6 py-12 max-w-6xl mx-auto flex items-center justify-between">
         <UrlInput defaultValue={url} />
+        {
+          !link &&
+          <IndexRequestButton url={url} disabled={requested} />
+        }
       </div>
       <div className="w-full max-w-6xl mx-auto">
         <div className=" divide-y *:p-4 *:border-x *:first:rounded-t-3xl *:last:rounded-b-3xl *:first:border-t *:last:border-b">
@@ -93,10 +101,12 @@ export default async function ({ searchParams }: PageProps) {
                   <span className="text-sm text-muted-foreground">Статус</span>
                   <span className="text-sm font-medium text-foreground flex items-center gap-1">
                     {
-                      link ? <CheckIcon size={14} /> : <XIcon size={14} />
+                      requested ? <Loader2Icon size={14} className="animate-spin" /> :
+                        link ? <CheckIcon size={14} /> : <XIcon size={14} />
                     }
                     {
-                      link ? "Проиндексирован" : "Не проиндексирован"
+                      requested ? "Запрошена ндекксация" :
+                        link ? "Проиндексирован" : "Не проиндексирован"
                     }
                   </span>
                 </div>
@@ -164,7 +174,7 @@ export default async function ({ searchParams }: PageProps) {
         <div className="w-full grid grid-cols-1 gap-4 col-span-1 *:bg-card *:rounded-xl *:border">
           <div className="w-full aspect-[600/320] overflow-hidden relative flex items-center justify-center">
             <Badge variant="secondary" className="absolute top-3 left-3 z-20">
-              {sameOgUrl ? "Совпадает с индексированным" : "Не совпадает с индексированным"}
+              {link ? sameOgUrl ? "Совпадает с индексированным" : "Не совпадает с индексированным" : "Не проиндексирован"}
             </Badge>
             {
               og ?

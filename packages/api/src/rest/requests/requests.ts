@@ -30,3 +30,8 @@ export async function rejectRequest(id: string) {
     method: "POST",
   })
 }
+
+
+export async function getRequestByLink(url: string) {
+  return await customFetch<Request | null>(`/requests/link?url=${url}`)
+}
