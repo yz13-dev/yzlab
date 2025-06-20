@@ -1,12 +1,34 @@
 import { expire, redis } from "@/extensions/redis";
-import { makeLinksImages } from "@/lib/links-images";
+import { makeLinkImage, makeLinksImages } from "@/lib/links-images";
 import type { DomainLinkWithBlur } from "@yzlab/api/types/domains";
 import { Hono } from "hono/quick";
-import { createLinks, getOgsByTag, getRecentOgs, getRecentSites, getRootLinks, getRootLinksWithOgs, getSitesByTag } from "./actions";
+import { createLinks, getLinkByDomainAndPathname, getOgsByTag, getRecentOgs, getRecentSites, getRootLinks, getRootLinksWithOgs, getSitesByTag } from "./actions";
 
 
 
 export const links = new Hono();
+
+links.get("/:domain", async (c) => {
+
+  const domain = c.req.param("domain");
+  const pathname = c.req.query("pathname");
+
+  const path = pathname ? pathname : "/";
+
+
+  try {
+    const link = await getLinkByDomainAndPathname(domain, path)
+
+    if (!link) return c.json(null, 404);
+
+    const withLink = await makeLinkImage(link, true)
+
+    return c.json(withLink, 200)
+  } catch (error) {
+    console.log(error)
+    return c.json(null, 500);
+  }
+})
 
 links.get("/sites", async (c) => {
   const blur = c.req.query("blur");

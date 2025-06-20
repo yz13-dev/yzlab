@@ -1,4 +1,5 @@
 "use client"
+import { isURLValid } from "@/lib/url-check";
 import { createRequest } from "@yzlab/api/requests";
 import { Button } from "@yzlab/ui/components/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogTrigger } from "@yzlab/ui/components/dialog";
@@ -13,7 +14,7 @@ type Props = {
   children?: React.ReactNode
 }
 
-const isURLValid = (url: string) => url.match(/^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)$/);
+
 
 export default function ({ children }: Props) {
   const [open, setOpen] = useState<boolean>(false);

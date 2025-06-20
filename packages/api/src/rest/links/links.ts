@@ -3,7 +3,10 @@
 import { customFetch } from "@/const/fetch";
 import type { DomainLinkWithBlur } from "@/types/domains";
 
-
+export async function getLinkByDomainAndPathname(domain: string, pathname: string) {
+  const path = `/links/${domain}?pathname=${pathname}`
+  return await customFetch<DomainLinkWithBlur | null>(path)
+}
 
 export async function getRootLinks(blur?: boolean, offset?: number) {
 
