@@ -8,7 +8,7 @@ import { createLinks, getLinkByDomainAndPathname, getOgsByTag, getRecentOgs, get
 
 export const links = new Hono();
 
-links.get("/:domain", async (c) => {
+links.get("/all/:domain", async (c) => {
 
   const domain = c.req.param("domain");
   const pathname = c.req.query("pathname");
