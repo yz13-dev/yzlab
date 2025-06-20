@@ -1,10 +1,11 @@
+import Favicon from "@/components/favicon";
+import { makeLink } from "@/lib/make-a-link";
 import type { DomainLinkWithBlur } from "@yzlab/api/types/domains";
 import { Badge } from "@yzlab/ui/components/badge";
 import { Skeleton } from "@yzlab/ui/components/skeleton";
 import { parseISO } from "date-fns";
 import { differenceInDays } from "date-fns/fp";
 import { BookmarkIcon, PlusIcon } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import CardImage from "./card-image";
 
@@ -30,17 +31,13 @@ export default function ({ link, hideImage = false }: Props) {
 
   const wasCreatedMoreThanTwoDays = differenceInDays(createdAt, new Date()) > 2;
 
-  const domainLink = `/og/${domain}`;
+  const domainLink = makeLink(link);
 
   return (
     <div className="w-full h-full flex flex-col gap-2 relative">
       <div className="flex items-center justify-between">
         <div className="w-fit items-center flex gap-2">
-          {
-            favicon
-              ? <Image src={favicon} className="shrink-0" width={20} height={20} alt={domain} />
-              : <div className="size-5 shrink-0 rounded-full bg-secondary" />
-          }
+          <Favicon url={favicon} />
           <span className="text-sm line-clamp-1 text-foreground font-medium">{title}</span>
         </div>
         <div className="w-fit hidden items-center gap-2">

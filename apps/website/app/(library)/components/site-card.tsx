@@ -1,3 +1,4 @@
+import { makeLink } from "@/lib/make-a-link";
 import type { DomainLinkWithBlur } from "@yzlab/api/types/domains";
 import { Badge } from "@yzlab/ui/components/badge";
 import { Skeleton } from "@yzlab/ui/components/skeleton";
@@ -29,7 +30,7 @@ export default function ({ link, hideImage = false }: Props) {
 
   const wasCreatedMoreThanTwoDays = differenceInDays(createdAt, new Date()) > 2;
 
-  const domainLink = `/site/${domain}`;
+  const domainLink = makeLink(link);
 
   return (
     <div className="w-full h-full flex flex-col gap-2 relative">

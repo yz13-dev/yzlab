@@ -1,4 +1,5 @@
-import { permanentRedirect } from "next/navigation"
+import { increaseClicks } from "@yzlab/api/links"
+import { redirect } from "next/navigation"
 
 
 type PageProps = {
@@ -13,7 +14,11 @@ export default async function ({ params, searchParams }: PageProps) {
   const { domain } = await params;
   const { path } = await searchParams;
 
-  const route = `/${domain}?path=${path}`
+  const { data } = await increaseClicks({ domain, path })
 
-  return permanentRedirect(route)
+  console.log(data)
+
+  const url = `https://${domain}${path ? path : "/"}`
+
+  return redirect(url)
 }
