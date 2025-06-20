@@ -8,6 +8,9 @@ export type Snippet = Tables<"snippets">;
 export type DomainLinkWithBlur = DomainLink & {
   blurImageURL: string | null
 }
+export type DomainLinkWithBufferScreenshot = Omit<DomainLink, "screenshot"> & {
+  screenshot: Buffer<ArrayBufferLike> | null
+}
 
 export type DomainFull = Domain & {
   links: DomainLink[];

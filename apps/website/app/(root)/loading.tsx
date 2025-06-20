@@ -1,7 +1,6 @@
 import Header from "@/components/header/header";
 import { Logo } from "@/components/logo";
-import { Button } from "@yzlab/ui/components/button";
-import { Input } from "@yzlab/ui/components/input";
+import { Skeleton } from "@yzlab/ui/components/skeleton";
 import { SectionSkeleton as OgRecentSectionSkeleton } from "./components/sections/recent-og-section";
 import { SectionSkeleton as SiteRecentSectionSkeleton } from "./components/sections/recent-site-section";
 import { SectionSkeleton as SpotlightedOgSectionSkeleton } from "./components/sections/spotlighted-og-section";
@@ -16,17 +15,17 @@ export default function () {
 
       <div className="w-full max-w-screen-2xl mx-auto p-6">
         <div className="border w-full rounded-lg flex flex-col gap-8 items-center justify-center h-96">
-          <div className="flex flex-col gap-4">
+          <main className="flex flex-col gap-4">
             <h3 className="text-4xl font-semibold max-w-xl text-center">
-              Множество сайтов, ресурсов собранны в одном месте.
+              Множество сайтов, ресурсов собранны для вас.
             </h3>
             <p className="text-lg text-muted-foreground text-center">
-              Сайты, ресуры. Еженедельные обновления.
+              Сайты, ресурсы. Всё в одном месте.
             </p>
-          </div>
+          </main>
           <div className="flex items-center gap-2">
-            <Input placeholder="user@example.com" />
-            <Button variant="default">Подписаться</Button>
+            <Skeleton className="max-w-xs w-full h-9" />
+            <Skeleton className="w-28 h-9" />
           </div>
         </div>
       </div>
