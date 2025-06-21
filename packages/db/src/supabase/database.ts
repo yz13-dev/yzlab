@@ -33,6 +33,27 @@ export type Database = {
         }
         Relationships: []
       }
+      "auth-codes": {
+        Row: {
+          code: string
+          created_at: string
+          expires_at: string
+          id: number
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          expires_at: string
+          id?: number
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          expires_at?: string
+          id?: number
+        }
+        Relationships: []
+      }
       domains: {
         Row: {
           created_at: string
@@ -41,7 +62,7 @@ export type Database = {
           favicon: string | null
           id: string
           last_crawled_at: string | null
-          tags: Json[] | null
+          tags: string[] | null
           title: string | null
         }
         Insert: {
@@ -51,7 +72,7 @@ export type Database = {
           favicon?: string | null
           id?: string
           last_crawled_at?: string | null
-          tags?: Json[] | null
+          tags?: string[] | null
           title?: string | null
         }
         Update: {
@@ -61,7 +82,7 @@ export type Database = {
           favicon?: string | null
           id?: string
           last_crawled_at?: string | null
-          tags?: Json[] | null
+          tags?: string[] | null
           title?: string | null
         }
         Relationships: []
@@ -98,6 +119,7 @@ export type Database = {
       }
       links: {
         Row: {
+          clicks: number | null
           created_at: string
           description: string | null
           domain: string
@@ -111,6 +133,7 @@ export type Database = {
           title: string | null
         }
         Insert: {
+          clicks?: number | null
           created_at?: string
           description?: string | null
           domain: string
@@ -124,6 +147,7 @@ export type Database = {
           title?: string | null
         }
         Update: {
+          clicks?: number | null
           created_at?: string
           description?: string | null
           domain?: string

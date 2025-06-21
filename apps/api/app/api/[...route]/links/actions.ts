@@ -411,3 +411,60 @@ export const getOgsByTag = async (tag: string) => {
     return [];
   }
 }
+
+
+export const increaseClicks = async (id: number) => {
+  try {
+
+    const cookieStore = await cookies()
+
+    const supabase = createClient(cookieStore)
+
+    const link = await getLink(id)
+
+
+    const { data, error } = await supabase.from("links").update({
+      clicks: (link?.clicks ?? 0) + 1
+    })
+      .eq("id", id)
+      .select("*")
+      .maybeSingle()
+
+    if (error) {
+      throw new Error(error.message)
+    }
+
+    return data
+  } catch (error) {
+    console.log(error)
+    return null;
+  }
+}
+
+export const increaseClicksByDomainAndPath = async (domain: string, path: string) => {
+  try {
+
+    const cookieStore = await cookies()
+
+    const supabase = createClient(cookieStore)
+
+    const link = await getLinkByDomainAndPathname(domain, path)
+
+    const { data, error } = await supabase.from("links").update({
+      clicks: (link?.clicks ?? 0) + 1
+    })
+      .eq("domain", domain)
+      .eq("pathname", path)
+      .select("*")
+      .maybeSingle()
+
+    if (error) {
+      throw new Error(error.message)
+    }
+
+    return data
+  } catch (error) {
+    console.log(error)
+    return null;
+  }
+}

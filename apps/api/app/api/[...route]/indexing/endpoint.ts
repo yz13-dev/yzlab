@@ -105,6 +105,9 @@ indexing.post(
       const pathname = link.pathname;
       const domainAsUrl = `https://${link.domain}${pathname}`;
 
+      const hasOgTag = (link.tags ?? []).find(tag => tag === "og")
+      const hasSiteTag = (link.tags ?? []).find(tag => tag === "site")
+
       console.log("link", domainAsUrl)
 
       const html = await fetchPageContent(domainAsUrl)
@@ -112,7 +115,6 @@ indexing.post(
       const defaultCrawl = crawlDefault({ url: domainAsUrl, html })
 
       const screenshotCrawl = crawlScreenshot({ url: domainAsUrl })
-
 
       const metadataCrawl = crawlMetadata({ url: domainAsUrl, html })
 
@@ -231,6 +233,11 @@ indexing.post("/preview", async (c) => {
 
     console.log("keywords", (keywords ?? []))
 
+    const themeColors = tags.filter(tag => tag.attributes.name === "theme-color")
+
+    const themed = themeColors.length > 0
+
+    console.log("[LINK]: Can be themed?", themed)
 
     const og = metadata?.image;
 
@@ -256,6 +263,7 @@ indexing.post("/preview", async (c) => {
   // console.log("og", !!og)
 
   const domainLink: DomainLinkWithBufferScreenshot = {
+    clicks: -1,
     pathname,
     last_crawled_at: formatISO(new Date()),
     domain,

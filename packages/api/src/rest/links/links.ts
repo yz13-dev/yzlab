@@ -56,3 +56,19 @@ export async function getSitesByTag(tag: string) {
 export async function getOgsByTag(tag: string) {
   return await customFetch<DomainLinkWithBlur[]>(`/links/ogs/tag/${tag}`)
 }
+
+export async function increaseClicks({ domain, id, path }: { id?: number, domain?: string, path?: string }) {
+
+  const searchParams = new URLSearchParams()
+
+  if (domain) searchParams.set("domain", domain)
+  if (path) searchParams.set("path", path)
+  if (id) searchParams.set("id", String(id))
+
+  return await customFetch<number>(`/links/count/increase?${searchParams.toString()}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "plain/text",
+    }
+  })
+}

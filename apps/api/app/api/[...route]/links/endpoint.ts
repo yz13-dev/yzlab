@@ -2,11 +2,27 @@ import { expire, redis } from "@/extensions/redis";
 import { makeLinkImage, makeLinksImages } from "@/lib/links-images";
 import type { DomainLinkWithBlur } from "@yzlab/api/types/domains";
 import { Hono } from "hono/quick";
-import { createLinks, getLinkByDomainAndPathname, getOgsByTag, getRecentOgs, getRecentSites, getRootLinks, getRootLinksWithOgs, getSitesByTag } from "./actions";
+import { createLinks, getLinkByDomainAndPathname, getOgsByTag, getRecentOgs, getRecentSites, getRootLinks, getRootLinksWithOgs, getSitesByTag, increaseClicks, increaseClicksByDomainAndPath } from "./actions";
 
 
 
 export const links = new Hono();
+
+links.post("/count/increase", async (c) => {
+
+  const id = c.req.query("id");
+
+  const path = c.req.query("path");
+  const domain = c.req.query("domain");
+
+  if (!id && !path && !domain) return c.json(null, 200);
+
+  if (id) return c.json(await increaseClicks(parseInt(id)), 200);
+
+  if (domain && path) return c.json(await increaseClicksByDomainAndPath(domain, path), 200);
+
+  return c.json(null, 200);
+})
 
 links.get("/all/:domain", async (c) => {
 

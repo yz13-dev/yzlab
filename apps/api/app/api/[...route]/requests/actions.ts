@@ -40,7 +40,7 @@ export const getRequestByLink = async (link: string) => {
       .select("*")
       .eq("url", link)
       .limit(1)
-      .single()
+      .maybeSingle()
 
     if (error) {
       throw new Error(error.message)
@@ -108,12 +108,15 @@ export const createFromRequest = async (request: Requests) => {
     const title = request.name;
     const description = request.description;
 
+    const type = request.type;
+
     const existedDomain = await getDomainByDomain(domain);
     if (!existedDomain) {
       const newDomain = await createDomain(domain, {
         domain,
         title,
         description,
+        tags: [type],
       });
 
       console.log("domain id:", newDomain?.id);
@@ -133,6 +136,7 @@ export const createFromRequest = async (request: Requests) => {
           pathname,
           title,
           description,
+          tags: [type],
         })
 
         console.log("link id:", newLink?.id);
