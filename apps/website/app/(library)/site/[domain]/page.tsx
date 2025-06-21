@@ -13,7 +13,7 @@ export default async function ({ params, searchParams }: PageProps) {
   const { domain } = await params;
   const { path } = await searchParams;
 
-  const route = `/${domain}?path=${path}`
+  const route = `/${domain}?path=${path ?? "/"}`
 
   return permanentRedirect(route)
 }

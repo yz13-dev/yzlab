@@ -163,6 +163,11 @@ indexing.post(
         await context.cancel();
         return null;
       }
+      if (!data.title && !data.description) {
+        console.log("cancel because title or description is null")
+        await context.cancel();
+        return null;
+      }
 
       const linkId = link.id;
       const pathname = link.pathname;
