@@ -8,7 +8,7 @@ import { Hono } from "hono";
 import { crawlDefault, crawlMetadata, crawlScreenshot } from "../crawl/action";
 import { getNotCrawledDomain, updateDomain } from "../domains/actions";
 import { createLink, getNotCrawledLink, getRootLink, updateLink } from "../links/actions";
-import { reCacheLinks } from "./actions";
+import { getFullIndexing, getOgIndexing, getSiteIndexing, reCacheLinks } from "./actions";
 
 export const indexing = new Hono();
 
@@ -107,46 +107,58 @@ indexing.post(
 
       const hasOgTag = (link.tags ?? []).find(tag => tag === "og")
       const hasSiteTag = (link.tags ?? []).find(tag => tag === "site")
+      const hasBothTags = hasOgTag && hasSiteTag;
 
-      console.log("link", domainAsUrl)
+      console.log("[LINK]:", domainAsUrl)
 
-      const html = await fetchPageContent(domainAsUrl)
+      if (hasBothTags) {
 
-      const defaultCrawl = crawlDefault({ url: domainAsUrl, html })
+        const { data, screenshot, metadata } = await getFullIndexing(domainAsUrl)
 
-      const screenshotCrawl = crawlScreenshot({ url: domainAsUrl })
-
-      const metadataCrawl = crawlMetadata({ url: domainAsUrl, html })
-
-
-      const [data, screenshot, metadata] = await Promise.all([defaultCrawl, screenshotCrawl, metadataCrawl])
-
-      const tags = data?.tags ?? [];
-
-      const keywords = tags.find(tag => tag.attributes.name === "keywords")
-
-      console.log("keywords", (keywords ?? []))
+        const og = metadata?.image;
 
 
-      const og = metadata?.image;
+        if (!link.screenshot && screenshot) {
 
-      if (!link.screenshot && screenshot) {
+          const uploaded = await uploadScreenshot(link.domain, pathname, screenshot)
 
-        const uploaded = await uploadScreenshot(link.domain, pathname, screenshot)
+          if (uploaded) {
 
-        if (uploaded) {
-
-          return { data, screenshot: uploaded.fullPath, og }
+            return { data, screenshot: uploaded.fullPath, og }
+          }
         }
+
+        return { data, screenshot: null, og }
       }
 
+      if (hasOgTag) {
 
-      if (!data) {
-        await context.cancel();
-        return { data: null, screenshot: null, og }
+        const { data, metadata } = await getOgIndexing(domainAsUrl)
+
+        const og = metadata?.image;
+
+        return { data, screenshot: null, og }
       }
 
-      return { data, screenshot: link.screenshot, og }
+      if (hasSiteTag) {
+
+        const { data, screenshot } = await getSiteIndexing(domainAsUrl)
+
+        if (!link.screenshot && screenshot) {
+
+          const uploaded = await uploadScreenshot(link.domain, pathname, screenshot)
+
+          if (uploaded) {
+
+            return { data, screenshot: uploaded.fullPath, og: null }
+          }
+        }
+
+        return { data, screenshot: null, og: null }
+      }
+
+      await context.cancel();
+      return { data: null, screenshot: null, og: null }
     })
 
     const result = await context.run("update link", async () => {

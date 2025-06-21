@@ -111,12 +111,15 @@ export const createFromRequest = async (request: Requests) => {
     const type = request.type;
 
     const existedDomain = await getDomainByDomain(domain);
+
+    const tags = type === "full" ? ["site", "og"] : [type]
+
     if (!existedDomain) {
       const newDomain = await createDomain(domain, {
         domain,
         title,
         description,
-        tags: [type],
+        tags,
       });
 
       console.log("domain id:", newDomain?.id);
@@ -136,7 +139,7 @@ export const createFromRequest = async (request: Requests) => {
           pathname,
           title,
           description,
-          tags: [type],
+          tags,
         })
 
         console.log("link id:", newLink?.id);
