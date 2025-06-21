@@ -16,8 +16,6 @@ export default async function ({ params, searchParams }: PageProps) {
 
   const { data } = await increaseClicks({ domain, path })
 
-  console.log(data)
-
   const url = `https://${domain}${path ? path : "/"}`
 
   return redirect(url)
