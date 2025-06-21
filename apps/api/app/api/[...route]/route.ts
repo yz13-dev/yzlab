@@ -3,6 +3,7 @@ import { compress } from 'hono/compress';
 import { Hono } from "hono/quick";
 import { handle } from "hono/vercel";
 import { auth } from "./auth/endpoint";
+import { codes } from "./codes/endpoint";
 import { crawl } from "./crawl/endpoint";
 import { domains } from "./domains/endpoint";
 import { email } from "./email/endpoint";
@@ -25,6 +26,7 @@ app.route("search", search);
 app.route("snippets", snippets);
 app.route("requests", requests);
 app.route("auth", auth);
+app.route("auth/codes", codes);
 app.route("links", links);
 app.route("email", email);
 

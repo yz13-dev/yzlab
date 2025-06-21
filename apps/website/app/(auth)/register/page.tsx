@@ -4,7 +4,14 @@ import Link from "next/link";
 import Form from "./form";
 
 
-export default function () {
+type PageProps = {
+  searchParams: Promise<{
+    as?: string;
+  }>
+}
+export default async function ({ searchParams }: PageProps) {
+  const { as } = await searchParams
+  const asAdmin = as === "admin"
   return (
     <div className="max-w-3xl w-full h-80 grid grid-cols-2 *:p-6 bg-card border rounded-2xl">
       <div className="w-full h-full">
@@ -15,13 +22,13 @@ export default function () {
                 <ArrowLeftIcon />
               </Link>
             </Button>
-            <h1 className="text-2xl font-medium">Регистрация пользователя</h1>
+            <h1 className="text-2xl font-medium">Регистрация</h1>
           </div>
           <p className="block text-base text-muted-foreground">Создайте аккаунт для продолжения работы.</p>
         </div>
       </div>
       <div className="w-full h-full flex flex-col">
-        <Form />
+        <Form admin={asAdmin} />
       </div>
     </div>
   )
