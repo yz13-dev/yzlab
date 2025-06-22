@@ -30,3 +30,29 @@ export const uploadScreenshot = async (domain: string, pathname: string, screens
     return null
   }
 }
+
+export const deleteScreenshot = async (domain: string, pathname: string) => {
+  try {
+    const cookieStore = await cookies()
+
+    const supabase = createClient(cookieStore)
+
+    const storage = supabase.storage
+
+    const path = [domain, pathname, "screenshot.jpg"]
+
+    const { data, error } = await storage
+      .from("screenshots")
+      .remove(path)
+
+    if (error) {
+      console.error(error)
+      throw new Error("Failed to delete screenshot")
+    }
+
+    return data
+  } catch (error) {
+    console.error(error)
+    return null
+  }
+}

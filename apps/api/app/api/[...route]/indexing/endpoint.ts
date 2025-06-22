@@ -1,13 +1,13 @@
 import { clearLinksCache } from "@/lib/cache";
 import { fetchPageContent } from "@/lib/fetch/page";
-import { uploadScreenshot } from "@/lib/storage";
+import { deleteScreenshot, uploadScreenshot } from "@/lib/storage";
 import { serve } from "@upstash/workflow/hono";
 import { DomainLinkWithBufferScreenshot } from "@yzlab/api/types/domains";
 import { formatISO } from "date-fns";
 import { Hono } from "hono";
 import { crawlDefault, crawlMetadata, crawlScreenshot } from "../crawl/action";
 import { getNotCrawledDomain, updateDomain } from "../domains/actions";
-import { createLink, getNotCrawledLink, getRootLink, updateLink } from "../links/actions";
+import { createLink, getNotCrawledLink, getOldCrawledLink, getRootLink, updateLink } from "../links/actions";
 import { getFullIndexing, getOgIndexing, getSiteIndexing, reCacheLinks } from "./actions";
 
 export const indexing = new Hono();
@@ -20,6 +20,8 @@ indexing.post(
       const data = await getNotCrawledDomain();
 
       const domain = data
+
+      const domainTags = domain?.tags ?? [];
 
       if (!domain) {
         await context.cancel();
@@ -48,6 +50,7 @@ indexing.post(
         await createLink(domain.domain, {
           domain: domain.domain,
           pathname: "/",
+          tags: domainTags,
         })
       }
 
@@ -85,14 +88,19 @@ indexing.post(
   serve(async (context) => {
     const link = await context.run("retrieve link", async () => {
       console.group("[LINK]");
-      const data = await getNotCrawledLink();
 
-      if (!data) {
+      const oldIndexed = getOldCrawledLink();
+
+      const notIndexed = getNotCrawledLink();
+
+      const [old, not] = await Promise.all([oldIndexed, notIndexed]);
+
+      if (!old && !not) {
         await context.cancel();
         return null;
       }
 
-      return data
+      return not ? not : old
     });
 
     const crawl = await context.run("do crawl magic", async () => {
@@ -109,6 +117,8 @@ indexing.post(
       const hasSiteTag = (link.tags ?? []).find(tag => tag === "site")
       const hasBothTags = hasOgTag && hasSiteTag;
 
+      if (!hasSiteTag && link.screenshot) await deleteScreenshot(link.domain, link.pathname)
+
       console.log("[LINK]:", domainAsUrl)
 
       if (hasBothTags) {
@@ -118,7 +128,7 @@ indexing.post(
         const og = metadata?.image;
 
 
-        if (!link.screenshot && screenshot) {
+        if (screenshot) {
 
           const uploaded = await uploadScreenshot(link.domain, pathname, screenshot)
 
@@ -144,7 +154,7 @@ indexing.post(
 
         const { data, screenshot } = await getSiteIndexing(domainAsUrl)
 
-        if (!link.screenshot && screenshot) {
+        if (screenshot) {
 
           const uploaded = await uploadScreenshot(link.domain, pathname, screenshot)
 

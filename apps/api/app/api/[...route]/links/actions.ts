@@ -1,7 +1,7 @@
 import type { DomainLink, NewLink, UpdateLink } from "@yzlab/api/types/domains"
 import { createClient } from "@yzlab/supabase/supabase/server"
+import { formatISO, setMonth } from "date-fns"
 import { cookies } from "next/headers"
-
 
 
 
@@ -39,7 +39,36 @@ export const getNotCrawledLink = async () => {
     const { data, error } = await supabase
       .from("links")
       .select("*")
-      .or("last_crawled_at.is.null,screenshot.is.null")
+      .is("last_crawled_at", null)
+      .limit(1)
+      .maybeSingle()
+
+    if (error) {
+      throw new Error(error.message)
+    }
+
+    return data
+  } catch (error) {
+    console.log(error)
+    return null;
+  }
+}
+
+export const getOldCrawledLink = async () => {
+  try {
+    const cookieStore = await cookies()
+
+    const supabase = createClient(cookieStore)
+
+    const currentDate = new Date()
+    const monthBefore = setMonth(currentDate, currentDate.getMonth() - 1)
+
+    const { data, error } = await supabase
+      .from("links")
+      .select("*")
+      .not('last_crawled_at', 'is', null)
+      .lte("last_crawled_at", formatISO(monthBefore))
+      .order("created_at", { ascending: false })
       .limit(1)
       .maybeSingle()
 
