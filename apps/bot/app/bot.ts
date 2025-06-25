@@ -1,6 +1,6 @@
 import { hydrate, HydrateFlavor } from "@grammyjs/hydrate";
 import { Bot, Context, InlineKeyboard } from "grammy";
-import { getRequests, acceptRequest, rejectRequest } from "@/lib/api";
+import { getRequests, acceptRequest, rejectRequest } from "@yzlab/api/requests";
 
 type BotContext = HydrateFlavor<Context>;
 const BOT_TOKEN = process.env.BOT_TOKEN ?? "";
