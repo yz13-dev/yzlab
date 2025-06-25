@@ -1,6 +1,6 @@
 import { hydrate, HydrateFlavor } from "@grammyjs/hydrate";
 import { Bot, Context, InlineKeyboard } from "grammy";
-import { getRequests, acceptRequest, rejectRequest } from "@yzlab/api/requests";
+import { getRequests, acceptRequest, rejectRequest, createRequest } from "@/lib/api";
 
 type BotContext = HydrateFlavor<Context>;
 const BOT_TOKEN = process.env.BOT_TOKEN ?? "";
@@ -28,21 +28,101 @@ bot.use(async (ctx, next) => {
 bot.command("start", async (ctx) => {
   // Check if this is the authorized chat
   if (AUTHORIZED_CHAT_ID && ctx.chat?.id.toString() === AUTHORIZED_CHAT_ID) {
-    // Authorized user - show actual commands
+    // Authorized user - show admin commands
     await bot.api.setMyCommands([
       {
         command: "requests",
         description: "Показать запросы на индексацию",
       },
+      {
+        command: "request",
+        description: "Отправить запрос на индексацию",
+      },
     ]);
 
-    await ctx.reply("Привет! Используй /requests для просмотра запросов на индексацию.");
+    await ctx.reply("Привет! Используй /requests для просмотра запросов или /request для отправки нового запроса.");
   } else {
-    // Unauthorized user - show empty commands
-    await bot.api.setMyCommands([]);
+    // Unauthorized user - show only public commands
+    await bot.api.setMyCommands([
+      {
+        command: "request",
+        description: "Отправить запрос на индексацию",
+      },
+    ]);
     
-    // Don't send any response to unauthorized users
-    console.log(`Unauthorized access attempt from chat ID: ${ctx.chat?.id}`);
+    await ctx.reply("Привет! Используй /request для отправки запроса на индексацию сайта.");
+  }
+});
+
+// Command for submitting index requests (available to all users)
+bot.command("request", async (ctx) => {
+  const message = `📝 <b>Отправка запроса на индексацию</b>\n\n` +
+    `Отправьте мне сообщение в формате:\n` +
+    `<code>/submit https://example.com</code>\n\n` +
+    `<b>Типы индексации:</b>\n` +
+    `• <code>/submit https://example.com full</code> - полная индексация\n` +
+    `• <code>/submit https://example.com site</code> - только скриншот\n` +
+    `• <code>/submit https://example.com og</code> - только OG метаданные`;
+
+  await ctx.reply(message, {
+    parse_mode: "HTML",
+  });
+});
+
+// Command for submitting requests via bot
+bot.command("submit", async (ctx) => {
+  const args = ctx.message?.text?.split(' ');
+  
+  if (!args || args.length < 2) {
+    await ctx.reply("❌ Неправильный формат. Используйте:\n<code>/submit https://example.com [type]</code>", {
+      parse_mode: "HTML"
+    });
+    return;
+  }
+
+  const url = args[1];
+  const type = args[2] || "full";
+
+  // Validate URL
+  if (!url) {
+    await ctx.reply("❌ Неверный URL. Пожалуйста, укажите корректную ссылку.");
+    return;
+  }
+
+  try {
+    new URL(url);
+  } catch {
+    await ctx.reply("❌ Неверный URL. Пожалуйста, укажите корректную ссылку.");
+    return;
+  }
+
+  // Validate type
+  if (!["full", "site", "og"].includes(type)) {
+    await ctx.reply("❌ Неверный тип. Доступные типы: full, site, og");
+    return;
+  }
+
+  try {
+    // Create request using the API wrapper
+    await createRequest({
+      url,
+      type,
+      name: `Запрос от ${ctx.from?.first_name || 'пользователя'}`,
+      description: `Запрос отправлен через Telegram бота`,
+      email: null,
+    });
+    
+    await ctx.reply(`✅ <b>Запрос отправлен!</b>\n\n` +
+      `🌐 <b>URL:</b> ${url}\n` +
+      `📋 <b>Тип:</b> ${type}\n` +
+      `📅 <b>Время:</b> ${new Date().toLocaleString('ru-RU')}\n\n` +
+      `Ваш запрос будет рассмотрен в ближайшее время.`, {
+      parse_mode: "HTML"
+    });
+
+  } catch (error) {
+    console.error("Error creating request:", error);
+    await ctx.reply("❌ Ошибка при отправке запроса. Попробуйте позже или используйте веб-форму: https://yzlab.ru/preview");
   }
 });
 

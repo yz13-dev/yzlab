@@ -39,4 +39,27 @@ export async function rejectRequest(id: string) {
     console.error('Error rejecting request:', error);
     throw error;
   }
+}
+
+export async function createRequest(data: {
+  url: string;
+  type: string;
+  name?: string;
+  description?: string;
+  email?: string | null;
+}) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/requests`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) throw new Error('Failed to create request');
+    return await response.json();
+  } catch (error) {
+    console.error('Error creating request:', error);
+    throw error;
+  }
 } 
