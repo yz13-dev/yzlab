@@ -6,12 +6,19 @@ const API_BASE_URL = "https://api.yzlab.ru";
 
 export async function getRequests() {
   try {
+    console.log('Fetching requests from:', `${API_BASE_URL}/requests`);
     const response = await fetch(`${API_BASE_URL}/requests`);
+    console.log('Response status:', response.status);
+    
     if (!response.ok) throw new Error('Failed to fetch requests');
-    return await response.json();
+    
+    const result = await response.json();
+    console.log('API response:', result);
+    
+    return result; // Return data array directly
   } catch (error) {
     console.error('Error fetching requests:', error);
-    return { data: null };
+    return []; // Return empty array instead of { data: null }
   }
 }
 

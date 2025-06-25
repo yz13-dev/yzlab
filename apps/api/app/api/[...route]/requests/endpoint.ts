@@ -67,6 +67,7 @@ requests.post("/", async (c) => {
     return c.json(data)
   } catch (error) {
     const err = error as HTTPResponseError;
+    console.log(err.message);
     try {
 
       const parsedErrorMessage = JSON.parse(err.message);

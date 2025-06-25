@@ -6,5 +6,5 @@ export const requestSchema = z.object({
   type: z.enum(["site", "og", "full"]),
   name: z.string().optional(),
   description: z.string().optional(),
-  email: z.string().optional(),
+  email: z.string().optional().nullable(),
 })
