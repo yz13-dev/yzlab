@@ -3,10 +3,8 @@
  */
 const nextConfig = {
   transpilePackages: ["@yzlab/api"],
+  serverExternalPackages: ["grammy"],
   compress: true,
-  experimental: {
-    serverComponentsExternalPackages: ["grammy"],
-  },
 };
 
 export default nextConfig;
