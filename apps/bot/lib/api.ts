@@ -9,7 +9,7 @@ let acceptRequest: any;
 let rejectRequest: any;
 
 try {
-  const api = require("@yzlab/api/requests");
+  const api = await import("@yzlab/api/requests");
   getRequests = api.getRequests;
   acceptRequest = api.acceptRequest;
   rejectRequest = api.rejectRequest;
