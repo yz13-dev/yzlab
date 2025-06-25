@@ -1,48 +1,10 @@
 import { hydrate, HydrateFlavor } from "@grammyjs/hydrate";
 import { Bot, Context, InlineKeyboard } from "grammy";
+import { getRequests, acceptRequest, rejectRequest } from "@yzlab/api/requests";
 
 type BotContext = HydrateFlavor<Context>;
 const BOT_TOKEN = process.env.BOT_TOKEN ?? "";
 const AUTHORIZED_CHAT_ID = process.env.AUTHORIZED_CHAT_ID;
-const API_BASE_URL = "https://api.yzlab.ru";
-
-// API functions
-async function getRequests() {
-  try {
-    const response = await fetch(`${API_BASE_URL}/requests`);
-    if (!response.ok) throw new Error('Failed to fetch requests');
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching requests:', error);
-    return { data: null };
-  }
-}
-
-async function acceptRequest(id: string) {
-  try {
-    const response = await fetch(`${API_BASE_URL}/requests/${id}/accept`, {
-      method: 'POST',
-    });
-    if (!response.ok) throw new Error('Failed to accept request');
-    return await response.json();
-  } catch (error) {
-    console.error('Error accepting request:', error);
-    throw error;
-  }
-}
-
-async function rejectRequest(id: string) {
-  try {
-    const response = await fetch(`${API_BASE_URL}/requests/${id}/reject`, {
-      method: 'POST',
-    });
-    if (!response.ok) throw new Error('Failed to reject request');
-    return await response.json();
-  } catch (error) {
-    console.error('Error rejecting request:', error);
-    throw error;
-  }
-}
 
 export const bot = new Bot<BotContext>(BOT_TOKEN);
 

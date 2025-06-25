@@ -19,18 +19,22 @@ BOT_TOKEN=your_telegram_bot_token_here
 AUTHORIZED_CHAT_ID=your_authorized_chat_id_here
 ```
 
+The API_BASE_URL is hardcoded to `https://api.yzlab.ru` in the bot code.
+
 ### Getting the Chat ID
 
 To get your chat ID:
 1. Start a conversation with your bot
-2. Send any message to the bot
-3. Check the bot logs or use the Telegram API to get the chat ID
+2. Send `/chatid` to the bot (temporary command for setup)
+3. The bot will reply with your chat ID
 4. Set this ID in the `AUTHORIZED_CHAT_ID` environment variable
+5. Remove the `/chatid` command from the code after setup
 
 ## Commands
 
-- `/start` - Initialize the bot and show available commands
+- `/start` - Initialize the bot and show available commands (only for authorized users)
 - `/requests` - Show all pending index requests with accept/reject buttons
+- `/chatid` - Get your chat ID (temporary, remove after setup)
 
 ## Usage
 
@@ -42,4 +46,11 @@ To get your chat ID:
 
 ## Security
 
-The bot will only respond to messages from the chat ID specified in `AUTHORIZED_CHAT_ID`. All other messages will be ignored and logged. 
+The bot will only respond to messages from the chat ID specified in `AUTHORIZED_CHAT_ID`. All other messages will be ignored and logged. Unauthorized users will see no bot commands in their Telegram interface.
+
+## Troubleshooting
+
+If you encounter import issues:
+- Make sure all dependencies are installed: `bun install`
+- The bot uses direct API calls instead of package imports
+- Check that your API is accessible at `https://api.yzlab.ru` 
