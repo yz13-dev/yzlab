@@ -32,7 +32,7 @@ const MONO = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "YZLAB",
-  description: "Lab",
+  description: "Множество сайтов, ресурсов собранны для вас.",
 };
 
 const isDev = process.env.NODE_ENV === "development";

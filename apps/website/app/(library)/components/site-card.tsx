@@ -70,7 +70,7 @@ export default function ({ link, hideImage = false }: Props) {
             !wasCreatedMoreThanTwoDays &&
             <Badge variant="secondary" className="absolute top-14 -right-3 rotate-[30deg] z-30">Новое</Badge>
           }
-          <div className="group/image aspect-[600/400] w-full overflow-hidden rounded-md border relative">
+          <div className="group/image aspect-[16/10] w-full overflow-hidden rounded-md border relative">
             <Link href={domainLink} className="absolute indent-0 w-full h-full z-30" />
             {
               image &&
