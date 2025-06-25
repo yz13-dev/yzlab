@@ -105,7 +105,7 @@ export const CardSkeleton = ({ hideImage = false }: { hideImage?: boolean }) => 
       <div className="h-4 w-1/2 rounded-full bg-secondary" />
       {
         !hideImage &&
-        <Skeleton className="aspect-[640/400] w-full rounded-md border" />
+        <Skeleton className="aspect-[16/10] w-full rounded-md border" />
       }
     </div>
   )
