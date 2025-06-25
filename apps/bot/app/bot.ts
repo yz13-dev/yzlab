@@ -1,38 +1,167 @@
 import { hydrate, HydrateFlavor } from "@grammyjs/hydrate";
-import { Menu } from "@grammyjs/menu";
-import { Bot, Context, InlineKeyboard, InlineQueryResultBuilder } from "grammy";
+import { Bot, Context, InlineKeyboard } from "grammy";
+import { getRequests, acceptRequest, rejectRequest } from "@yzlab/api/requests";
 
 type BotContext = HydrateFlavor<Context>;
 const BOT_TOKEN = process.env.BOT_TOKEN ?? "";
+const AUTHORIZED_CHAT_ID = process.env.AUTHORIZED_CHAT_ID;
 
 export const bot = new Bot<BotContext>(BOT_TOKEN);
 
-const menu = new Menu("services-menu").text("Все услуги").row();
-
 bot.use(hydrate());
-bot.use(menu);
 
-bot.command("start", async (ctx) => {
-  await bot.api.setMyCommands([
-    {
-      command: "services",
-      description: "Показать список услуг",
-    },
-  ]);
-
-  const inlineKeyboard = new InlineKeyboard().text("Услуги", "click-services");
-
-  await ctx.reply("Привет! Чем могу помочь?", {
-    reply_markup: inlineKeyboard,
-  });
+// Middleware to check if the chat is authorized
+bot.use(async (ctx, next) => {
+  if (!AUTHORIZED_CHAT_ID) {
+    console.warn("AUTHORIZED_CHAT_ID not set in environment variables");
+    return;
+  }
+  
+  if (ctx.chat?.id.toString() !== AUTHORIZED_CHAT_ID) {
+    console.log(`Unauthorized access attempt from chat ID: ${ctx.chat?.id}`);
+    return;
+  }
+  
+  await next();
 });
 
-bot.command("user", async (ctx) => {});
+bot.command("start", async (ctx) => {
+  // Check if this is the authorized chat
+  if (AUTHORIZED_CHAT_ID && ctx.chat?.id.toString() === AUTHORIZED_CHAT_ID) {
+    // Authorized user - show actual commands
+    await bot.api.setMyCommands([
+      {
+        command: "requests",
+        description: "Показать запросы на индексацию",
+      },
+    ]);
 
-bot.inlineQuery("website", async (ctx) => {
-  const result = InlineQueryResultBuilder.article("id:website", "Сайт", {
-    reply_markup: new InlineKeyboard().url("YZ13 Website", "https://yz13.ru/"),
-  }).text(`<b>YZ13</b> - Фронтенд разработчик`, { parse_mode: "HTML" });
+    await ctx.reply("Привет! Используй /requests для просмотра запросов на индексацию.");
+  } else {
+    // Unauthorized user - show empty commands
+    await bot.api.setMyCommands([]);
+    
+    // Don't send any response to unauthorized users
+    console.log(`Unauthorized access attempt from chat ID: ${ctx.chat?.id}`);
+  }
+});
 
-  await ctx.answerInlineQuery([result], { cache_time: 24 * 3600 });
+// Temporary command to get chat ID - remove this after setup
+bot.command("chatid", async (ctx) => {
+  await ctx.reply(`Your Chat ID is: ${ctx.chat?.id}`);
+});
+
+bot.command("requests", async (ctx) => {
+  // Check authorization before processing
+  if (!AUTHORIZED_CHAT_ID || ctx.chat?.id.toString() !== AUTHORIZED_CHAT_ID) {
+    console.log(`Unauthorized access attempt from chat ID: ${ctx.chat?.id}`);
+    return;
+  }
+
+  try {
+    const { data: requests } = await getRequests();
+    
+    if (!requests || requests.length === 0) {
+      await ctx.reply("Нет активных запросов на индексацию.");
+      return;
+    }
+
+    await ctx.reply(`Найдено ${requests.length} запросов на индексацию:`);
+    
+    for (const request of requests) {
+      const url = new URL(request.url);
+      const domain = url.hostname;
+      const title = request.name || "Не указано";
+      const description = request.description || "Не указано";
+      const email = request.email || "Не указано";
+      const type = request.type;
+      
+      const message = `🌐 <b>${domain}</b>\n` +
+        `📝 <b>Название:</b> ${title}\n` +
+        `📄 <b>Описание:</b> ${description}\n` +
+        `📧 <b>Email:</b> ${email}\n` +
+        `🔗 <b>URL:</b> ${request.url}\n` +
+        `📋 <b>Тип:</b> ${type}\n` +
+        `📅 <b>Создан:</b> ${new Date(request.created_at).toLocaleString('ru-RU')}`;
+      
+      const keyboard = new InlineKeyboard()
+        .text("✅ Принять", `accept_${request.id}`)
+        .text("❌ Отклонить", `reject_${request.id}`);
+      
+      await ctx.reply(message, {
+        parse_mode: "HTML",
+        reply_markup: keyboard,
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching requests:", error);
+    await ctx.reply("Ошибка при получении запросов.");
+  }
+});
+
+// Handle accept button clicks
+bot.callbackQuery(/^accept_(\d+)$/, async (ctx) => {
+  // Check authorization before processing
+  if (!AUTHORIZED_CHAT_ID || ctx.chat?.id.toString() !== AUTHORIZED_CHAT_ID) {
+    console.log(`Unauthorized callback attempt from chat ID: ${ctx.chat?.id}`);
+    return;
+  }
+
+  const requestId = ctx.match?.[1];
+  
+  if (!requestId) {
+    await ctx.answerCallbackQuery("❌ Ошибка: ID запроса не найден");
+    return;
+  }
+  
+  try {
+    await acceptRequest(requestId);
+    await ctx.answerCallbackQuery("✅ Запрос принят!");
+    
+    // Update the message to show it was accepted
+    const keyboard = new InlineKeyboard().text("✅ Принято", "accepted");
+    await ctx.editMessageReplyMarkup({ reply_markup: keyboard });
+  } catch (error) {
+    console.error("Error accepting request:", error);
+    await ctx.answerCallbackQuery("❌ Ошибка при принятии запроса.");
+  }
+});
+
+// Handle reject button clicks
+bot.callbackQuery(/^reject_(\d+)$/, async (ctx) => {
+  // Check authorization before processing
+  if (!AUTHORIZED_CHAT_ID || ctx.chat?.id.toString() !== AUTHORIZED_CHAT_ID) {
+    console.log(`Unauthorized callback attempt from chat ID: ${ctx.chat?.id}`);
+    return;
+  }
+
+  const requestId = ctx.match?.[1];
+  
+  if (!requestId) {
+    await ctx.answerCallbackQuery("❌ Ошибка: ID запроса не найден");
+    return;
+  }
+  
+  try {
+    await rejectRequest(requestId);
+    await ctx.answerCallbackQuery("❌ Запрос отклонен!");
+    
+    // Update the message to show it was rejected
+    const keyboard = new InlineKeyboard().text("❌ Отклонено", "rejected");
+    await ctx.editMessageReplyMarkup({ reply_markup: keyboard });
+  } catch (error) {
+    console.error("Error rejecting request:", error);
+    await ctx.answerCallbackQuery("❌ Ошибка при отклонении запроса.");
+  }
+});
+
+// Handle accepted/rejected status buttons (no action needed)
+bot.callbackQuery(/^(accepted|rejected)$/, async (ctx) => {
+  // Check authorization before processing
+  if (!AUTHORIZED_CHAT_ID || ctx.chat?.id.toString() !== AUTHORIZED_CHAT_ID) {
+    console.log(`Unauthorized callback attempt from chat ID: ${ctx.chat?.id}`);
+    return;
+  }
+
+  await ctx.answerCallbackQuery("Действие уже выполнено.");
 });
