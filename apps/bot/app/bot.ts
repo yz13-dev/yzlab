@@ -1,11 +1,10 @@
 import { hydrate, HydrateFlavor } from "@grammyjs/hydrate";
-import { API_URL } from "@yzlab/api/env";
 import { Bot, Context, InlineKeyboard } from "grammy";
 
 type BotContext = HydrateFlavor<Context>;
 const BOT_TOKEN = process.env.BOT_TOKEN ?? "";
 const AUTHORIZED_CHAT_ID = process.env.AUTHORIZED_CHAT_ID;
-const API_BASE_URL = API_URL;
+const API_BASE_URL = "https://api.yzlab.ru";
 
 // API functions
 async function getRequests() {
