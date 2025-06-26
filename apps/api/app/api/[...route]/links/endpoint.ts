@@ -1,12 +1,14 @@
 import { expire, redis } from "@/extensions/redis";
 import { makeLinkImage, makeLinksImages } from "@/lib/links-images";
+import { OpenAPIHono } from "@hono/zod-openapi";
 import type { DomainLinkWithBlur } from "@yzlab/api/types/domains";
-import { Hono } from "hono/quick";
 import { createLinks, getLinkByDomainAndPathname, getOgsByTag, getRecentOgs, getRecentSites, getRootLinks, getRootLinksWithOgs, getSitesByTag, increaseClicks, increaseClicksByDomainAndPath } from "./actions";
+import { route as ogs } from "./routes/ogs";
+import { route as sites } from "./routes/sites";
 
 
 
-export const links = new Hono();
+export const links = new OpenAPIHono();
 
 links.post("/count/increase", async (c) => {
 
@@ -46,7 +48,7 @@ links.get("/all/:domain", async (c) => {
   }
 })
 
-links.get("/sites", async (c) => {
+links.openapi(sites, async (c) => {
   const blur = c.req.query("blur");
 
   const withBlur = blur === "true";
@@ -89,9 +91,9 @@ links.get("/sites", async (c) => {
 
     return c.json([], 200);
   }
-});
+})
 
-links.get("/ogs", async (c) => {
+links.openapi(ogs, async (c) => {
   const blur = c.req.query("blur");
 
   const withBlur = blur === "true";
@@ -134,7 +136,7 @@ links.get("/ogs", async (c) => {
 
     return c.json([], 200);
   }
-});
+})
 
 links.get("/sites/recent", async (c) => {
 

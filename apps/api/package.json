@@ -9,21 +9,25 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@hono/zod-openapi": "^0.19.8",
+    "@hono/zod-validator": "^0.7.0",
     "@plaiceholder/next": "^3.0.0",
     "@sparticuz/chromium": "^133.0.0",
     "@upstash/qstash": "^2.8.1",
     "@upstash/redis": "^1.34.9",
     "@upstash/workflow": "^0.2.13",
-    "cheerio": "^1.0.0",
+    "@yzlab/api": "*",
     "@yzlab/supabase": "*",
+    "cheerio": "^1.0.0",
     "hono": "^4.7.10",
+    "hono-openapi": "^0.4.8",
     "next": "15.1.8",
     "plaiceholder": "^3.0.0",
     "playwright": "^1.53.0",
     "puppeteer": "^24.9.0",
     "resend": "^4.6.0",
-    "@yzlab/api": "*",
-    "zod": "^3.25.64"
+    "zod": "^3.25.67",
+    "zod-openapi": "^4.2.4"
   },
   "devDependencies": {
     "typescript": "^5",

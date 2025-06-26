@@ -63,7 +63,10 @@
   "scripts": {
     "publish": "bun run build",
     "build": "tsup",
-    "dev": "tsup --watch --clean=false"
+    "dev": "tsup --watch --clean=false",
+    "api:fetch": "bun run generate-api",
+    "api:generate": "rimraf src/generated && orval",
+    "api:update": "bun run api:fetch && bun run api:generate"
   },
   "keywords": [
     "package",
@@ -78,8 +81,10 @@
     "@yzlab/supabase": "*"
   },
   "dependencies": {
+    "axios": "^1.10.0",
     "date-fns": "^4.1.0",
     "next": "^15.3.0",
+    "orval": "^7.9.0",
     "tsup": "^6.7.0",
     "typescript-config": "*"
   },

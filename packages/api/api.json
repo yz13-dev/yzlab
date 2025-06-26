@@ -1,0 +1,247 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "YZLAB API",
+    "version": "1.0.0",
+    "description": "It's YZLAB API"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Local Server"
+    },
+    {
+      "url": "https://api.yzlab.ru",
+      "description": "Production Server"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "sites": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number"
+            },
+            "domain": {
+              "type": "string",
+              "minLength": 1
+            },
+            "pathname": {
+              "type": "string",
+              "minLength": 1
+            },
+            "title": {
+              "type": "string",
+              "nullable": true
+            },
+            "description": {
+              "type": "string",
+              "nullable": true
+            },
+            "favicon": {
+              "type": "string",
+              "nullable": true
+            },
+            "og": {
+              "type": "string",
+              "nullable": true
+            },
+            "screenshot": {
+              "type": "string",
+              "nullable": true
+            },
+            "clicks": {
+              "type": "number",
+              "nullable": true
+            },
+            "tags": {
+              "type": "array",
+              "nullable": true,
+              "items": {
+                "type": "string"
+              }
+            },
+            "last_crawled_at": {
+              "type": "string",
+              "nullable": true
+            },
+            "created_at": {
+              "type": "string"
+            },
+            "blurImageURL": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          "required": [
+            "domain",
+            "pathname",
+            "blurImageURL"
+          ]
+        }
+      },
+      "ogs": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number"
+            },
+            "domain": {
+              "type": "string",
+              "minLength": 1
+            },
+            "pathname": {
+              "type": "string",
+              "minLength": 1
+            },
+            "title": {
+              "type": "string",
+              "nullable": true
+            },
+            "description": {
+              "type": "string",
+              "nullable": true
+            },
+            "favicon": {
+              "type": "string",
+              "nullable": true
+            },
+            "og": {
+              "type": "string",
+              "nullable": true
+            },
+            "screenshot": {
+              "type": "string",
+              "nullable": true
+            },
+            "clicks": {
+              "type": "number",
+              "nullable": true
+            },
+            "tags": {
+              "type": "array",
+              "nullable": true,
+              "items": {
+                "type": "string"
+              }
+            },
+            "last_crawled_at": {
+              "type": "string",
+              "nullable": true
+            },
+            "created_at": {
+              "type": "string"
+            },
+            "blurImageURL": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          "required": [
+            "domain",
+            "pathname",
+            "blurImageURL"
+          ]
+        }
+      }
+    },
+    "parameters": {}
+  },
+  "paths": {
+    "/links/sites": {
+      "get": {
+        "operationId": "getSites",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "name": "blur",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "name": "offset",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get all sites links",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/sites"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/links/ogs": {
+      "get": {
+        "operationId": "getOgss",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "name": "blur",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "name": "offset",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get all ogs links",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ogs"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
