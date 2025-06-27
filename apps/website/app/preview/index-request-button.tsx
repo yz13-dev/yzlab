@@ -1,6 +1,6 @@
 "use client"
 
-import { createRequest } from "@yzlab/api/requests"
+import { createRequest } from "@yzlab/api"
 import { Button } from "@yzlab/ui/components/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@yzlab/ui/components/dropdown-menu"
 import { Separator } from "@yzlab/ui/components/separator"

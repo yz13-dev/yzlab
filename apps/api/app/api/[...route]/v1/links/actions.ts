@@ -1,4 +1,4 @@
-import type { DomainLink, NewLink, UpdateLink } from "@yzlab/api/types/domains"
+import { CreateLinkSchema, LinkSchema, UpdateLinkSchema } from "@/schemas"
 import { createClient } from "@yzlab/supabase/supabase/server"
 import { formatISO, setMonth } from "date-fns"
 import { cookies } from "next/headers"
@@ -83,7 +83,7 @@ export const getOldCrawledLink = async () => {
   }
 }
 
-export const createLink = async (domain: string, body: NewLink) => {
+export const createLink = async (domain: string, body: CreateLinkSchema) => {
   try {
     const cookieStore = await cookies()
 
@@ -132,7 +132,7 @@ export const getDomainLinks = async (domain: string) => {
   }
 }
 
-export const createLinks = async (body: NewLink[]): Promise<DomainLink[]> => {
+export const createLinks = async (body: CreateLinkSchema[]): Promise<LinkSchema[]> => {
   try {
     const cookieStore = await cookies()
 
@@ -154,7 +154,7 @@ export const createLinks = async (body: NewLink[]): Promise<DomainLink[]> => {
   }
 }
 
-export const updateLink = async (id: number, body: UpdateLink) => {
+export const updateLink = async (id: number, body: UpdateLinkSchema) => {
   try {
     const cookieStore = await cookies()
 

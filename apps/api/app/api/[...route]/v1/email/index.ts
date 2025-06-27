@@ -1,6 +1,7 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { email as emailRoute } from "./endpoint";
 import { subscribe } from "./subscribe/endpoint";
+import { unsubscribe } from "./unsubscribe/endpoint";
 
 
 
@@ -10,4 +11,4 @@ email.route("/check", emailRoute)
 
 email.route("/subscribe", subscribe)
 
-email.route("/unsubscribe", subscribe)
+email.route("/unsubscribe", unsubscribe)

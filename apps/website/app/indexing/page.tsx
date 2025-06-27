@@ -1,5 +1,5 @@
 import Header from "@/components/header/header";
-import { getDomains } from "@yzlab/api/domains";
+import { getDomains } from "@yzlab/api";
 import { Badge } from "@yzlab/ui/components/badge";
 import { Input } from "@yzlab/ui/components/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@yzlab/ui/components/table";

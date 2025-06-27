@@ -1,4 +1,4 @@
-import type { Requests } from "@yzlab/api/types/requests"
+import { IndexRequestSchema } from "@/schemas"
 import { createClient } from "@yzlab/supabase/supabase/server"
 import { cookies } from "next/headers"
 import { createDomain, getDomainByDomain } from "../domains/actions"
@@ -102,7 +102,7 @@ export const deleteRequest = async (id: number) => {
 }
 
 
-export const createFromRequest = async (request: Requests) => {
+export const createFromRequest = async (request: IndexRequestSchema) => {
   try {
     const domain = new URL(request.url).host;
     const title = request.name;

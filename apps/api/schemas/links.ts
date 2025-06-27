@@ -29,12 +29,18 @@ export const updateLinkSchema = linkSchema.partial().omit({
 })
 
 // Schema for DomainLinkWithBlur (includes blurImageURL)
-export const domainLinkWithBlurSchema = linkSchema.extend({
+export const linkWithBlurSchema = linkSchema.extend({
   blurImageURL: z.string().nullable(),
 })
-export const domainLinkWithBlurSchemaArray = z.array(domainLinkWithBlurSchema)
+export const linkWithBlurSchemaArray = z.array(linkWithBlurSchema)
+
+export const linkWithBufferScreenshot = linkSchema.extend({
+  screenshot: z.instanceof(Buffer).nullable(),
+})
 
 export type LinkSchema = z.infer<typeof linkSchema>
 export type CreateLinkSchema = z.infer<typeof createLinkSchema>
 export type UpdateLinkSchema = z.infer<typeof updateLinkSchema>
-export type DomainLinkWithBlurSchema = z.infer<typeof domainLinkWithBlurSchema>
+export type LinkWithBlurSchema = z.infer<typeof linkWithBlurSchema>
+export type LinkWithBlurSchemaArray = z.infer<typeof linkWithBlurSchemaArray>
+export type LinkWithBufferScreenshot = z.infer<typeof linkWithBufferScreenshot>

@@ -1,18 +1,17 @@
 "use client"
-
-import { getRootLinksWithOgs } from "@yzlab/api/links";
-import type { DomainLinkWithBlur } from "@yzlab/api/types/domains";
+import { getOgs, getSites } from "@yzlab/api";
+import { OgsItem, SitesItem } from "@yzlab/api/types";
 import { Button } from "@yzlab/ui/components/button";
 import { Loader2Icon } from "lucide-react";
 import { useState } from "react";
 import OgCard from "./og-card";
 import SiteCard from "./site-card";
 
-export default function ({ defaultLinks = [], type = "site" }: { defaultLinks?: DomainLinkWithBlur[], type: "og" | "site" }) {
+export default function ({ defaultLinks = [], type = "site" }: { defaultLinks?: (SitesItem | OgsItem)[], type: "og" | "site" }) {
 
   const [loading, setLoading] = useState<boolean>(false)
   const [offset, setOffset] = useState(0)
-  const [links, setLinks] = useState<DomainLinkWithBlur[]>(defaultLinks ?? [])
+  const [links, setLinks] = useState<(SitesItem | OgsItem)[]>(defaultLinks ?? [])
 
   const [end, setEnd] = useState<boolean>(false)
 
@@ -21,7 +20,7 @@ export default function ({ defaultLinks = [], type = "site" }: { defaultLinks?: 
     try {
       const newOffset = offset + 16
 
-      const { data } = await (type === "og" ? getRootLinksWithOgs(true, newOffset) : getRootLinksWithOgs(true, newOffset))
+      const { data } = await (type === "og" ? getSites({ blur: "true", offset: String(newOffset) }) : getOgs({ blur: "true", offset: String(newOffset) }))
 
       const newLinks = data ?? []
 

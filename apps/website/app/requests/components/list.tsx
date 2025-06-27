@@ -1,6 +1,6 @@
 "use client";
-import { acceptRequest, getRequests, rejectRequest } from "@yzlab/api/requests";
-import type { Requests } from "@yzlab/api/types/requests";
+import { acceptRequest, getRequests, rejectRequest } from "@yzlab/api";
+import { GetRequests200Item } from "@yzlab/api/types";
 import { Badge } from "@yzlab/ui/components/badge";
 import { Button } from "@yzlab/ui/components/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@yzlab/ui/components/table";
@@ -8,9 +8,9 @@ import { CheckIcon, Loader2Icon, XIcon } from "lucide-react";
 import { useState } from "react";
 
 
-export default function ({ requests: defaultRequests = [] }: { requests?: Requests[] }) {
+export default function ({ requests: defaultRequests = [] }: { requests?: GetRequests200Item[] }) {
 
-  const [requests, setRequests] = useState<Requests[]>(defaultRequests);
+  const [requests, setRequests] = useState<GetRequests200Item[]>(defaultRequests);
   const [loading, setLoading] = useState<boolean>(false);
 
   const accept = async (id: string) => {
@@ -21,8 +21,11 @@ export default function ({ requests: defaultRequests = [] }: { requests?: Reques
       console.error(e);
     } finally {
       setLoading(false);
-      const { data: newRequests } = await getRequests()
-      setRequests(newRequests ?? []);
+      const response = await getRequests()
+
+      const requests = response.data ?? [];
+
+      setRequests(requests);
     }
   }
   const reject = async (id: string) => {
@@ -33,8 +36,11 @@ export default function ({ requests: defaultRequests = [] }: { requests?: Reques
       console.error(e);
     } finally {
       setLoading(false);
-      const { data: newRequests } = await getRequests()
-      setRequests(newRequests ?? []);
+      const response = await getRequests()
+
+      const requests = response.data ?? [];
+
+      setRequests(requests);
     }
   }
 
@@ -53,7 +59,6 @@ export default function ({ requests: defaultRequests = [] }: { requests?: Reques
       <TableBody>
         {
           requests.map(request => {
-
             const url = new URL(request.url);
             const domain = url.hostname;
 

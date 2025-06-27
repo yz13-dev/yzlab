@@ -1,6 +1,6 @@
 import { expire, redis } from "@/extensions/redis";
 import { makeLinksImages } from "@/lib/links-images";
-import { DomainLinkWithBlurSchema, domainLinkWithBlurSchema } from "@/schemas";
+import { LinkWithBlurSchema, linkWithBlurSchemaArray } from "@/schemas";
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import { getRootLinks } from "../actions";
 import { recent } from "./recent/endpoint";
@@ -21,7 +21,7 @@ const route = createRoute({
       content: {
         'application/json': {
           // @ts-expect-error
-          schema: z.array(domainLinkWithBlurSchema).openapi("sites"),
+          schema: linkWithBlurSchemaArray
         },
       },
       description: 'Get all sites links',
@@ -30,7 +30,7 @@ const route = createRoute({
       content: {
         'application/json': {
           // @ts-expect-error
-          schema: z.array(domainLinkWithBlurSchema).openapi("sites"),
+          schema: linkWithBlurSchemaArray
         },
       },
       description: 'Internal server error',
@@ -56,7 +56,7 @@ sites.openapi(route, async (c) => {
     const key = `sites:${offsetInt}`
     console.log(key)
 
-    const cached = await redis.get<DomainLinkWithBlurSchema[]>(key)
+    const cached = await redis.get<LinkWithBlurSchema[]>(key)
 
     if (cached) {
 

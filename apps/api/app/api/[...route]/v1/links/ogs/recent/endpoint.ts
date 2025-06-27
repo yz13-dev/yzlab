@@ -1,6 +1,6 @@
 import { expire, redis } from "@/extensions/redis";
 import { makeLinksImages } from "@/lib/links-images";
-import { domainLinkWithBlurSchema, DomainLinkWithBlurSchema } from "@/schemas";
+import { LinkWithBlurSchema, linkWithBlurSchema } from "@/schemas";
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import { getRecentOgs } from "../../actions";
 
@@ -16,7 +16,7 @@ const route = createRoute({
       content: {
         'application/json': {
           // @ts-expect-error
-          schema: z.array(domainLinkWithBlurSchema).openapi("ogs"),
+          schema: z.array(linkWithBlurSchema).openapi("ogs"),
         },
       },
       description: 'Get all ogs links',
@@ -25,7 +25,7 @@ const route = createRoute({
       content: {
         'application/json': {
           // @ts-expect-error
-          schema: z.array(domainLinkWithBlurSchema).openapi("ogs"),
+          schema: z.array(linkWithBlurSchema).openapi("ogs"),
         },
       },
       description: 'Internal server error',
@@ -40,7 +40,7 @@ recent.openapi(route, async (c) => {
   const key = "ogs:recent"
   try {
 
-    const cached = await redis.get<DomainLinkWithBlurSchema[]>(key)
+    const cached = await redis.get<LinkWithBlurSchema[]>(key)
     if (cached) {
       return c.json(cached, 200);
     }

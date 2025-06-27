@@ -1,6 +1,6 @@
 "use client"
 import { isURLValid } from "@/lib/url-check";
-import { createRequest } from "@yzlab/api/requests";
+import { createRequest } from "@yzlab/api";
 import { Button } from "@yzlab/ui/components/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogTrigger } from "@yzlab/ui/components/dialog";
 import { Input } from "@yzlab/ui/components/input";
@@ -19,7 +19,7 @@ type Props = {
 export default function ({ children }: Props) {
   const [open, setOpen] = useState<boolean>(false);
 
-  const [type, setType] = useState<"site" | "og">("site");
+  const [type, setType] = useState<"site" | "og" | "full">("site");
 
   const [url, setUrl] = useState<string>("");
 

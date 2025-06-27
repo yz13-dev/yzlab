@@ -1,4 +1,4 @@
-import { createIndexRequestSchema, indexRequestSchema } from "@/schemas";
+import { createIndexRequestSchema, indexRequestSchema, indexRequestSchemaArray } from "@/schemas";
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import { createClient } from "@yzlab/supabase/supabase/server";
 import type { HTTPResponseError } from "hono/types";
@@ -14,7 +14,7 @@ const routeGET = createRoute({
       content: {
         'application/json': {
           // @ts-expect-error
-          schema: z.array(z.record(indexRequestSchema)).openapi("request"),
+          schema: indexRequestSchemaArray,
         },
       },
     },
@@ -23,7 +23,7 @@ const routeGET = createRoute({
       content: {
         'application/json': {
           // @ts-expect-error
-          schema: z.array(z.record(indexRequestSchema)).openapi("request"),
+          schema: indexRequestSchemaArray,
         },
       },
     },
@@ -34,11 +34,17 @@ const routePOST = createRoute({
   path: "/",
   method: "post",
   operationId: "createRequest",
-  requestBody: {
-    // @ts-expect-error
-    content: z.record(createIndexRequestSchema),
-    required: true,
-    description: "Request body",
+  request: {
+    body: {
+      content: {
+        "application/json": {
+          // @ts-expect-error
+          schema: createIndexRequestSchema,
+        }
+      },
+      required: true,
+      description: "Request body",
+    }
   },
   responses: {
     200: {
@@ -46,7 +52,7 @@ const routePOST = createRoute({
       content: {
         'application/json': {
           // @ts-expect-error
-          schema: z.record(indexRequestSchema).openapi("request"),
+          schema: indexRequestSchema,
         },
       },
     },

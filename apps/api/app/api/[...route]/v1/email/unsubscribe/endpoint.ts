@@ -7,6 +7,12 @@ import { checkEmail } from "../action";
 const route = createRoute({
   method: "post",
   path: "/",
+  operationId: "unSubscribeEmail",
+  request: {
+    query: z.object({
+      email: z.string().email(),
+    }),
+  },
   responses: {
     200: {
       description: "Unsubscribe",

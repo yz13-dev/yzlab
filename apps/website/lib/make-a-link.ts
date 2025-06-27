@@ -1,9 +1,9 @@
-import { DomainLink } from "@yzlab/api/types/domains";
+import { SitesItem } from "@yzlab/api/types";
 
 
 
 
-export const makeLink = (link: DomainLink) => {
+export const makeLink = (link: SitesItem) => {
 
   const pathname = link.pathname;
   const domain = link.domain;

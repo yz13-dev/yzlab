@@ -9,71 +9,10 @@
     {
       "url": "http://localhost:3000",
       "description": "Local Server"
-    },
-    {
-      "url": "https://api.yzlab.ru",
-      "description": "Production Server"
     }
   ],
   "components": {
     "schemas": {
-      "domain": {
-        "type": "object",
-        "additionalProperties": {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "string"
-            },
-            "domain": {
-              "type": "string",
-              "minLength": 1
-            },
-            "title": {
-              "type": "string",
-              "nullable": true
-            },
-            "description": {
-              "type": "string",
-              "nullable": true
-            },
-            "favicon": {
-              "type": "string",
-              "nullable": true
-            },
-            "tags": {
-              "type": "array",
-              "nullable": true,
-              "items": {
-                "type": "string"
-              }
-            },
-            "last_crawled_at": {
-              "type": "string",
-              "nullable": true
-            },
-            "created_at": {
-              "type": "string"
-            },
-            "screenshot": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "nullable": true
-                },
-                {
-                  "nullable": true
-                }
-              ]
-            }
-          },
-          "required": [
-            "domain"
-          ]
-        }
-      },
       "error": {
         "nullable": true
       },
@@ -208,6 +147,9 @@
           ]
         }
       },
+      "domain": {
+        "nullable": true
+      },
       "ogs": {
         "type": "array",
         "items": {
@@ -275,47 +217,7 @@
         }
       },
       "request": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "number"
-              },
-              "url": {
-                "type": "string",
-                "minLength": 1,
-                "format": "uri"
-              },
-              "type": {
-                "type": "string",
-                "minLength": 1
-              },
-              "name": {
-                "type": "string",
-                "nullable": true
-              },
-              "description": {
-                "type": "string",
-                "nullable": true
-              },
-              "email": {
-                "type": "string",
-                "nullable": true,
-                "format": "email"
-              },
-              "created_at": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "url",
-              "type"
-            ]
-          }
-        }
+        "nullable": true
       }
     },
     "parameters": {}
@@ -386,6 +288,18 @@
     },
     "/v1/email/subscribe": {
       "post": {
+        "operationId": "subscribeEmail",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "email"
+            },
+            "required": true,
+            "name": "email",
+            "in": "query"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Subscribe",
@@ -435,25 +349,41 @@
     },
     "/v1/email/unsubscribe": {
       "post": {
+        "operationId": "unSubscribeEmail",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "email"
+            },
+            "required": true,
+            "name": "email",
+            "in": "query"
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Subscribe",
+            "description": "Unsubscribe",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "nullable": true,
                   "properties": {
-                    "id": {
+                    "object": {
                       "type": "string"
                     },
-                    "object": {
+                    "deleted": {
+                      "type": "boolean"
+                    },
+                    "contact": {
                       "type": "string"
                     }
                   },
                   "required": [
-                    "id",
-                    "object"
+                    "object",
+                    "deleted",
+                    "contact"
                   ]
                 }
               }
@@ -489,13 +419,80 @@
         "tags": [
           "Indexing"
         ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "format": "uri"
+            },
+            "required": true,
+            "name": "url",
+            "in": "query"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/domain"
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number"
+                    },
+                    "domain": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "pathname": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "title": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "description": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "favicon": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "og": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "screenshot": {
+                      "nullable": true
+                    },
+                    "clicks": {
+                      "type": "number",
+                      "nullable": true
+                    },
+                    "tags": {
+                      "type": "array",
+                      "nullable": true,
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "last_crawled_at": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "created_at": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "domain",
+                    "pathname",
+                    "screenshot"
+                  ]
                 }
               }
             }
@@ -613,7 +610,7 @@
     },
     "/v1/links/all/{domain}": {
       "get": {
-        "operationId": "getlinkByDomainAndPathname",
+        "operationId": "getLinkByDomainAndPathname",
         "parameters": [
           {
             "schema": {
@@ -645,75 +642,66 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/domain"
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number"
                     },
-                    {
-                      "additionalProperties": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "number"
-                          },
-                          "domain": {
-                            "type": "string",
-                            "minLength": 1
-                          },
-                          "pathname": {
-                            "type": "string",
-                            "minLength": 1
-                          },
-                          "title": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "description": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "favicon": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "og": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "screenshot": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "clicks": {
-                            "type": "number",
-                            "nullable": true
-                          },
-                          "tags": {
-                            "type": "array",
-                            "nullable": true,
-                            "items": {
-                              "type": "string"
-                            }
-                          },
-                          "last_crawled_at": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "created_at": {
-                            "type": "string"
-                          },
-                          "blurImageURL": {
-                            "type": "string",
-                            "nullable": true
-                          }
-                        },
-                        "required": [
-                          "domain",
-                          "pathname",
-                          "blurImageURL"
-                        ]
+                    "domain": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "pathname": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "title": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "description": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "favicon": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "og": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "screenshot": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "clicks": {
+                      "type": "number",
+                      "nullable": true
+                    },
+                    "tags": {
+                      "type": "array",
+                      "nullable": true,
+                      "items": {
+                        "type": "string"
                       }
+                    },
+                    "last_crawled_at": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "created_at": {
+                      "type": "string"
+                    },
+                    "blurImageURL": {
+                      "type": "string",
+                      "nullable": true
                     }
+                  },
+                  "required": [
+                    "domain",
+                    "pathname",
+                    "blurImageURL"
                   ]
                 }
               }
@@ -724,14 +712,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/domain"
-                    },
-                    {
-                      "nullable": true
-                    }
-                  ]
+                  "$ref": "#/components/schemas/domain"
                 }
               }
             }
@@ -741,14 +722,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/domain"
-                    },
-                    {
-                      "nullable": true
-                    }
-                  ]
+                  "$ref": "#/components/schemas/domain"
                 }
               }
             }
@@ -802,7 +776,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/sites"
+                  "$ref": "#/components/schemas/ogs"
                 }
               }
             }
@@ -812,7 +786,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/sites"
+                  "$ref": "#/components/schemas/ogs"
                 }
               }
             }
@@ -847,77 +821,70 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/sites"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "number"
-                          },
-                          "domain": {
-                            "type": "string",
-                            "minLength": 1
-                          },
-                          "pathname": {
-                            "type": "string",
-                            "minLength": 1
-                          },
-                          "title": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "description": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "favicon": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "og": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "screenshot": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "clicks": {
-                            "type": "number",
-                            "nullable": true
-                          },
-                          "tags": {
-                            "type": "array",
-                            "nullable": true,
-                            "items": {
-                              "type": "string"
-                            }
-                          },
-                          "last_crawled_at": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "created_at": {
-                            "type": "string"
-                          },
-                          "blurImageURL": {
-                            "type": "string",
-                            "nullable": true
-                          }
-                        },
-                        "required": [
-                          "domain",
-                          "pathname",
-                          "blurImageURL"
-                        ]
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "number"
+                      },
+                      "domain": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "pathname": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "title": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "description": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "favicon": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "og": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "screenshot": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "clicks": {
+                        "type": "number",
+                        "nullable": true
+                      },
+                      "tags": {
+                        "type": "array",
+                        "nullable": true,
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "last_crawled_at": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "created_at": {
+                        "type": "string"
+                      },
+                      "blurImageURL": {
+                        "type": "string",
+                        "nullable": true
                       }
-                    }
-                  ]
+                    },
+                    "required": [
+                      "domain",
+                      "pathname",
+                      "blurImageURL"
+                    ]
+                  }
                 }
               }
             }
@@ -927,77 +894,70 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/sites"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "number"
-                          },
-                          "domain": {
-                            "type": "string",
-                            "minLength": 1
-                          },
-                          "pathname": {
-                            "type": "string",
-                            "minLength": 1
-                          },
-                          "title": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "description": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "favicon": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "og": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "screenshot": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "clicks": {
-                            "type": "number",
-                            "nullable": true
-                          },
-                          "tags": {
-                            "type": "array",
-                            "nullable": true,
-                            "items": {
-                              "type": "string"
-                            }
-                          },
-                          "last_crawled_at": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "created_at": {
-                            "type": "string"
-                          },
-                          "blurImageURL": {
-                            "type": "string",
-                            "nullable": true
-                          }
-                        },
-                        "required": [
-                          "domain",
-                          "pathname",
-                          "blurImageURL"
-                        ]
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "number"
+                      },
+                      "domain": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "pathname": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "title": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "description": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "favicon": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "og": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "screenshot": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "clicks": {
+                        "type": "number",
+                        "nullable": true
+                      },
+                      "tags": {
+                        "type": "array",
+                        "nullable": true,
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "last_crawled_at": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "created_at": {
+                        "type": "string"
+                      },
+                      "blurImageURL": {
+                        "type": "string",
+                        "nullable": true
                       }
-                    }
-                  ]
+                    },
+                    "required": [
+                      "domain",
+                      "pathname",
+                      "blurImageURL"
+                    ]
+                  }
                 }
               }
             }
@@ -1051,7 +1011,77 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/sites"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/sites"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "number"
+                          },
+                          "domain": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "pathname": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "title": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "description": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "favicon": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "og": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "screenshot": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "clicks": {
+                            "type": "number",
+                            "nullable": true
+                          },
+                          "tags": {
+                            "type": "array",
+                            "nullable": true,
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "last_crawled_at": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "created_at": {
+                            "type": "string"
+                          },
+                          "blurImageURL": {
+                            "type": "string",
+                            "nullable": true
+                          }
+                        },
+                        "required": [
+                          "domain",
+                          "pathname",
+                          "blurImageURL"
+                        ]
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -1061,7 +1091,77 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/sites"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/sites"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "number"
+                          },
+                          "domain": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "pathname": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "title": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "description": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "favicon": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "og": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "screenshot": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "clicks": {
+                            "type": "number",
+                            "nullable": true
+                          },
+                          "tags": {
+                            "type": "array",
+                            "nullable": true,
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "last_crawled_at": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "created_at": {
+                            "type": "string"
+                          },
+                          "blurImageURL": {
+                            "type": "string",
+                            "nullable": true
+                          }
+                        },
+                        "required": [
+                          "domain",
+                          "pathname",
+                          "blurImageURL"
+                        ]
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -1096,7 +1196,70 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ogs"
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "number"
+                      },
+                      "domain": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "pathname": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "title": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "description": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "favicon": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "og": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "screenshot": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "clicks": {
+                        "type": "number",
+                        "nullable": true
+                      },
+                      "tags": {
+                        "type": "array",
+                        "nullable": true,
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "last_crawled_at": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "created_at": {
+                        "type": "string"
+                      },
+                      "blurImageURL": {
+                        "type": "string",
+                        "nullable": true
+                      }
+                    },
+                    "required": [
+                      "domain",
+                      "pathname",
+                      "blurImageURL"
+                    ]
+                  }
                 }
               }
             }
@@ -1106,7 +1269,70 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ogs"
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "number"
+                      },
+                      "domain": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "pathname": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "title": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "description": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "favicon": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "og": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "screenshot": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "clicks": {
+                        "type": "number",
+                        "nullable": true
+                      },
+                      "tags": {
+                        "type": "array",
+                        "nullable": true,
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "last_crawled_at": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "created_at": {
+                        "type": "string"
+                      },
+                      "blurImageURL": {
+                        "type": "string",
+                        "nullable": true
+                      }
+                    },
+                    "required": [
+                      "domain",
+                      "pathname",
+                      "blurImageURL"
+                    ]
+                  }
                 }
               }
             }
@@ -1123,7 +1349,44 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/request"
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "number"
+                      },
+                      "url": {
+                        "type": "string",
+                        "minLength": 1,
+                        "format": "uri"
+                      },
+                      "type": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "name": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "description": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "email": {
+                        "type": "string",
+                        "nullable": true,
+                        "format": "email"
+                      },
+                      "created_at": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "url",
+                      "type"
+                    ]
+                  }
                 }
               }
             }
@@ -1133,7 +1396,44 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/request"
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "number"
+                      },
+                      "url": {
+                        "type": "string",
+                        "minLength": 1,
+                        "format": "uri"
+                      },
+                      "type": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "name": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "description": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "email": {
+                        "type": "string",
+                        "nullable": true,
+                        "format": "email"
+                      },
+                      "created_at": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "url",
+                      "type"
+                    ]
+                  }
                 }
               }
             }
@@ -1143,48 +1443,43 @@
       "post": {
         "operationId": "createRequest",
         "requestBody": {
-          "content": {
-            "_def": {
-              "keyType": {
-                "_def": {
-                  "checks": [],
-                  "typeName": "ZodString",
-                  "coerce": false
-                },
-                "~standard": {
-                  "version": 1,
-                  "vendor": "zod"
-                }
-              },
-              "valueType": {
-                "_def": {
-                  "unknownKeys": "strip",
-                  "catchall": {
-                    "_def": {
-                      "typeName": "ZodNever"
-                    },
-                    "~standard": {
-                      "version": 1,
-                      "vendor": "zod"
-                    }
-                  },
-                  "typeName": "ZodObject"
-                },
-                "~standard": {
-                  "version": 1,
-                  "vendor": "zod"
-                },
-                "_cached": null
-              },
-              "typeName": "ZodRecord"
-            },
-            "~standard": {
-              "version": 1,
-              "vendor": "zod"
-            }
-          },
           "required": true,
-          "description": "Request body"
+          "description": "Request body",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "minLength": 1,
+                    "format": "uri"
+                  },
+                  "type": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "name": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "description": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "email": {
+                    "type": "string",
+                    "nullable": true,
+                    "format": "email"
+                  }
+                },
+                "required": [
+                  "url",
+                  "type"
+                ]
+              }
+            }
+          }
         },
         "responses": {
           "200": {
@@ -1192,50 +1487,40 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/request"
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number"
                     },
-                    {
-                      "type": "object",
-                      "additionalProperties": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "number"
-                          },
-                          "url": {
-                            "type": "string",
-                            "minLength": 1,
-                            "format": "uri"
-                          },
-                          "type": {
-                            "type": "string",
-                            "minLength": 1
-                          },
-                          "name": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "description": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "email": {
-                            "type": "string",
-                            "nullable": true,
-                            "format": "email"
-                          },
-                          "created_at": {
-                            "type": "string"
-                          }
-                        },
-                        "required": [
-                          "url",
-                          "type"
-                        ]
-                      }
+                    "url": {
+                      "type": "string",
+                      "minLength": 1,
+                      "format": "uri"
+                    },
+                    "type": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "name": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "description": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "email": {
+                      "type": "string",
+                      "nullable": true,
+                      "format": "email"
+                    },
+                    "created_at": {
+                      "type": "string"
                     }
+                  },
+                  "required": [
+                    "url",
+                    "type"
                   ]
                 }
               }
@@ -1246,14 +1531,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/request"
-                    },
-                    {
-                      "nullable": true
-                    }
-                  ]
+                  "$ref": "#/components/schemas/request"
                 }
               }
             }
@@ -1263,14 +1541,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/request"
-                    },
-                    {
-                      "nullable": true
-                    }
-                  ]
+                  "$ref": "#/components/schemas/request"
                 }
               }
             }
@@ -1305,14 +1576,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/request"
-                    },
-                    {
-                      "nullable": true
-                    }
-                  ]
+                  "$ref": "#/components/schemas/request"
                 }
               }
             }
@@ -1322,14 +1586,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/request"
-                    },
-                    {
-                      "nullable": true
-                    }
-                  ]
+                  "$ref": "#/components/schemas/request"
                 }
               }
             }
@@ -1367,14 +1624,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/request"
-                    },
-                    {
-                      "nullable": true
-                    }
-                  ]
+                  "$ref": "#/components/schemas/request"
                 }
               }
             }
@@ -1384,14 +1634,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/request"
-                    },
-                    {
-                      "nullable": true
-                    }
-                  ]
+                  "$ref": "#/components/schemas/request"
                 }
               }
             }
@@ -1401,14 +1644,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/request"
-                    },
-                    {
-                      "nullable": true
-                    }
-                  ]
+                  "$ref": "#/components/schemas/request"
                 }
               }
             }
@@ -1441,7 +1677,6 @@
                     },
                     {
                       "type": "object",
-                      "nullable": true,
                       "additionalProperties": {
                         "type": "object",
                         "properties": {
@@ -1490,14 +1725,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/request"
-                    },
-                    {
-                      "nullable": true
-                    }
-                  ]
+                  "$ref": "#/components/schemas/request"
                 }
               }
             }
@@ -1507,14 +1735,190 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/request"
+                  "$ref": "#/components/schemas/request"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/domains": {
+      "get": {
+        "operationId": "getDomains",
+        "responses": {
+          "200": {
+            "description": "Get domains",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "domain": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "title": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "description": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "favicon": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "tags": {
+                        "type": "array",
+                        "nullable": true,
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "last_crawled_at": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "created_at": {
+                        "type": "string"
+                      }
                     },
-                    {
+                    "required": [
+                      "domain"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "domain": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "title": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "description": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "favicon": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "tags": {
+                        "type": "array",
+                        "nullable": true,
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "last_crawled_at": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "created_at": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "domain"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/domains/domain/{domain}": {
+      "get": {
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "domain",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get domain by domain",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "domain": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "title": {
+                      "type": "string",
                       "nullable": true
+                    },
+                    "description": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "favicon": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "tags": {
+                      "type": "array",
+                      "nullable": true,
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "last_crawled_at": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "created_at": {
+                      "type": "string"
                     }
+                  },
+                  "required": [
+                    "domain"
                   ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "nullable": true
                 }
               }
             }

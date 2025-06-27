@@ -18,7 +18,7 @@ const route = createRoute({
       content: {
         "application/json": {
           // @ts-expect-error
-          schema: z.record(domainSchema).nullable()
+          schema: domainSchema
         }
       }
     },

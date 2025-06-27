@@ -1,4 +1,4 @@
-import type { NewDomain, UpdateDomain } from "@yzlab/api/types/domains"
+import { CreateDomainSchema, UpdateDomainSchema } from "@/schemas"
 import { createClient } from "@yzlab/supabase/supabase/server"
 import { cookies } from "next/headers"
 
@@ -25,7 +25,10 @@ export const getDomain = async (id: string) => {
   }
 }
 
-export const getDomainByDomain = async (domain: string) => {
+export const getDomainByDomain = async (domain?: string) => {
+
+  if (!domain) return null;
+
   try {
     const cookieStore = await cookies()
 
@@ -93,11 +96,11 @@ export const getDomains = async () => {
     return data
   } catch (error) {
     console.log(error)
-    return null;
+    return [];
   }
 }
 
-export const createDomain = async (domain: string, body: NewDomain) => {
+export const createDomain = async (domain: string, body: CreateDomainSchema) => {
   try {
     const cookieStore = await cookies()
     const supabase = createClient(cookieStore)
@@ -120,7 +123,7 @@ export const createDomain = async (domain: string, body: NewDomain) => {
   }
 }
 
-export const updateDomain = async (id: string, body: UpdateDomain) => {
+export const updateDomain = async (id: string, body: UpdateDomainSchema) => {
   try {
     const cookieStore = await cookies()
 

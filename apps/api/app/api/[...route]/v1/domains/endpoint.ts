@@ -1,17 +1,18 @@
-import { domainSchema } from "@/schemas";
-import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
+import { domainSchemaArray } from "@/schemas";
+import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
 import { getDomains } from "./actions";
 
 const route = createRoute({
   path: "/",
   method: "get",
+  operationId: "getDomains",
   responses: {
     200: {
       description: "Get domains",
       content: {
         "application/json": {
           // @ts-expect-error
-          schema: z.array(z.record(domainSchema))
+          schema: domainSchemaArray
         }
       }
     },
@@ -20,7 +21,7 @@ const route = createRoute({
       content: {
         "application/json": {
           // @ts-expect-error
-          schema: z.array(z.record(domainSchema))
+          schema: domainSchemaArray
         }
       }
     },

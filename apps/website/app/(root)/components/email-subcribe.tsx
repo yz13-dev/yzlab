@@ -1,6 +1,6 @@
 "use client"
 
-import { subscribeEmail } from "@yzlab/api/email"
+import { subscribeEmail } from "@yzlab/api"
 import { Button } from "@yzlab/ui/components/button"
 import { Input } from "@yzlab/ui/components/input"
 import { Loader2Icon } from "lucide-react"
@@ -18,7 +18,7 @@ export default function () {
   const trySubscribe = async () => {
     setLoading(true)
     try {
-      const { data } = await subscribeEmail(email)
+      const { data } = await subscribeEmail({ email })
       console.log("data", data)
       if (data) {
         setSuccess(true)

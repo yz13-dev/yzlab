@@ -8,53 +8,11 @@
       "import": "./dist/lib/avatar-url.mjs",
       "require": "./dist/lib/avatar-url.js"
     },
-    "./types/domains": "./dist/types/domains.d.ts",
-    "./types/filters": "./dist/types/filters.d.ts",
-    "./types/requests": "./dist/types/requests.d.ts",
-    "./env": {
-      "types": "./dist/const/api.d.ts",
-      "import": "./dist/const/api.mjs",
-      "require": "./dist/const/api.js"
-    },
-    "./links": {
-      "types": "./dist/rest/links/links.d.ts",
-      "import": "./dist/rest/links/links.mjs",
-      "require": "./dist/rest/links/links.js"
-    },
-    "./requests": {
-      "types": "./dist/rest/requests/requests.d.ts",
-      "import": "./dist/rest/requests/requests.mjs",
-      "require": "./dist/rest/requests/requests.js"
-    },
-    "./domains": {
-      "types": "./dist/rest/domains/domains.d.ts",
-      "import": "./dist/rest/domains/domains.mjs",
-      "require": "./dist/rest/domains/domains.js"
-    },
-    "./indexing": {
-      "types": "./dist/rest/indexing/indexing.d.ts",
-      "import": "./dist/rest/indexing/indexing.mjs",
-      "require": "./dist/rest/indexing/indexing.js"
-    },
-    "./search": {
-      "types": "./dist/rest/search/search.d.ts",
-      "import": "./dist/rest/search/search.mjs",
-      "require": "./dist/rest/search/search.js"
-    },
-    "./snippets": {
-      "types": "./dist/rest/snippets/snippets.d.ts",
-      "import": "./dist/rest/snippets/snippets.mjs",
-      "require": "./dist/rest/snippets/snippets.js"
-    },
-    "./filters": {
-      "types": "./dist/rest/search/filters.d.ts",
-      "import": "./dist/rest/search/filters.mjs",
-      "require": "./dist/rest/search/filters.js"
-    },
-    "./email": {
-      "types": "./dist/rest/email/email.d.ts",
-      "import": "./dist/rest/email/email.mjs",
-      "require": "./dist/rest/email/email.js"
+    "./types": "./dist/types/index.d.ts",
+    ".": {
+      "types": "./dist/api/yzlab-api.d.ts",
+      "import": "./dist/api/yzlab-api.mjs",
+      "require": "./dist/api/yzlab-api.js"
     }
   },
   "files": [
@@ -65,7 +23,7 @@
     "build": "tsup",
     "dev": "tsup --watch --clean=false",
     "api:fetch": "bun run generate-api",
-    "api:generate": "rimraf src/generated && orval",
+    "api:generate": "rimraf src/api && rimraf src/types && orval",
     "api:update": "bun run api:fetch && bun run api:generate"
   },
   "keywords": [

@@ -1,7 +1,6 @@
 import { fetchPageContent } from "@/lib/fetch/page";
-import { domainLinkWithBufferScreenshot } from "@/schemas";
+import { LinkWithBufferScreenshot, linkWithBufferScreenshot } from "@/schemas";
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
-import { DomainLinkWithBufferScreenshot } from "@yzlab/api/types/domains";
 import { formatISO } from "date-fns";
 import { crawlDefault, crawlMetadata, crawlScreenshot } from "../../crawl/action";
 
@@ -11,14 +10,18 @@ const route = createRoute({
   path: "/",
   description: "Get preview of a link",
   tags: ["Indexing"],
-  request: {},
+  request: {
+    query: z.object({
+      url: z.string().url("URL must be valid").min(1, "URL is required"),
+    }),
+  },
   responses: {
     200: {
       description: "Success",
       content: {
         "application/json": {
           // @ts-expect-error
-          schema: z.record(domainLinkWithBufferScreenshot).openapi("domain")
+          schema: linkWithBufferScreenshot,
         },
       },
     },
@@ -113,7 +116,7 @@ preview.openapi(route, async (c) => {
   // console.log("screenshot", !!screenshot)
   // console.log("og", !!og)
 
-  const domainLink: DomainLinkWithBufferScreenshot = {
+  const domainLink: LinkWithBufferScreenshot = {
     clicks: -1,
     pathname,
     last_crawled_at: formatISO(new Date()),

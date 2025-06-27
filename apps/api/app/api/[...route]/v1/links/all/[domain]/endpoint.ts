@@ -1,11 +1,11 @@
 import { makeLinkImage } from "@/lib/links-images";
-import { domainLinkWithBlurSchema } from "@/schemas";
+import { linkWithBlurSchema } from "@/schemas";
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import { getLinkByDomainAndPathname } from "../../actions";
 
 
 const route = createRoute({
-  operationId: "getlinkByDomainAndPathname",
+  operationId: "getLinkByDomainAndPathname",
   path: "/{domain}",
   method: "get",
   request: {
@@ -21,7 +21,7 @@ const route = createRoute({
       content: {
         'application/json': {
           // @ts-expect-error
-          schema: z.record(domainLinkWithBlurSchema).openapi("domain"),
+          schema: linkWithBlurSchema,
         },
       },
       description: 'Get all sites links',
@@ -54,6 +54,7 @@ domain.openapi(route, async (c) => {
 
   const path = pathname ? pathname : "/";
 
+  if (!domain) return c.json(null, 404);
 
   try {
     const link = await getLinkByDomainAndPathname(domain, path)

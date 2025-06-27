@@ -6,9 +6,11 @@ export const gfkOrvalConfig: OptionsExport = {
     target: "./api.json",
   },
   output: {
+    baseUrl: "https://api.yzlab.ru",
+    httpClient: "axios",
     mode: "split",
-    target: "./src/generated/endpoints",
-    schemas: "./src/generated/types",
+    target: "./src/api",
+    schemas: "./src/types",
     client: "axios-functions",
     mock: false,
     clean: true,

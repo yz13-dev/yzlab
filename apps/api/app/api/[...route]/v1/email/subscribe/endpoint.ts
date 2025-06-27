@@ -7,6 +7,12 @@ import { checkEmail, sendWelcomeEmail } from "../action";
 const route = createRoute({
   path: "/",
   method: "post",
+  operationId: "subscribeEmail",
+  request: {
+    query: z.object({
+      email: z.string().email(),
+    }),
+  },
   responses: {
     200: {
       description: "Subscribe",

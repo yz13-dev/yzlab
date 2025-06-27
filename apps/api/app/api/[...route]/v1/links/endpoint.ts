@@ -1,4 +1,4 @@
-import { domainLinkWithBlurSchemaArray } from "@/schemas";
+import { linkWithBlurSchemaArray } from "@/schemas";
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import { createLinks } from "./actions";
 
@@ -18,7 +18,7 @@ const route = createRoute({
       content: {
         'application/json': {
           // @ts-expect-error
-          schema: z.record(domainLinkWithBlurSchemaArray).openapi("sites"),
+          schema: z.record(linkWithBlurSchemaArray).openapi("sites"),
         },
       },
       description: 'Get all sites links',
@@ -27,7 +27,7 @@ const route = createRoute({
       content: {
         'application/json': {
           // @ts-expect-error
-          schema: z.record(domainLinkWithBlurSchemaArray).openapi("sites"),
+          schema: z.record(linkWithBlurSchemaArray).openapi("sites"),
         },
       },
       description: 'Internal server error',

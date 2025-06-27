@@ -13,16 +13,19 @@ export const indexRequestSchema = z.object({
   created_at: z.string().optional(),
 })
 
-export const createIndexRequestSchema = indexRequestSchema.omit({ 
-  id: true, 
-  created_at: true 
+export const indexRequestSchemaArray = z.array(indexRequestSchema)
+
+export const createIndexRequestSchema = indexRequestSchema.omit({
+  id: true,
+  created_at: true
 })
 
-export const updateIndexRequestSchema = indexRequestSchema.partial().omit({ 
-  id: true, 
-  created_at: true 
+export const updateIndexRequestSchema = indexRequestSchema.partial().omit({
+  id: true,
+  created_at: true
 })
 
 export type IndexRequestSchema = z.infer<typeof indexRequestSchema>
 export type CreateIndexRequestSchema = z.infer<typeof createIndexRequestSchema>
-export type UpdateIndexRequestSchema = z.infer<typeof updateIndexRequestSchema> 
+export type UpdateIndexRequestSchema = z.infer<typeof updateIndexRequestSchema>
+export type IndexRequestSchemaArray = z.infer<typeof indexRequestSchemaArray>
