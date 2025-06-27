@@ -12,15 +12,23 @@ import type {
 } from 'axios';
 
 import type {
+  AcceptRequest200,
+  AcceptRequestParams,
   CreateLinkParams,
+  CreateRequest200,
   Domain,
   GetOgsParams,
+  GetRequestByLink200,
+  GetRequestByLinkParams,
   GetSites200,
   GetSitesParams,
   GetlinkByDomainAndPathnameParams,
   Increase,
   IncreaseClicksParams,
   Ogs,
+  RejectRequest200,
+  RejectRequestParams,
+  Request,
   Sites
 } from '../types';
 
@@ -110,6 +118,54 @@ export const getOgs = <TData = AxiosResponse<Ogs>>(
     );
   }
 
+export const getRequests = <TData = AxiosResponse<Request>>(
+     options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/v1/requests`,options
+    );
+  }
+
+export const createRequest = <TData = AxiosResponse<CreateRequest200>>(
+     options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.post(
+      `/v1/requests`,undefined,options
+    );
+  }
+
+export const acceptRequest = <TData = AxiosResponse<AcceptRequest200>>(
+    id: string,
+    params?: AcceptRequestParams, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.post(
+      `/v1/requests/${id}/accept`,undefined,{
+    ...options,
+        params: {...params, ...options?.params},}
+    );
+  }
+
+export const rejectRequest = <TData = AxiosResponse<RejectRequest200>>(
+    id: string,
+    params?: RejectRequestParams, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.post(
+      `/v1/requests/${id}/reject`,undefined,{
+    ...options,
+        params: {...params, ...options?.params},}
+    );
+  }
+
+export const getRequestByLink = <TData = AxiosResponse<GetRequestByLink200>>(
+    params?: GetRequestByLinkParams, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.post(
+      `/v1/requests/link`,undefined,{
+    ...options,
+        params: {...params, ...options?.params},}
+    );
+  }
+
 export type CreateLinkResult = AxiosResponse<Sites>
 export type IncreaseClicksResult = AxiosResponse<Increase>
 export type GetlinkByDomainAndPathnameResult = AxiosResponse<Domain>
@@ -119,3 +175,8 @@ export type GetSitesResult = AxiosResponse<GetSites200>
 export type GetRecentOgsResult = AxiosResponse<Ogs>
 export type GetOgsByTagResult = AxiosResponse<Sites>
 export type GetOgsResult = AxiosResponse<Ogs>
+export type GetRequestsResult = AxiosResponse<Request>
+export type CreateRequestResult = AxiosResponse<CreateRequest200>
+export type AcceptRequestResult = AxiosResponse<AcceptRequest200>
+export type RejectRequestResult = AxiosResponse<RejectRequest200>
+export type GetRequestByLinkResult = AxiosResponse<GetRequestByLink200>

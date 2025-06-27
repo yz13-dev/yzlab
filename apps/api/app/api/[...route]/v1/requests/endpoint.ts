@@ -1,15 +1,77 @@
+import { createIndexRequestSchema, indexRequestSchema } from "@/schemas";
+import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import { createClient } from "@yzlab/supabase/supabase/server";
-import { Hono } from "hono";
 import type { HTTPResponseError } from "hono/types";
 import { cookies } from "next/headers";
-import { createFromRequest, deleteRequest, getRequest, getRequestByLink } from "./actions";
-import { requestSchema } from "./schemas";
 
+const routeGET = createRoute({
+  path: "/",
+  method: "get",
+  operationId: "getRequests",
+  responses: {
+    200: {
+      description: "Success",
+      content: {
+        'application/json': {
+          // @ts-expect-error
+          schema: z.array(z.record(indexRequestSchema)).openapi("request"),
+        },
+      },
+    },
+    500: {
+      description: "Internal server error",
+      content: {
+        'application/json': {
+          // @ts-expect-error
+          schema: z.array(z.record(indexRequestSchema)).openapi("request"),
+        },
+      },
+    },
+  },
+})
 
+const routePOST = createRoute({
+  path: "/",
+  method: "post",
+  operationId: "createRequest",
+  requestBody: {
+    // @ts-expect-error
+    content: z.record(createIndexRequestSchema),
+    required: true,
+    description: "Request body",
+  },
+  responses: {
+    200: {
+      description: "Success",
+      content: {
+        'application/json': {
+          // @ts-expect-error
+          schema: z.record(indexRequestSchema).openapi("request"),
+        },
+      },
+    },
+    400: {
+      description: "Not found",
+      content: {
+        'application/json': {
+          schema: z.null().openapi("request"),
+        },
+      },
+    },
+    500: {
+      description: "Internal server error",
+      content: {
+        'application/json': {
+          schema: z.null().openapi("request"),
+        },
+      },
+    },
+  },
+});
 
-export const requests = new Hono()
+export const request = new OpenAPIHono()
 
-requests.get("/", async (c) => {
+request.openapi(routeGET, async (c) => {
   try {
     const cookieStore = await cookies()
 
@@ -27,18 +89,24 @@ requests.get("/", async (c) => {
     return c.json(data)
   } catch (error) {
     const err = error as HTTPResponseError;
+
+    console.log(err.message);
+
     try {
 
       const parsedErrorMessage = JSON.parse(err.message);
 
-      return c.json({ error: parsedErrorMessage }, 500);
+      console.log(parsedErrorMessage);
+
+      return c.json([], 500);
     } catch (error) {
-      return c.json({ error: err.message }, 500);
+
+      return c.json([], 500);
     }
   }
 });
 
-requests.post("/", async (c) => {
+request.openapi(routePOST, async (c) => {
   try {
     const contentType = c.req.header("Content-Type")
 
@@ -46,7 +114,7 @@ requests.post("/", async (c) => {
 
     const body = await c.req.json();
 
-    const isValid = requestSchema.safeParse(body);
+    const isValid = createIndexRequestSchema.safeParse(body);
 
     if (!isValid.success) throw new Error(isValid.error.message);
 
@@ -67,70 +135,19 @@ requests.post("/", async (c) => {
     return c.json(data)
   } catch (error) {
     const err = error as HTTPResponseError;
+
     console.log(err.message);
+
     try {
 
       const parsedErrorMessage = JSON.parse(err.message);
 
-      return c.json({ error: parsedErrorMessage }, 500);
+      console.log(parsedErrorMessage);
+
+      return c.json(null, 500);
     } catch (error) {
-      return c.json({ error: err.message }, 500);
+
+      return c.json(null, 500);
     }
-  }
-})
-
-requests.get("/link", async (c) => {
-  const url = c.req.query("url")
-
-  if (!url) return c.json(null, 400);
-
-  try {
-
-    const link = await getRequestByLink(url)
-
-    return c.json(link)
-  } catch (error) {
-    return c.json(null, 500);
-  }
-})
-
-
-requests.post("/:id/accept", async (c) => {
-  const id = c.req.param("id")
-
-  const intId = Number.parseInt(id)
-
-  try {
-    const request = await getRequest(intId);
-
-    if (!request) throw new Error("Request not found");
-
-    await createFromRequest(request);
-
-    await deleteRequest(intId);
-
-    return c.json({ error: null }, 200);
-  } catch (error) {
-    const err = error as HTTPResponseError;
-    return c.json({ error: err.message }, 500);
-  }
-})
-
-requests.post("/:id/reject", async (c) => {
-  const id = c.req.param("id")
-
-  const intId = Number.parseInt(id)
-
-  try {
-    const request = await getRequest(intId);
-
-    if (!request) throw new Error("Request not found");
-
-    await deleteRequest(intId);
-
-    return c.json({ error: null }, 200);
-  } catch (error) {
-    const err = error as HTTPResponseError;
-    return c.json({ error: err.message }, 500);
   }
 })
