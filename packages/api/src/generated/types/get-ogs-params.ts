@@ -6,7 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type GetOgssParams = {
+export type GetOgsParams = {
 blur?: string;
 offset?: string;
 };

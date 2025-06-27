@@ -6,6 +6,6 @@
  * OpenAPI spec version: 1.0.0
  */
 import type { Sites } from './sites';
-import type { GetSites500AllOfItem } from './get-sites500-all-of-item';
+import type { GetSites200AllOfItem } from './get-sites200-all-of-item';
 
-export type GetSites500 = Sites & GetSites500AllOfItem[];
+export type GetSites200 = Sites & GetSites200AllOfItem[];

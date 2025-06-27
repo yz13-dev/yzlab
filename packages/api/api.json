@@ -18,8 +18,139 @@
   "components": {
     "schemas": {
       "sites": {
-        "type": "array",
-        "items": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number"
+              },
+              "domain": {
+                "type": "string",
+                "minLength": 1
+              },
+              "pathname": {
+                "type": "string",
+                "minLength": 1
+              },
+              "title": {
+                "type": "string",
+                "nullable": true
+              },
+              "description": {
+                "type": "string",
+                "nullable": true
+              },
+              "favicon": {
+                "type": "string",
+                "nullable": true
+              },
+              "og": {
+                "type": "string",
+                "nullable": true
+              },
+              "screenshot": {
+                "type": "string",
+                "nullable": true
+              },
+              "clicks": {
+                "type": "number",
+                "nullable": true
+              },
+              "tags": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "type": "string"
+                }
+              },
+              "last_crawled_at": {
+                "type": "string",
+                "nullable": true
+              },
+              "created_at": {
+                "type": "string"
+              },
+              "blurImageURL": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "required": [
+              "domain",
+              "pathname",
+              "blurImageURL"
+            ]
+          }
+        }
+      },
+      "increase": {
+        "type": "object",
+        "nullable": true,
+        "additionalProperties": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number"
+            },
+            "domain": {
+              "type": "string",
+              "minLength": 1
+            },
+            "pathname": {
+              "type": "string",
+              "minLength": 1
+            },
+            "title": {
+              "type": "string",
+              "nullable": true
+            },
+            "description": {
+              "type": "string",
+              "nullable": true
+            },
+            "favicon": {
+              "type": "string",
+              "nullable": true
+            },
+            "og": {
+              "type": "string",
+              "nullable": true
+            },
+            "screenshot": {
+              "type": "string",
+              "nullable": true
+            },
+            "clicks": {
+              "type": "number",
+              "nullable": true
+            },
+            "tags": {
+              "type": "array",
+              "nullable": true,
+              "items": {
+                "type": "string"
+              }
+            },
+            "last_crawled_at": {
+              "type": "string",
+              "nullable": true
+            },
+            "created_at": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "domain",
+            "pathname"
+          ]
+        }
+      },
+      "domain": {
+        "type": "object",
+        "additionalProperties": {
           "type": "object",
           "properties": {
             "id": {
@@ -153,7 +284,235 @@
     "parameters": {}
   },
   "paths": {
-    "/links/sites": {
+    "/v1/links": {
+      "post": {
+        "operationId": "createLink",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "name": "links",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "name": "domain",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get all sites links",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/sites"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/sites"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/links/count/increase": {
+      "post": {
+        "operationId": "increaseClicks",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "name": "id",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "name": "path",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "name": "domain",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get all sites links",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/increase"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/links/all/{domain}": {
+      "get": {
+        "operationId": "getlinkByDomainAndPathname",
+        "parameters": [
+          {
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/domain"
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            },
+            "required": true,
+            "name": "domain",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "name": "pathname",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get all sites links",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/domain"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/domain"
+                    },
+                    {
+                      "nullable": true
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/domain"
+                    },
+                    {
+                      "nullable": true
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/links/sites/recent": {
+      "get": {
+        "operationId": "getRecentSites",
+        "responses": {
+          "200": {
+            "description": "Get all ogs links",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ogs"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ogs"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/links/sites/tag/{tag}": {
+      "get": {
+        "operationId": "getSitesByTag",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "tag",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get all sites links",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/sites"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/sites"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/links/sites": {
       "get": {
         "operationId": "getSites",
         "parameters": [
@@ -180,6 +539,210 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/sites"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "number"
+                          },
+                          "domain": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "pathname": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "title": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "description": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "favicon": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "og": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "screenshot": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "clicks": {
+                            "type": "number",
+                            "nullable": true
+                          },
+                          "tags": {
+                            "type": "array",
+                            "nullable": true,
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "last_crawled_at": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "created_at": {
+                            "type": "string"
+                          },
+                          "blurImageURL": {
+                            "type": "string",
+                            "nullable": true
+                          }
+                        },
+                        "required": [
+                          "domain",
+                          "pathname",
+                          "blurImageURL"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/sites"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "number"
+                          },
+                          "domain": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "pathname": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "title": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "description": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "favicon": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "og": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "screenshot": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "clicks": {
+                            "type": "number",
+                            "nullable": true
+                          },
+                          "tags": {
+                            "type": "array",
+                            "nullable": true,
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "last_crawled_at": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "created_at": {
+                            "type": "string"
+                          },
+                          "blurImageURL": {
+                            "type": "string",
+                            "nullable": true
+                          }
+                        },
+                        "required": [
+                          "domain",
+                          "pathname",
+                          "blurImageURL"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/links/ogs/recent": {
+      "get": {
+        "operationId": "getRecentOgs",
+        "responses": {
+          "200": {
+            "description": "Get all ogs links",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ogs"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ogs"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/links/ogs/tag/{tag}": {
+      "get": {
+        "operationId": "getOgsByTag",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "tag",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get all sites links",
+            "content": {
+              "application/json": {
+                "schema": {
                   "$ref": "#/components/schemas/sites"
                 }
               }
@@ -190,7 +753,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "nullable": true
+                  "$ref": "#/components/schemas/sites"
                 }
               }
             }
@@ -198,9 +761,9 @@
         }
       }
     },
-    "/links/ogs": {
+    "/v1/links/ogs": {
       "get": {
-        "operationId": "getOgss",
+        "operationId": "getOgs",
         "parameters": [
           {
             "schema": {
@@ -235,7 +798,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "nullable": true
+                  "$ref": "#/components/schemas/ogs"
                 }
               }
             }

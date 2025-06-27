@@ -6,7 +6,8 @@
  * OpenAPI spec version: 1.0.0
  */
 
-/**
- * @nullable
- */
-export type GetOgss500 = unknown | null;
+export type IncreaseClicksParams = {
+id?: string;
+path?: string;
+domain?: string;
+};

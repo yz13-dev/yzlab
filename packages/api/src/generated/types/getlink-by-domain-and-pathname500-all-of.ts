@@ -5,6 +5,8 @@
  * It's YZLAB API
  * OpenAPI spec version: 1.0.0
  */
-import type { SitesItem } from './sites-item';
 
-export interface Sites {[key: string]: SitesItem[]}
+/**
+ * @nullable
+ */
+export type GetlinkByDomainAndPathname500AllOf = unknown | null;

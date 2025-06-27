@@ -2,16 +2,7 @@ import packageJson from "@/package.json";
 import { OpenAPIHono } from '@hono/zod-openapi';
 import { compress } from 'hono/compress';
 import { handle } from "hono/vercel";
-import { auth } from "./auth/endpoint";
-import { codes } from "./codes/endpoint";
-import { crawl } from "./crawl/endpoint";
-import { domains } from "./domains/endpoint";
-import { email } from "./email/endpoint";
-import { indexing } from "./indexing/endpoint";
-import { links } from "./links/endpoint";
-import { requests } from "./requests/endpoint";
-import { search } from "./search/endpoint";
-import { snippets } from "./snippets/endpoint";
+import { v1 } from "./v1";
 
 export const runtime = "nodejs";
 
@@ -19,16 +10,8 @@ const app = new OpenAPIHono().basePath("/");
 
 app.use(compress())
 
-app.route("crawl", crawl);
-app.route("domains", domains);
-app.route("indexing", indexing);
-app.route("search", search);
-app.route("snippets", snippets);
-app.route("requests", requests);
-app.route("auth", auth);
-app.route("auth/codes", codes);
-app.route("links", links);
-app.route("email", email);
+app.route("/", v1)
+
 app.doc("/openapi.json", {
   openapi: "3.0.0",
   info: {

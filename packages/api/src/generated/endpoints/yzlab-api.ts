@@ -12,8 +12,14 @@ import type {
 } from 'axios';
 
 import type {
-  GetOgssParams,
+  CreateLinkParams,
+  Domain,
+  GetOgsParams,
+  GetSites200,
   GetSitesParams,
+  GetlinkByDomainAndPathnameParams,
+  Increase,
+  IncreaseClicksParams,
   Ogs,
   Sites
 } from '../types';
@@ -21,25 +27,95 @@ import type {
 
 
 
-  export const getSites = <TData = AxiosResponse<Sites>>(
+  export const createLink = <TData = AxiosResponse<Sites>>(
+    params?: CreateLinkParams, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.post(
+      `/v1/links`,undefined,{
+    ...options,
+        params: {...params, ...options?.params},}
+    );
+  }
+
+export const increaseClicks = <TData = AxiosResponse<Increase>>(
+    params?: IncreaseClicksParams, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.post(
+      `/v1/links/count/increase`,undefined,{
+    ...options,
+        params: {...params, ...options?.params},}
+    );
+  }
+
+export const getlinkByDomainAndPathname = <TData = AxiosResponse<Domain>>(
+    domain: Domain & string,
+    params?: GetlinkByDomainAndPathnameParams, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/v1/links/all/${domain}`,{
+    ...options,
+        params: {...params, ...options?.params},}
+    );
+  }
+
+export const getRecentSites = <TData = AxiosResponse<Ogs>>(
+     options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/v1/links/sites/recent`,options
+    );
+  }
+
+export const getSitesByTag = <TData = AxiosResponse<Sites>>(
+    tag: string, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/v1/links/sites/tag/${tag}`,options
+    );
+  }
+
+export const getSites = <TData = AxiosResponse<GetSites200>>(
     params?: GetSitesParams, options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.get(
-      `/links/sites`,{
+      `/v1/links/sites`,{
     ...options,
         params: {...params, ...options?.params},}
     );
   }
 
-export const getOgss = <TData = AxiosResponse<Ogs>>(
-    params?: GetOgssParams, options?: AxiosRequestConfig
+export const getRecentOgs = <TData = AxiosResponse<Ogs>>(
+     options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.get(
-      `/links/ogs`,{
+      `/v1/links/ogs/recent`,options
+    );
+  }
+
+export const getOgsByTag = <TData = AxiosResponse<Sites>>(
+    tag: string, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/v1/links/ogs/tag/${tag}`,options
+    );
+  }
+
+export const getOgs = <TData = AxiosResponse<Ogs>>(
+    params?: GetOgsParams, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.get(
+      `/v1/links/ogs`,{
     ...options,
         params: {...params, ...options?.params},}
     );
   }
 
-export type GetSitesResult = AxiosResponse<Sites>
-export type GetOgssResult = AxiosResponse<Ogs>
+export type CreateLinkResult = AxiosResponse<Sites>
+export type IncreaseClicksResult = AxiosResponse<Increase>
+export type GetlinkByDomainAndPathnameResult = AxiosResponse<Domain>
+export type GetRecentSitesResult = AxiosResponse<Ogs>
+export type GetSitesByTagResult = AxiosResponse<Sites>
+export type GetSitesResult = AxiosResponse<GetSites200>
+export type GetRecentOgsResult = AxiosResponse<Ogs>
+export type GetOgsByTagResult = AxiosResponse<Sites>
+export type GetOgsResult = AxiosResponse<Ogs>
