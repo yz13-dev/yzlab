@@ -1,6 +1,6 @@
 import { expire, redis } from "@/extensions/redis";
 import { makeLinksImages } from "@/lib/links-images";
-import { LinkWithBlurSchema, linkWithBlurSchema } from "@/schemas";
+import { LinkWithBlurSchema, linkWithBlurSchemaArray } from "@/schemas";
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import { getOgsByTag } from "../../../actions";
 
@@ -20,7 +20,7 @@ const route = createRoute({
       content: {
         'application/json': {
           // @ts-expect-error
-          schema: z.array(linkWithBlurSchema).openapi("sites"),
+          schema: linkWithBlurSchemaArray
         },
       },
       description: 'Get all sites links',
@@ -29,7 +29,7 @@ const route = createRoute({
       content: {
         'application/json': {
           // @ts-expect-error
-          schema: z.array(linkWithBlurSchema).openapi("sites"),
+          schema: linkWithBlurSchemaArray
         },
       },
       description: 'Internal server error',

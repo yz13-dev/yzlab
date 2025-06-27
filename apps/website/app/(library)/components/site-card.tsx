@@ -16,6 +16,7 @@ type Props = {
 }
 
 export default function ({ link, hideImage = false }: Props) {
+
   const favicon = link.favicon;
 
   const domain = link.domain;

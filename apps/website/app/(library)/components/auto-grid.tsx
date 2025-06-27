@@ -1,17 +1,17 @@
 "use client"
 import { getOgs, getSites } from "@yzlab/api";
-import { OgsItem, SitesItem } from "@yzlab/api/types";
+import { GetOgs200Item, SitesItem } from "@yzlab/api/types";
 import { Button } from "@yzlab/ui/components/button";
 import { Loader2Icon } from "lucide-react";
 import { useState } from "react";
 import OgCard from "./og-card";
 import SiteCard from "./site-card";
 
-export default function ({ defaultLinks = [], type = "site" }: { defaultLinks?: (SitesItem | OgsItem)[], type: "og" | "site" }) {
+export default function ({ defaultLinks = [], type = "site" }: { defaultLinks?: (SitesItem | GetOgs200Item)[], type: "og" | "site" }) {
 
   const [loading, setLoading] = useState<boolean>(false)
   const [offset, setOffset] = useState(0)
-  const [links, setLinks] = useState<(SitesItem | OgsItem)[]>(defaultLinks ?? [])
+  const [links, setLinks] = useState<(SitesItem | GetOgs200Item)[]>(defaultLinks ?? [])
 
   const [end, setEnd] = useState<boolean>(false)
 

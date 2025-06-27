@@ -7,6 +7,7 @@ export const gfkOrvalConfig: OptionsExport = {
   },
   output: {
     baseUrl: "https://api.yzlab.ru",
+    // baseUrl: "http://localhost:3000",
     httpClient: "axios",
     mode: "split",
     target: "./src/api",

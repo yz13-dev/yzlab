@@ -23,17 +23,19 @@ import type {
   GetLinkByDomainAndPathname200,
   GetLinkByDomainAndPathnameParams,
   GetOgs200Item,
-  GetOgsByTag200,
+  GetOgsByTag200Item,
   GetOgsParams,
+  GetRecentOgs200Item,
+  GetRecentSites200Item,
   GetRequestByLink200,
   GetRequestByLinkParams,
   GetRequests200Item,
   GetSites200Item,
+  GetSitesByTag200Item,
   GetSitesParams,
   GetV1DomainsDomainDomain200,
   Increase,
   IncreaseClicksParams,
-  Ogs,
   PostV1EmailCheck200,
   PostV1EmailCheckParams,
   RejectRequestParams,
@@ -125,7 +127,7 @@ export const getLinkByDomainAndPathname = <TData = AxiosResponse<GetLinkByDomain
     );
   }
 
-export const getRecentSites = <TData = AxiosResponse<Ogs>>(
+export const getRecentSites = <TData = AxiosResponse<GetRecentSites200Item[]>>(
      options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.get(
@@ -133,7 +135,7 @@ export const getRecentSites = <TData = AxiosResponse<Ogs>>(
     );
   }
 
-export const getSitesByTag = <TData = AxiosResponse<Ogs>>(
+export const getSitesByTag = <TData = AxiosResponse<GetSitesByTag200Item[]>>(
     tag: string, options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.get(
@@ -151,7 +153,7 @@ export const getSites = <TData = AxiosResponse<GetSites200Item[]>>(
     );
   }
 
-export const getRecentOgs = <TData = AxiosResponse<Ogs>>(
+export const getRecentOgs = <TData = AxiosResponse<GetRecentOgs200Item[]>>(
      options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.get(
@@ -159,7 +161,7 @@ export const getRecentOgs = <TData = AxiosResponse<Ogs>>(
     );
   }
 
-export const getOgsByTag = <TData = AxiosResponse<GetOgsByTag200>>(
+export const getOgsByTag = <TData = AxiosResponse<GetOgsByTag200Item[]>>(
     tag: string, options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.get(
@@ -249,11 +251,11 @@ export type GetIndexPreviewResult = AxiosResponse<GetIndexPreview200>
 export type CreateLinkResult = AxiosResponse<Sites>
 export type IncreaseClicksResult = AxiosResponse<Increase>
 export type GetLinkByDomainAndPathnameResult = AxiosResponse<GetLinkByDomainAndPathname200>
-export type GetRecentSitesResult = AxiosResponse<Ogs>
-export type GetSitesByTagResult = AxiosResponse<Ogs>
+export type GetRecentSitesResult = AxiosResponse<GetRecentSites200Item[]>
+export type GetSitesByTagResult = AxiosResponse<GetSitesByTag200Item[]>
 export type GetSitesResult = AxiosResponse<GetSites200Item[]>
-export type GetRecentOgsResult = AxiosResponse<Ogs>
-export type GetOgsByTagResult = AxiosResponse<GetOgsByTag200>
+export type GetRecentOgsResult = AxiosResponse<GetRecentOgs200Item[]>
+export type GetOgsByTagResult = AxiosResponse<GetOgsByTag200Item[]>
 export type GetOgsResult = AxiosResponse<GetOgs200Item[]>
 export type GetRequestsResult = AxiosResponse<GetRequests200Item[]>
 export type CreateRequestResult = AxiosResponse<CreateRequest200>

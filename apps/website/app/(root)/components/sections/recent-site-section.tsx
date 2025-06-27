@@ -20,9 +20,9 @@ export const SectionSkeleton = () => {
 
 export default async function () {
 
-  const { data } = await getRecentSites()
+  const response = await getRecentSites()
 
-  const links = data ?? [];
+  const links = response.data ?? [];
 
   return (
     <BigSection title="Новые Сайты">

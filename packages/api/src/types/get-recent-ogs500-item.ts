@@ -6,7 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type GetOgsByTag200AllOfItem = {
+export type GetRecentOgs500Item = {
   id?: number;
   /** @minLength 1 */
   domain: string;
