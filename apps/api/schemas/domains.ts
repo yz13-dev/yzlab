@@ -14,16 +14,21 @@ export const domainSchema = z.object({
   created_at: z.string().optional(),
 })
 
-export const createDomainSchema = domainSchema.omit({ 
-  id: true, 
-  created_at: true 
+
+export const domainLinkWithBufferScreenshot = domainSchema.merge(z.object({
+  screenshot: z.union([z.string().nullable(), z.null()]).optional(),
+}))
+
+export const createDomainSchema = domainSchema.omit({
+  id: true,
+  created_at: true
 })
 
-export const updateDomainSchema = domainSchema.partial().omit({ 
-  id: true, 
-  created_at: true 
+export const updateDomainSchema = domainSchema.partial().omit({
+  id: true,
+  created_at: true
 })
 
 export type DomainSchema = z.infer<typeof domainSchema>
 export type CreateDomainSchema = z.infer<typeof createDomainSchema>
-export type UpdateDomainSchema = z.infer<typeof updateDomainSchema> 
+export type UpdateDomainSchema = z.infer<typeof updateDomainSchema>

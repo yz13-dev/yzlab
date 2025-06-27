@@ -17,6 +17,66 @@
   ],
   "components": {
     "schemas": {
+      "domain": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "domain": {
+              "type": "string",
+              "minLength": 1
+            },
+            "title": {
+              "type": "string",
+              "nullable": true
+            },
+            "description": {
+              "type": "string",
+              "nullable": true
+            },
+            "favicon": {
+              "type": "string",
+              "nullable": true
+            },
+            "tags": {
+              "type": "array",
+              "nullable": true,
+              "items": {
+                "type": "string"
+              }
+            },
+            "last_crawled_at": {
+              "type": "string",
+              "nullable": true
+            },
+            "created_at": {
+              "type": "string"
+            },
+            "screenshot": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "nullable": true
+                },
+                {
+                  "nullable": true
+                }
+              ]
+            }
+          },
+          "required": [
+            "domain"
+          ]
+        }
+      },
+      "error": {
+        "nullable": true
+      },
       "sites": {
         "type": "object",
         "additionalProperties": {
@@ -148,72 +208,6 @@
           ]
         }
       },
-      "domain": {
-        "type": "object",
-        "additionalProperties": {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "number"
-            },
-            "domain": {
-              "type": "string",
-              "minLength": 1
-            },
-            "pathname": {
-              "type": "string",
-              "minLength": 1
-            },
-            "title": {
-              "type": "string",
-              "nullable": true
-            },
-            "description": {
-              "type": "string",
-              "nullable": true
-            },
-            "favicon": {
-              "type": "string",
-              "nullable": true
-            },
-            "og": {
-              "type": "string",
-              "nullable": true
-            },
-            "screenshot": {
-              "type": "string",
-              "nullable": true
-            },
-            "clicks": {
-              "type": "number",
-              "nullable": true
-            },
-            "tags": {
-              "type": "array",
-              "nullable": true,
-              "items": {
-                "type": "string"
-              }
-            },
-            "last_crawled_at": {
-              "type": "string",
-              "nullable": true
-            },
-            "created_at": {
-              "type": "string"
-            },
-            "blurImageURL": {
-              "type": "string",
-              "nullable": true
-            }
-          },
-          "required": [
-            "domain",
-            "pathname",
-            "blurImageURL"
-          ]
-        }
-      },
       "ogs": {
         "type": "array",
         "items": {
@@ -327,6 +321,47 @@
     "parameters": {}
   },
   "paths": {
+    "/v1/indexing/preview": {
+      "post": {
+        "operationId": "getIndexPreview",
+        "description": "Get preview of a link",
+        "tags": [
+          "Indexing"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/domain"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/links": {
       "post": {
         "operationId": "createLink",
@@ -449,7 +484,76 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/domain"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/domain"
+                    },
+                    {
+                      "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "number"
+                          },
+                          "domain": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "pathname": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "title": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "description": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "favicon": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "og": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "screenshot": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "clicks": {
+                            "type": "number",
+                            "nullable": true
+                          },
+                          "tags": {
+                            "type": "array",
+                            "nullable": true,
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "last_crawled_at": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "created_at": {
+                            "type": "string"
+                          },
+                          "blurImageURL": {
+                            "type": "string",
+                            "nullable": true
+                          }
+                        },
+                        "required": [
+                          "domain",
+                          "pathname",
+                          "blurImageURL"
+                        ]
+                      }
+                    }
+                  ]
                 }
               }
             }

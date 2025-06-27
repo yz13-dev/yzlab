@@ -5,12 +5,13 @@
  * It's YZLAB API
  * OpenAPI spec version: 1.0.0
  */
-import type { DomainScreenshot } from './domain-screenshot';
 
-export interface Domain {[key: string]: {
-  id?: string;
+export type GetlinkByDomainAndPathname200AllOf = {[key: string]: {
+  id?: number;
   /** @minLength 1 */
   domain: string;
+  /** @minLength 1 */
+  pathname: string;
   /** @nullable */
   title?: string | null;
   /** @nullable */
@@ -18,9 +19,16 @@ export interface Domain {[key: string]: {
   /** @nullable */
   favicon?: string | null;
   /** @nullable */
+  og?: string | null;
+  /** @nullable */
+  screenshot?: string | null;
+  /** @nullable */
+  clicks?: number | null;
+  /** @nullable */
   tags?: string[] | null;
   /** @nullable */
   last_crawled_at?: string | null;
   created_at?: string;
-  screenshot?: DomainScreenshot;
-}}
+  /** @nullable */
+  blurImageURL: string | null;
+}};

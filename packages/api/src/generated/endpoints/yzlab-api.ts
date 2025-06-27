@@ -22,6 +22,7 @@ import type {
   GetRequestByLinkParams,
   GetSites200,
   GetSitesParams,
+  GetlinkByDomainAndPathname200,
   GetlinkByDomainAndPathnameParams,
   Increase,
   IncreaseClicksParams,
@@ -35,7 +36,18 @@ import type {
 
 
 
-  export const createLink = <TData = AxiosResponse<Sites>>(
+  /**
+ * Get preview of a link
+ */
+export const getIndexPreview = <TData = AxiosResponse<Domain>>(
+     options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.post(
+      `/v1/indexing/preview`,undefined,options
+    );
+  }
+
+export const createLink = <TData = AxiosResponse<Sites>>(
     params?: CreateLinkParams, options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.post(
@@ -55,7 +67,7 @@ export const increaseClicks = <TData = AxiosResponse<Increase>>(
     );
   }
 
-export const getlinkByDomainAndPathname = <TData = AxiosResponse<Domain>>(
+export const getlinkByDomainAndPathname = <TData = AxiosResponse<GetlinkByDomainAndPathname200>>(
     domain: Domain & string,
     params?: GetlinkByDomainAndPathnameParams, options?: AxiosRequestConfig
  ): Promise<TData> => {
@@ -166,9 +178,10 @@ export const getRequestByLink = <TData = AxiosResponse<GetRequestByLink200>>(
     );
   }
 
+export type GetIndexPreviewResult = AxiosResponse<Domain>
 export type CreateLinkResult = AxiosResponse<Sites>
 export type IncreaseClicksResult = AxiosResponse<Increase>
-export type GetlinkByDomainAndPathnameResult = AxiosResponse<Domain>
+export type GetlinkByDomainAndPathnameResult = AxiosResponse<GetlinkByDomainAndPathname200>
 export type GetRecentSitesResult = AxiosResponse<Ogs>
 export type GetSitesByTagResult = AxiosResponse<Sites>
 export type GetSitesResult = AxiosResponse<GetSites200>
