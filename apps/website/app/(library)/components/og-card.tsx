@@ -1,6 +1,6 @@
 import Favicon from "@/components/favicon";
 import { makeLink } from "@/lib/make-a-link";
-import { OgsItem } from "@yzlab/api/types";
+import { GetOgs200Item } from "@yzlab/api/types";
 import { Badge } from "@yzlab/ui/components/badge";
 import { Skeleton } from "@yzlab/ui/components/skeleton";
 import { parseISO } from "date-fns";
@@ -11,7 +11,7 @@ import CardImage from "./card-image";
 
 
 type Props = {
-  link: OgsItem;
+  link: GetOgs200Item;
   hideImage?: boolean;
 }
 
