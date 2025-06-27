@@ -1,5 +1,5 @@
 import Header from "@/components/header/header";
-import { getRequests } from "@yzlab/api/requests";
+import { getRequests } from "@yzlab/api";
 import List from "./components/list";
 
 export default async function () {

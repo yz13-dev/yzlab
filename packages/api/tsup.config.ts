@@ -2,7 +2,7 @@ import { defineConfig } from "tsup";
 
 export default defineConfig([
   {
-    entry: ["src/const/*", "src/rest/**/*", "src/lib/*"],
+    entry: ["src/const/*", "src/api/**/*", "src/lib/*"],
     format: ["esm", "cjs"],
     splitting: false,
     sourcemap: true,
@@ -23,7 +23,7 @@ export default defineConfig([
     external: ["node_modules"],
   },
   {
-    entry: ["src/const/*", "src/rest/**/*", "src/lib/*"],
+    entry: ["src/const/*", "src/api/**/*", "src/lib/*"],
     splitting: false,
     sourcemap: true,
     minify: true,

@@ -1,5 +1,5 @@
 import SiteCard, { CardSkeleton } from "@/app/(library)/components/site-card";
-import { getSitesByTag } from "@yzlab/api/links";
+import { getSitesByTag } from "@yzlab/api";
 import Section, { SectionSkeleton as SmallSectionSkeleton } from "../small-section";
 
 
@@ -20,9 +20,9 @@ export const SectionSkeleton = () => {
 
 export default async function () {
 
-  const { data } = await getSitesByTag("spotlight")
+  const response = await getSitesByTag("spotlight")
 
-  const links = data ?? [];
+  const links = response.data ?? [];
 
   return (
     <Section title="Оторанные cайты">

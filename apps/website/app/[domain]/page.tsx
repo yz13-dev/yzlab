@@ -1,4 +1,4 @@
-import { increaseClicks } from "@yzlab/api/links"
+import { increaseClicks } from "@yzlab/api"
 import { redirect } from "next/navigation"
 
 

@@ -1,6 +1,4 @@
-import { getIndexingPreview } from "@yzlab/api/indexing";
-import { getLinkByDomainAndPathname } from "@yzlab/api/links";
-import { getRequestByLink } from "@yzlab/api/requests";
+import { getIndexPreview, getLinkByDomainAndPathname, getRequestByLink } from "@yzlab/api";
 import { cn } from "@yzlab/ui/cn";
 import { Badge } from "@yzlab/ui/components/badge";
 import { Skeleton } from "@yzlab/ui/components/skeleton";
@@ -30,22 +28,23 @@ export default async function ({ searchParams }: PageProps) {
     </div>
   )
 
-  const { data: preview } = await getIndexingPreview(url.toString())
+  const { data } = await getIndexPreview({ url: url.toString() })
+  const preview = data;
 
   const domain = preview?.domain;
   const pathname = preview?.pathname;
 
   if (!domain || !pathname) return null;
 
-  const [{ data: link }, { data: request }] = await Promise.all([getLinkByDomainAndPathname(domain, pathname), getRequestByLink(url.toString())])
+  const [{ data: link }, { data: request }] = await Promise.all([getLinkByDomainAndPathname(domain, { pathname }), getRequestByLink({ url: url.toString() })])
 
   const requested = !!request
 
-  const createdAt = link ? parseISO(link.created_at) : null
+  const createdAt = link.created_at ? parseISO(link.created_at) : null
 
   const favicon = preview?.favicon;
 
-  const screenshot = preview?.screenshot ? `data:image/png;base64,${Buffer.from(preview?.screenshot).toString('base64')}` : null
+  const screenshot = preview?.screenshot ? `data:image/png;base64,${Buffer.from((preview?.screenshot) as Buffer).toString('base64')}` : null
 
   const og = preview?.og;
 

@@ -8,7 +8,7 @@ export const runtime = "edge";
 
 const app = new Hono().basePath("/api");
 
-app.post("/webhook", webhookCallback(bot, "hono"));
+app.post("/webhook", webhookCallback(bot, "hono", {timeoutMilliseconds: 60_000}));
 
 app.get("/version", (c) => {
   const version = packageJson.name;

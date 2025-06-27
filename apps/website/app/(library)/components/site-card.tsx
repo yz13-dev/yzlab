@@ -1,5 +1,5 @@
 import { makeLink } from "@/lib/make-a-link";
-import type { DomainLinkWithBlur } from "@yzlab/api/types/domains";
+import { SitesItem } from "@yzlab/api/types";
 import { Badge } from "@yzlab/ui/components/badge";
 import { Skeleton } from "@yzlab/ui/components/skeleton";
 import { parseISO } from "date-fns";
@@ -11,7 +11,7 @@ import CardImage from "./card-image";
 
 
 type Props = {
-  link: DomainLinkWithBlur;
+  link: SitesItem;
   hideImage?: boolean;
 }
 
@@ -26,7 +26,7 @@ export default function ({ link, hideImage = false }: Props) {
 
   const blurDataURL = link.blurImageURL;
 
-  const createdAt = parseISO(link.created_at);
+  const createdAt = link.created_at ? parseISO(link.created_at) : new Date();
 
   const wasCreatedMoreThanTwoDays = differenceInDays(createdAt, new Date()) > 2;
 
@@ -105,7 +105,7 @@ export const CardSkeleton = ({ hideImage = false }: { hideImage?: boolean }) => 
       <div className="h-4 w-1/2 rounded-full bg-secondary" />
       {
         !hideImage &&
-        <Skeleton className="aspect-[640/400] w-full rounded-md border" />
+        <Skeleton className="aspect-[16/10] w-full rounded-md border" />
       }
     </div>
   )

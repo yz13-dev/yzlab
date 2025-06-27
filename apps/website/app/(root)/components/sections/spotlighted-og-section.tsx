@@ -1,5 +1,5 @@
 import OgCard, { CardSkeleton } from "@/app/(library)/components/og-card";
-import { getOgsByTag } from "@yzlab/api/links";
+import { getOgsByTag } from "@yzlab/api";
 import Section, { SectionSkeleton as SmallSectionSkeleton } from "../small-section";
 
 
@@ -20,9 +20,9 @@ export const SectionSkeleton = () => {
 
 export default async function () {
 
-  const { data } = await getOgsByTag("spotlight")
+  const response = await getOgsByTag("spotlight")
 
-  const links = data ?? [];
+  const links = response.data ?? [];
 
   return (
     <Section title="Новые OG">
