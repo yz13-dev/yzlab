@@ -1,67 +1,52 @@
-import { audienceId } from "@/const/audience";
-import { resend } from "@/extensions/resend";
-import { Hono } from "hono";
-import { checkEmail, sendWelcomeEmail } from "./action";
+import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
+import { checkEmail } from "./action";
 
-
-export const email = new Hono()
-
-email.post("/", async (c) => {
-
-  const email = await c.req.text()
-
-  return c.json(checkEmail(email))
-})
-
-
-email.post("/subscribe", async (c) => {
-
-  const email = await c.req.text()
-
-  const checked = checkEmail(email)
-
-  if (!checked.valid) return c.json(null);
-  if (!checked.email) return c.json(null);
-
-  try {
-    const contacts = (await resend()).contacts;
-
-    const contact = await contacts.create({
-      email: checked.email,
-      audienceId,
-    })
-
-    if (!contact.error) {
-      await sendWelcomeEmail(checked.email)
-    }
-
-    return c.json(contact);
-  } catch (error) {
-    console.log("error", error)
-    return c.json(null);
+const route = createRoute({
+  path: "/",
+  method: "post",
+  description: "Email",
+  request: {
+    query: z.object({
+      email: z.string().optional(),
+    }),
+  },
+  responses: {
+    200: {
+      description: "Email",
+      content: {
+        "application/json": {
+          schema: z.object({
+            email: z.string().nullable(),
+            valid: z.boolean(),
+          }),
+        }
+      }
+    },
+    400: {
+      description: "Bad Request",
+      content: {
+        "application/json": {
+          schema: z.object({
+            email: z.string().nullable(),
+            valid: z.boolean(),
+          }),
+        }
+      }
+    },
   }
-})
+});
 
-email.post("/unsubscribe", async (c) => {
+export const email = new OpenAPIHono()
 
-  const email = await c.req.text()
+email.openapi(route, async (c) => {
 
-  const checked = checkEmail(email)
-
-  if (!checked.valid) return c.json(null);
-  if (!checked.email) return c.json(null);
+  const email = c.req.query("email")
 
   try {
-    const contacts = (await resend()).contacts;
-
-    const contact = await contacts.remove({
-      email: checked.email,
-      audienceId,
-    })
-
-    return c.json(contact);
+    if (!email) throw new Error("email is required")
+    return c.json(checkEmail(email), 200)
   } catch (error) {
     console.log("error", error)
-    return c.json(null);
+    return c.json({ email: null, valid: false }, 400);
   }
 })

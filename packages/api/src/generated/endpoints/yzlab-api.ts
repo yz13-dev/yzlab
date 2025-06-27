@@ -27,6 +27,10 @@ import type {
   Increase,
   IncreaseClicksParams,
   Ogs,
+  PostV1EmailCheck200,
+  PostV1EmailCheckParams,
+  PostV1EmailSubscribe200,
+  PostV1EmailUnsubscribe200,
   RejectRequest200,
   RejectRequestParams,
   Request,
@@ -37,6 +41,35 @@ import type {
 
 
   /**
+ * Email
+ */
+export const postV1EmailCheck = <TData = AxiosResponse<PostV1EmailCheck200>>(
+    params?: PostV1EmailCheckParams, options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.post(
+      `/v1/email/check`,undefined,{
+    ...options,
+        params: {...params, ...options?.params},}
+    );
+  }
+
+export const postV1EmailSubscribe = <TData = AxiosResponse<PostV1EmailSubscribe200>>(
+     options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.post(
+      `/v1/email/subscribe`,undefined,options
+    );
+  }
+
+export const postV1EmailUnsubscribe = <TData = AxiosResponse<PostV1EmailUnsubscribe200>>(
+     options?: AxiosRequestConfig
+ ): Promise<TData> => {
+    return axios.post(
+      `/v1/email/unsubscribe`,undefined,options
+    );
+  }
+
+/**
  * Get preview of a link
  */
 export const getIndexPreview = <TData = AxiosResponse<Domain>>(
@@ -178,6 +211,9 @@ export const getRequestByLink = <TData = AxiosResponse<GetRequestByLink200>>(
     );
   }
 
+export type PostV1EmailCheckResult = AxiosResponse<PostV1EmailCheck200>
+export type PostV1EmailSubscribeResult = AxiosResponse<PostV1EmailSubscribe200>
+export type PostV1EmailUnsubscribeResult = AxiosResponse<PostV1EmailUnsubscribe200>
 export type GetIndexPreviewResult = AxiosResponse<Domain>
 export type CreateLinkResult = AxiosResponse<Sites>
 export type IncreaseClicksResult = AxiosResponse<Increase>

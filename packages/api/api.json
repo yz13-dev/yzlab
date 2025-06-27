@@ -321,6 +321,167 @@
     "parameters": {}
   },
   "paths": {
+    "/v1/email/check": {
+      "post": {
+        "description": "Email",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "name": "email",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Email",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "valid": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "email",
+                    "valid"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "valid": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "email",
+                    "valid"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/email/subscribe": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "Subscribe",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "nullable": true,
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "object": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "object"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/email/unsubscribe": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "Subscribe",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "nullable": true,
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "object": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "object"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/indexing/preview": {
       "post": {
         "operationId": "getIndexPreview",
