@@ -20,6 +20,7 @@ link.post(
       const [old, not] = await Promise.all([oldIndexed, notIndexed]);
 
       if (!old && !not) {
+        console.log("cancel because old and not are null")
         await context.cancel();
         return null;
       }
