@@ -1,31 +1,41 @@
-import { Hono } from "hono";
-import { getDomainByDomain, getDomains } from "./actions";
+import { domainSchema } from "@/schemas";
+import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
+import { getDomains } from "./actions";
 
-
-export const domains = new Hono();
-
-domains.get("/", async (c) => {
-  try {
-    const data = await getDomains();
-
-    return c.json(data);
-  } catch (error) {
-    console.error(error);
-    return c.json(null, 500);
+const route = createRoute({
+  path: "/",
+  method: "get",
+  responses: {
+    200: {
+      description: "Get domains",
+      content: {
+        "application/json": {
+          // @ts-expect-error
+          schema: z.array(z.record(domainSchema))
+        }
+      }
+    },
+    500: {
+      description: "Internal Server Error",
+      content: {
+        "application/json": {
+          // @ts-expect-error
+          schema: z.array(z.record(domainSchema))
+        }
+      }
+    },
   }
 })
 
-domains.get("/:domain", async (c) => {
+export const domain = new OpenAPIHono();
 
-  const domain = c.req.param("domain");
-
+domain.openapi(route, async (c) => {
   try {
+    const data = await getDomains();
 
-    const data = await getDomainByDomain(domain)
-
-    return c.json(data, 200);
+    return c.json(data ?? [], 200);
   } catch (error) {
     console.error(error);
-    return c.json(null, 500);
+    return c.json([], 500);
   }
-});
+})
