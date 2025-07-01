@@ -126,7 +126,7 @@ bot.command("requests", async (ctx) => {
 
     console.log("Authorization passed, fetching requests...");
 
-    const { data: requests } = await getRequests();
+    const requests = await getRequests();
 
     console.log("requests", requests);
 
