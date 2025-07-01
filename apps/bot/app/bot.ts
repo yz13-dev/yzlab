@@ -152,7 +152,7 @@ bot.command("requests", async (ctx) => {
         `📧 <b>Email:</b> ${email}\n` +
         `🔗 <b>URL:</b> ${request.url}\n` +
         `📋 <b>Тип:</b> ${type}\n` +
-        created_at ? `📅 <b>Создан:</b> ${created_at}` : '';
+        `${created_at ? `📅 <b>Создан:</b> ${created_at}` : ''}`;
 
       const keyboard = new InlineKeyboard()
         .text("✅ Принять", `accept_${request.id}`)
