@@ -63,7 +63,7 @@ export const getNotCrawledDomain = async () => {
       .select("*")
       .is("last_crawled_at", null)
       .limit(1)
-      .single()
+      .maybeSingle()
 
     if (error) {
       throw new Error(error.message)

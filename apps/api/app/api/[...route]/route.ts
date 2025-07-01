@@ -21,7 +21,7 @@ app.doc("/openapi.json", {
   },
   servers: [
     { url: 'http://localhost:3000', description: 'Local Server' },
-    // { url: 'https://api.yzlab.ru', description: 'Production Server' },
+    { url: 'https://api.yzlab.ru', description: 'Production Server' },
   ],
 })
 

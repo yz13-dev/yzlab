@@ -12,9 +12,6 @@ const route = createRoute({
     params: z.object({
       id: z.string(),
     }),
-    query: z.object({
-      id: z.string().optional(),
-    }),
   },
   responses: {
     200: {
@@ -47,7 +44,7 @@ const route = createRoute({
 export const reject = new OpenAPIHono();
 
 reject.openapi(route, async (c) => {
-  const id = c.req.query("id")
+  const id = c.req.param("id")
 
   if (!id) return c.json(null, 400);
 
