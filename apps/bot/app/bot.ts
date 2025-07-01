@@ -214,7 +214,7 @@ bot.on("message:text", async (ctx) => {
     });
 
     // Get preview data from API
-    const response = await fetch(`https://api.yzlab.ru/indexing/preview?url=${encodeURIComponent(url)}`, {
+    const response = await fetch(`https://api.yzlab.ru/v1/indexing/preview?url=${encodeURIComponent(url)}`, {
       method: "POST",
     });
 
