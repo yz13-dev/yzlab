@@ -1,6 +1,7 @@
 import { hydrate, HydrateFlavor } from "@grammyjs/hydrate";
 import { Bot, Context, InlineKeyboard, InputFile } from "grammy";
-import { getRequests, acceptRequest, rejectRequest, createRequest } from "@/lib/api";
+// import { getRequests, acceptRequest, rejectRequest, createRequest } from "@/lib/api";
+import { acceptRequest, createRequest, getRequests, rejectRequest } from "@yzlab/api";
 
 type BotContext = HydrateFlavor<Context>;
 const BOT_TOKEN = process.env.BOT_TOKEN ?? "";
@@ -18,24 +19,24 @@ bot.use(hydrate());
 // Middleware to check if the chat is authorized (only for non-command messages)
 bot.use(async (ctx, next) => {
   console.log("Middleware called for message:", ctx.message?.text);
-  
+
   // Skip authorization check for commands
   if (ctx.message?.text?.startsWith('/')) {
     console.log("Command detected, skipping authorization check");
     await next();
     return;
   }
-  
+
   if (!AUTHORIZED_CHAT_ID) {
     console.warn("AUTHORIZED_CHAT_ID not set in environment variables");
     return;
   }
-  
+
   if (ctx.chat?.id.toString() !== AUTHORIZED_CHAT_ID) {
     console.log(`Unauthorized access attempt from chat ID: ${ctx.chat?.id}`);
     return;
   }
-  
+
   console.log("Authorization passed for non-command message");
   await next();
 });
@@ -45,7 +46,7 @@ bot.use(async (ctx, next) => {
 bot.command("start", async (ctx) => {
   console.log("=== START COMMAND EXECUTED ===");
   console.log("Start command called by chat ID:", ctx.chat?.id);
-  
+
   // Check if this is the authorized chat
   if (AUTHORIZED_CHAT_ID && ctx.chat?.id.toString() === AUTHORIZED_CHAT_ID) {
     console.log("Setting admin commands for authorized user");
@@ -71,7 +72,7 @@ bot.command("start", async (ctx) => {
         description: "Предпросмотр ссылки",
       },
     ]);
-    
+
     await ctx.reply("Привет! Просто отправь мне ссылку для предпросмотра и запроса индексации.");
   }
 });
@@ -114,7 +115,7 @@ bot.command("requests", async (ctx) => {
   console.log("=== REQUESTS COMMAND EXECUTED ===");
   console.log("Requests command called by chat ID:", ctx.chat?.id);
   console.log("AUTHORIZED_CHAT_ID:", AUTHORIZED_CHAT_ID);
-  
+
   try {
     // Check authorization before processing
     if (!AUTHORIZED_CHAT_ID || ctx.chat?.id.toString() !== AUTHORIZED_CHAT_ID) {
@@ -125,17 +126,17 @@ bot.command("requests", async (ctx) => {
 
     console.log("Authorization passed, fetching requests...");
 
-    const requests = await getRequests();
+    const { data: requests } = await getRequests();
 
     console.log("requests", requests);
-    
+
     if (!requests || requests.length === 0) {
       await ctx.reply("Нет активных запросов на индексацию.");
       return;
     }
 
     await ctx.reply(`Найдено ${requests.length} запросов на индексацию:`);
-    
+
     for (const request of requests) {
       const url = new URL(request.url);
       const domain = url.hostname;
@@ -143,19 +144,20 @@ bot.command("requests", async (ctx) => {
       const description = request.description || "Не указано";
       const email = request.email || "Не указано";
       const type = request.type;
-      
+      const created_at = request.created_at ? new Date(request.created_at).toLocaleString('ru-RU') : '';
+
       const message = `🌐 <b>${domain}</b>\n` +
         `📝 <b>Название:</b> ${title}\n` +
         `📄 <b>Описание:</b> ${description}\n` +
         `📧 <b>Email:</b> ${email}\n` +
         `🔗 <b>URL:</b> ${request.url}\n` +
         `📋 <b>Тип:</b> ${type}\n` +
-        `📅 <b>Создан:</b> ${new Date(request.created_at).toLocaleString('ru-RU')}`;
-      
+        created_at ? `📅 <b>Создан:</b> ${created_at}` : '';
+
       const keyboard = new InlineKeyboard()
         .text("✅ Принять", `accept_${request.id}`)
         .text("❌ Отклонить", `reject_${request.id}`);
-      
+
       await ctx.reply(message, {
         parse_mode: "HTML",
         reply_markup: keyboard,
@@ -183,7 +185,7 @@ bot.callbackQuery(/^(accepted|rejected)$/, async (ctx) => {
 // Handle URL messages (when users just send a link)
 bot.on("message:text", async (ctx) => {
   const text = ctx.message.text;
-  
+
   // Skip if it's a command
   if (text.startsWith('/')) {
     return;
@@ -215,20 +217,20 @@ bot.on("message:text", async (ctx) => {
     const response = await fetch(`https://api.yzlab.ru/indexing/preview?url=${encodeURIComponent(url)}`, {
       method: "POST",
     });
-    
+
     if (!response.ok) {
       throw new Error('Failed to get preview');
     }
 
     const preview = await response.json();
-    
+
     // Create preview message
     const domain = new URL(url).hostname;
     const title = preview.title || "Название не найдено";
     const description = preview.description || "Описание не найдено";
     const ogImage = preview.og;
     const screenshot = preview.screenshot;
-    
+
     let message = `🔍 <b>Предпросмотр</b>\n\n` +
       `🌐 <b>Домен:</b> ${domain}\n` +
       `📝 <b>Название:</b> ${title}\n` +
@@ -239,16 +241,16 @@ bot.on("message:text", async (ctx) => {
     const hasBasicMetadata = title !== "Название не найдено" || description !== "Описание не найдено";
     const hasOgImage = !!ogImage;
     const hasScreenshot = !!screenshot;
-    
+
     // Create keyboard with indexing options based on available data
     const keyboard = new InlineKeyboard();
-    
+
     // Full indexing - available if we have basic metadata (title/description)
     // Full indexing will generate both screenshot and OG even if they don't exist initially
     if (hasBasicMetadata) {
       keyboard.text("📋 Полная индексация", `request_full_${encodeURIComponent(url)}`);
     }
-    
+
     // Screenshot indexing - only if screenshot already exists
     if (hasScreenshot) {
       if (hasBasicMetadata) {
@@ -256,7 +258,7 @@ bot.on("message:text", async (ctx) => {
       }
       keyboard.text("🖼 Только скриншот", `request_site_${encodeURIComponent(url)}`);
     }
-    
+
     // OG indexing - only if OG image already exists
     if (hasOgImage) {
       if (hasBasicMetadata || hasScreenshot) {
@@ -264,12 +266,12 @@ bot.on("message:text", async (ctx) => {
       }
       keyboard.text("📄 Только OG", `request_og_${encodeURIComponent(url)}`);
     }
-    
+
     // If no indexing options are available, show a message
     if (!hasBasicMetadata && !hasScreenshot && !hasOgImage) {
       message += `\n\n⚠️ <b>Недостаточно данных для индексации</b>\n` +
         `Сайт не содержит необходимых метаданных или изображений.`;
-      
+
       // Edit the loading message with the result
       await ctx.api.editMessageText(ctx.chat.id, loadingMessage.message_id, message, {
         parse_mode: "HTML",
@@ -291,7 +293,7 @@ bot.on("message:text", async (ctx) => {
         console.error("Error sending screenshot:", error);
       }
     }
-    
+
     if (false) {
       try {
         await ctx.replyWithPhoto(ogImage, {
@@ -319,7 +321,7 @@ bot.on("message:text", async (ctx) => {
 bot.callbackQuery(/^request_(full|site|og)_(.+)$/, async (ctx) => {
   const type = ctx.match?.[1];
   const url = decodeURIComponent(ctx.match?.[2] || '');
-  
+
   if (!url || !type) {
     await ctx.answerCallbackQuery("❌ Ошибка: неверные параметры");
     return;
@@ -334,13 +336,13 @@ bot.callbackQuery(/^request_(full|site|og)_(.+)$/, async (ctx) => {
       description: `Запрос отправлен через Telegram бота`,
       email: null,
     });
-    
+
     await ctx.answerCallbackQuery("✅ Запрос отправлен!");
-    
+
     // Update the message to show request was sent
     const keyboard = new InlineKeyboard().text("✅ Запрос отправлен", "request_sent");
     await ctx.editMessageReplyMarkup({ reply_markup: keyboard });
-    
+
     // Send confirmation message
     await ctx.reply(`✅ <b>Запрос на индексацию отправлен!</b>\n\n` +
       `🌐 <b>URL:</b> ${url}\n` +
@@ -371,16 +373,16 @@ bot.callbackQuery(/^accept_(\d+)$/, async (ctx) => {
   }
 
   const requestId = ctx.match?.[1];
-  
+
   if (!requestId) {
     await ctx.answerCallbackQuery("❌ Ошибка: ID запроса не найден");
     return;
   }
-  
+
   try {
     await acceptRequest(requestId);
     await ctx.answerCallbackQuery("✅ Запрос принят!");
-    
+
     // Update the message to show it was accepted
     const keyboard = new InlineKeyboard().text("✅ Принято", "accepted");
     await ctx.editMessageReplyMarkup({ reply_markup: keyboard });
@@ -399,16 +401,16 @@ bot.callbackQuery(/^reject_(\d+)$/, async (ctx) => {
   }
 
   const requestId = ctx.match?.[1];
-  
+
   if (!requestId) {
     await ctx.answerCallbackQuery("❌ Ошибка: ID запроса не найден");
     return;
   }
-  
+
   try {
     await rejectRequest(requestId);
     await ctx.answerCallbackQuery("❌ Запрос отклонен!");
-    
+
     // Update the message to show it was rejected
     const keyboard = new InlineKeyboard().text("❌ Отклонено", "rejected");
     await ctx.editMessageReplyMarkup({ reply_markup: keyboard });
