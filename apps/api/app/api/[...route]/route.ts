@@ -26,6 +26,15 @@ app.use("/*", cors({
   // maxAge: 60 * 5 // 5 minutes
 }))
 
+app.route("/", v1);
+
+app.get("/version", (c) => {
+  const version = packageJson.version;
+  return c.json(version);
+});
+
+app.get("/health", (c) => c.json({ status: "ok" }));
+
 app.doc("/openapi.json", {
   openapi: "3.0.0",
   info: {
@@ -38,15 +47,6 @@ app.doc("/openapi.json", {
     { url: 'https://api.yzlab.ru', description: 'Production Server' },
   ],
 })
-
-app.route("/", v1);
-
-app.get("/version", (c) => {
-  const version = packageJson.version;
-  return c.json(version);
-});
-
-app.get("/health", (c) => c.json({ status: "ok" }));
 
 export const GET = handle(app);
 export const POST = handle(app);

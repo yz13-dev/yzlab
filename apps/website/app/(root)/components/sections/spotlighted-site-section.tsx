@@ -19,7 +19,6 @@ export const SectionSkeleton = () => {
 }
 
 export default async function () {
-
   const response = await getSitesByTag("spotlight")
 
   const links = response ?? [];
