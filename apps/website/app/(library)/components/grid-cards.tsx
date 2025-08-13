@@ -5,7 +5,13 @@ import { CardSkeleton as SiteCardSkeleton } from "./site-card";
 
 export default async function GridCards({ type = "site" }: { type: "og" | "site" }) {
 
-  const { data } = type === "site" ? await getSites({ blur: "true" }) : await getOgs({ blur: "true" })
+  const headers = {
+    "Access-Control-Allow-Origin": "*",
+  }
+
+  const { data } = type === "site"
+    ? await getSites({ blur: "true" }, { headers })
+    : await getOgs({ blur: "true" }, { headers })
 
   const links = data ?? []
 
