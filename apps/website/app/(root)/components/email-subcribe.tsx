@@ -18,7 +18,7 @@ export default function () {
   const trySubscribe = async () => {
     setLoading(true)
     try {
-      const { data } = await subscribeEmail({ email })
+      const data = await subscribeEmail({ email })
       console.log("data", data)
       if (data) {
         setSuccess(true)

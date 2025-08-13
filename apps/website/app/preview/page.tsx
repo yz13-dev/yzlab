@@ -28,7 +28,7 @@ export default async function ({ searchParams }: PageProps) {
     </div>
   )
 
-  const { data } = await getIndexPreview({ url: url.toString() })
+  const data = await getIndexPreview({ url: url.toString() })
   const preview = data;
 
   const domain = preview?.domain;

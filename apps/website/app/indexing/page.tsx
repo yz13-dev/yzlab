@@ -9,7 +9,7 @@ import Link from "next/link";
 
 export default async function () {
 
-  const { data } = await getDomains()
+  const data = await getDomains()
 
   const domains = data ?? [];
 
