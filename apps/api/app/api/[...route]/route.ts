@@ -14,11 +14,12 @@ app.use(compress())
 app.route("/", v1);
 
 app.use("*", cors({
-  origin: (origin, c) => {
-    return origin.endsWith('.yzlab.com')
-      ? origin
-      : 'https://yzlab.ru'
-  },
+  origin: [
+    "https://yzlab.ru",
+    "https://api.yzlab.ru",
+    "http://localhost:3000",
+    "http://localhost:3001",
+  ],
   allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"], // Specify allowed methods
   credentials: true,
   maxAge: 60 * 5 // 5 minutes
