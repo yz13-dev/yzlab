@@ -47,10 +47,11 @@ export default function ({ defaultLinks = [], type = "site" }: { defaultLinks?: 
   return (
     <>
       {
-        links.map(link => {
+        links.map((link, index) => {
           const linkId = link.id;
-          if (type === "site") return <SiteCard key={linkId} link={link} />
-          return <OgCard key={linkId} link={link} />
+          const key = `${linkId}-${index}`
+          if (type === "site") return <SiteCard key={key} link={link} />
+          return <OgCard key={key} link={link} />
         })
       }
       <div className="w-full col-span-full items-center justify-center flex">

@@ -33,11 +33,13 @@ export const axios = <T>(
     cancelToken: source.token,
 
   })
-    .then((data) => {
-      return data as T;
+    .then((response) => {
+      const data = response.data as T;
+      return data;
     })
     .catch((error) => {
-      return error as T;
+      const data = error.response?.data as T;
+      return data;
     });
 
 
