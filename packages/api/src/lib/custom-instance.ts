@@ -2,7 +2,7 @@ import Axios, { type AxiosError, type AxiosRequestConfig } from 'axios';
 
 
 
-const baseURL = "https://api.yz13.ru";
+const baseURL = "https://api.yzlab.ru";
 
 export const AXIOS_INSTANCE = Axios.create({ baseURL }); // use your own URL here or environment variable
 
@@ -32,9 +32,13 @@ export const axios = <T>(
     headers,
     cancelToken: source.token,
 
-  }).then((data) => {
-    return data as T;
-  });
+  })
+    .then((data) => {
+      return data as T;
+    })
+    .catch((error) => {
+      return error as T;
+    });
 
 
 
