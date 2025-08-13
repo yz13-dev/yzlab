@@ -33,7 +33,7 @@ export const axios = <T>(
     cancelToken: source.token,
 
   }).then((data) => {
-    return data
+    return data as T;
   });
 
 
