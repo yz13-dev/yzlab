@@ -4,7 +4,7 @@ import List from "./components/list";
 
 export default async function () {
 
-  const { data } = await getRequests();
+  const data = await getRequests();
 
   const requests = data ?? [];
 

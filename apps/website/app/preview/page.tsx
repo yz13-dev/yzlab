@@ -28,7 +28,7 @@ export default async function ({ searchParams }: PageProps) {
     </div>
   )
 
-  const { data } = await getIndexPreview({ url: url.toString() })
+  const data = await getIndexPreview({ url: url.toString() })
   const preview = data;
 
   const domain = preview?.domain;
@@ -36,7 +36,7 @@ export default async function ({ searchParams }: PageProps) {
 
   if (!domain || !pathname) return null;
 
-  const [{ data: link }, { data: request }] = await Promise.all([getLinkByDomainAndPathname(domain, { pathname }), getRequestByLink({ url: url.toString() })])
+  const [link, request] = await Promise.all([getLinkByDomainAndPathname(domain, { pathname }), getRequestByLink({ url: url.toString() })])
 
   const requested = !!request
 

@@ -11,18 +11,29 @@ const app = new OpenAPIHono().basePath("/");
 
 app.use(compress())
 
-app.route("/", v1);
 
-app.use("*", cors({
-  origin: (origin, c) => {
-    return origin.endsWith('.yzlab.com')
-      ? origin
-      : 'https://yzlab.ru'
+app.use("/*", cors({
+  origin: (origin) => {
+
+    console.log(origin)
+
+    return "*";
+    return origin.endsWith(".yzlab.ru") ? origin : "https://yzlab.ru"
   },
   allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"], // Specify allowed methods
   credentials: true,
-  maxAge: 60 * 5 // 5 minutes
+  maxAge: 60 // 5 minutes
+  // maxAge: 60 * 5 // 5 minutes
 }))
+
+app.route("/", v1);
+
+app.get("/version", (c) => {
+  const version = packageJson.version;
+  return c.json(version);
+});
+
+app.get("/health", (c) => c.json({ status: "ok" }));
 
 app.doc("/openapi.json", {
   openapi: "3.0.0",
@@ -37,15 +48,9 @@ app.doc("/openapi.json", {
   ],
 })
 
-app.get("/version", (c) => {
-  const version = packageJson.version;
-  return c.json(version);
-});
-
-app.get("/health", (c) => c.json({ status: "ok" }));
-
 export const GET = handle(app);
 export const POST = handle(app);
 export const PUT = handle(app);
 export const PATCH = handle(app);
 export const DELETE = handle(app);
+export const OPTIONS = handle(app);

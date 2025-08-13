@@ -14,7 +14,7 @@ export default async function ({ params, searchParams }: PageProps) {
   const { domain } = await params;
   const { path } = await searchParams;
 
-  const { data } = await increaseClicks({ domain, path })
+  await increaseClicks({ domain, path })
 
   const url = `https://${domain}${path ? path : "/"}`
 

@@ -20,14 +20,10 @@ export default function ({ defaultLinks = [], type = "site" }: { defaultLinks?: 
     try {
       const newOffset = offset + 16;
 
-      const headers = {
-        "Access-Control-Allow-Origin": "*",
-        "Content-Type": "application/json",
-      }
 
-      const { data } = await (type === "og"
-        ? getSites({ blur: "true", offset: String(newOffset) }, { headers })
-        : getOgs({ blur: "true", offset: String(newOffset) }, { headers })
+      const data = await (type === "og"
+        ? getSites({ blur: "true", offset: String(newOffset) })
+        : getOgs({ blur: "true", offset: String(newOffset) })
       )
 
       const newLinks = data ?? []
@@ -51,10 +47,11 @@ export default function ({ defaultLinks = [], type = "site" }: { defaultLinks?: 
   return (
     <>
       {
-        links.map(link => {
+        links.map((link, index) => {
           const linkId = link.id;
-          if (type === "site") return <SiteCard key={linkId} link={link} />
-          return <OgCard key={linkId} link={link} />
+          const key = `${linkId}-${index}`
+          if (type === "site") return <SiteCard key={key} link={link} />
+          return <OgCard key={key} link={link} />
         })
       }
       <div className="w-full col-span-full items-center justify-center flex">

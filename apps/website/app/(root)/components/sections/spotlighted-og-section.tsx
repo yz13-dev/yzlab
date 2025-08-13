@@ -22,7 +22,7 @@ export default async function () {
 
   const response = await getOgsByTag("spotlight")
 
-  const links = response.data ?? [];
+  const links = response ?? [];
 
   return (
     <Section title="Новые OG">

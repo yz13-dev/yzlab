@@ -22,7 +22,7 @@ export default function ({ url, disabled = false }: Props) {
     setOpen(false)
     setLoading(true)
     try {
-      const { data } = await createRequest({
+      const data = await createRequest({
         url,
         type,
       });
