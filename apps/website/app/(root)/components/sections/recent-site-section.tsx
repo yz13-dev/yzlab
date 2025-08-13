@@ -22,7 +22,7 @@ export default async function () {
 
   const response = await getRecentSites()
 
-  const links = response.data ?? [];
+  const links = response ?? [];
 
   return (
     <BigSection title="Новые Сайты">

@@ -36,7 +36,7 @@ export default async function ({ searchParams }: PageProps) {
 
   if (!domain || !pathname) return null;
 
-  const [{ data: link }, { data: request }] = await Promise.all([getLinkByDomainAndPathname(domain, { pathname }), getRequestByLink({ url: url.toString() })])
+  const [link, request] = await Promise.all([getLinkByDomainAndPathname(domain, { pathname }), getRequestByLink({ url: url.toString() })])
 
   const requested = !!request
 

@@ -23,7 +23,7 @@ export default function ({ requests: defaultRequests = [] }: { requests?: GetReq
       setLoading(false);
       const response = await getRequests()
 
-      const requests = response.data ?? [];
+      const requests = response ?? [];
 
       setRequests(requests);
     }
@@ -38,7 +38,7 @@ export default function ({ requests: defaultRequests = [] }: { requests?: GetReq
       setLoading(false);
       const response = await getRequests()
 
-      const requests = response.data ?? [];
+      const requests = response ?? [];
 
       setRequests(requests);
     }

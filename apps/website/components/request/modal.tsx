@@ -34,7 +34,7 @@ export default function ({ children }: Props) {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      const { data: res } = await createRequest({
+      const res = await createRequest({
         url,
         type,
         name,
