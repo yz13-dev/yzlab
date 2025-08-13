@@ -20,14 +20,10 @@ export default function ({ defaultLinks = [], type = "site" }: { defaultLinks?: 
     try {
       const newOffset = offset + 16;
 
-      const headers = {
-        "Access-Control-Allow-Origin": "*",
-        "Content-Type": "application/json",
-      }
 
-      const { data } = await (type === "og"
-        ? getSites({ blur: "true", offset: String(newOffset) }, { headers })
-        : getOgs({ blur: "true", offset: String(newOffset) }, { headers })
+      const data = await (type === "og"
+        ? getSites({ blur: "true", offset: String(newOffset) })
+        : getOgs({ blur: "true", offset: String(newOffset) })
       )
 
       const newLinks = data ?? []

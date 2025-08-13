@@ -9,6 +9,10 @@
     {
       "url": "http://localhost:3000",
       "description": "Local Server"
+    },
+    {
+      "url": "https://api.yzlab.ru",
+      "description": "Production Server"
     }
   ],
   "components": {
@@ -1858,14 +1862,6 @@
             "required": true,
             "name": "id",
             "in": "path"
-          },
-          {
-            "schema": {
-              "type": "string"
-            },
-            "required": false,
-            "name": "id",
-            "in": "query"
           }
         ],
         "responses": {
@@ -1906,14 +1902,6 @@
             "required": true,
             "name": "id",
             "in": "path"
-          },
-          {
-            "schema": {
-              "type": "string"
-            },
-            "required": false,
-            "name": "id",
-            "in": "query"
           }
         ],
         "responses": {

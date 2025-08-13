@@ -6,8 +6,6 @@ export const gfkOrvalConfig: OptionsExport = {
     target: "./api.json",
   },
   output: {
-    baseUrl: "https://api.yzlab.ru",
-    // baseUrl: "http://localhost:3000",
     httpClient: "axios",
     mode: "split",
     target: "./src/api",
@@ -17,6 +15,10 @@ export const gfkOrvalConfig: OptionsExport = {
     clean: true,
     namingConvention: "kebab-case",
     override: {
+      mutator: {
+        path: './src/lib/custom-instance.ts',
+        name: 'axios',
+      },
       zod: {
         generate: {
           response: true,
@@ -26,10 +28,6 @@ export const gfkOrvalConfig: OptionsExport = {
           header: true
         }
       },
-      // mutator: {
-      //   path: "./custom-fetch.tsx",
-      //   name: "customFetch",
-      // },
     },
   },
 };

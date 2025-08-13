@@ -6,7 +6,6 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export * from './accept-request-params';
 export * from './create-link-params';
 export * from './create-request-body';
 export * from './create-request200';
@@ -45,7 +44,6 @@ export * from './increase-clicks-params';
 export * from './post-v1-email-check-params';
 export * from './post-v1-email-check200';
 export * from './post-v1-email-check400';
-export * from './reject-request-params';
 export * from './request';
 export * from './sites';
 export * from './sites-item';

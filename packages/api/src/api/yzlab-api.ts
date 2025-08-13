@@ -5,14 +5,7 @@
  * It's YZLAB API
  * OpenAPI spec version: 1.0.0
  */
-import axios from 'axios';
 import type {
-  AxiosRequestConfig,
-  AxiosResponse
-} from 'axios';
-
-import type {
-  AcceptRequestParams,
   CreateLinkParams,
   CreateRequest200,
   CreateRequestBody,
@@ -38,7 +31,6 @@ import type {
   IncreaseClicksParams,
   PostV1EmailCheck200,
   PostV1EmailCheckParams,
-  RejectRequestParams,
   Request,
   Sites,
   SubscribeEmail200,
@@ -47,220 +39,229 @@ import type {
   UnSubscribeEmailParams
 } from '../types';
 
+import { axios } from '../lib/custom-instance';
+import type { BodyType } from '../lib/custom-instance';
 
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 
   /**
  * Email
  */
-export const postV1EmailCheck = <TData = AxiosResponse<PostV1EmailCheck200>>(
-    params?: PostV1EmailCheckParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.post(
-      `https://api.yzlab.ru/v1/email/check`,undefined,{
-    ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
-
-export const subscribeEmail = <TData = AxiosResponse<SubscribeEmail200>>(
-    params: SubscribeEmailParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.post(
-      `https://api.yzlab.ru/v1/email/subscribe`,undefined,{
-    ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
-
-export const unSubscribeEmail = <TData = AxiosResponse<UnSubscribeEmail200>>(
-    params: UnSubscribeEmailParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.post(
-      `https://api.yzlab.ru/v1/email/unsubscribe`,undefined,{
-    ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
-
+export const postV1EmailCheck = (
+    params?: PostV1EmailCheckParams,
+ options?: SecondParameter<typeof axios>,) => {
+      return axios<PostV1EmailCheck200>(
+      {url: `/v1/email/check`, method: 'POST',
+        params
+    },
+      options);
+    }
+  
+export const subscribeEmail = (
+    params: SubscribeEmailParams,
+ options?: SecondParameter<typeof axios>,) => {
+      return axios<SubscribeEmail200>(
+      {url: `/v1/email/subscribe`, method: 'POST',
+        params
+    },
+      options);
+    }
+  
+export const unSubscribeEmail = (
+    params: UnSubscribeEmailParams,
+ options?: SecondParameter<typeof axios>,) => {
+      return axios<UnSubscribeEmail200>(
+      {url: `/v1/email/unsubscribe`, method: 'POST',
+        params
+    },
+      options);
+    }
+  
 /**
  * Get preview of a link
  */
-export const getIndexPreview = <TData = AxiosResponse<GetIndexPreview200>>(
-    params: GetIndexPreviewParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.post(
-      `https://api.yzlab.ru/v1/indexing/preview`,undefined,{
-    ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
-
-export const createLink = <TData = AxiosResponse<Sites>>(
-    params?: CreateLinkParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.post(
-      `https://api.yzlab.ru/v1/links`,undefined,{
-    ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
-
-export const increaseClicks = <TData = AxiosResponse<Increase>>(
-    params?: IncreaseClicksParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.post(
-      `https://api.yzlab.ru/v1/links/count/increase`,undefined,{
-    ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
-
-export const getLinkByDomainAndPathname = <TData = AxiosResponse<GetLinkByDomainAndPathname200>>(
+export const getIndexPreview = (
+    params: GetIndexPreviewParams,
+ options?: SecondParameter<typeof axios>,) => {
+      return axios<GetIndexPreview200>(
+      {url: `/v1/indexing/preview`, method: 'POST',
+        params
+    },
+      options);
+    }
+  
+export const createLink = (
+    params?: CreateLinkParams,
+ options?: SecondParameter<typeof axios>,) => {
+      return axios<Sites>(
+      {url: `/v1/links`, method: 'POST',
+        params
+    },
+      options);
+    }
+  
+export const increaseClicks = (
+    params?: IncreaseClicksParams,
+ options?: SecondParameter<typeof axios>,) => {
+      return axios<Increase>(
+      {url: `/v1/links/count/increase`, method: 'POST',
+        params
+    },
+      options);
+    }
+  
+export const getLinkByDomainAndPathname = (
     domain: Domain & string,
-    params?: GetLinkByDomainAndPathnameParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `https://api.yzlab.ru/v1/links/all/${domain}`,{
-    ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
-
-export const getRecentSites = <TData = AxiosResponse<GetRecentSites200Item[]>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `https://api.yzlab.ru/v1/links/sites/recent`,options
-    );
-  }
-
-export const getSitesByTag = <TData = AxiosResponse<GetSitesByTag200Item[]>>(
-    tag: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `https://api.yzlab.ru/v1/links/sites/tag/${tag}`,options
-    );
-  }
-
-export const getSites = <TData = AxiosResponse<GetSites200Item[]>>(
-    params?: GetSitesParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `https://api.yzlab.ru/v1/links/sites`,{
-    ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
-
-export const getRecentOgs = <TData = AxiosResponse<GetRecentOgs200Item[]>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `https://api.yzlab.ru/v1/links/ogs/recent`,options
-    );
-  }
-
-export const getOgsByTag = <TData = AxiosResponse<GetOgsByTag200Item[]>>(
-    tag: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `https://api.yzlab.ru/v1/links/ogs/tag/${tag}`,options
-    );
-  }
-
-export const getOgs = <TData = AxiosResponse<GetOgs200Item[]>>(
-    params?: GetOgsParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `https://api.yzlab.ru/v1/links/ogs`,{
-    ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
-
-export const getRequests = <TData = AxiosResponse<GetRequests200Item[]>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `https://api.yzlab.ru/v1/requests`,options
-    );
-  }
-
-export const createRequest = <TData = AxiosResponse<CreateRequest200>>(
-    createRequestBody: CreateRequestBody, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.post(
-      `https://api.yzlab.ru/v1/requests`,
-      createRequestBody,options
-    );
-  }
-
-export const acceptRequest = <TData = AxiosResponse<Request>>(
+    params?: GetLinkByDomainAndPathnameParams,
+ options?: SecondParameter<typeof axios>,) => {
+      return axios<GetLinkByDomainAndPathname200>(
+      {url: `/v1/links/all/${domain}`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+export const getRecentSites = (
+    
+ options?: SecondParameter<typeof axios>,) => {
+      return axios<GetRecentSites200Item[]>(
+      {url: `/v1/links/sites/recent`, method: 'GET'
+    },
+      options);
+    }
+  
+export const getSitesByTag = (
+    tag: string,
+ options?: SecondParameter<typeof axios>,) => {
+      return axios<GetSitesByTag200Item[]>(
+      {url: `/v1/links/sites/tag/${tag}`, method: 'GET'
+    },
+      options);
+    }
+  
+export const getSites = (
+    params?: GetSitesParams,
+ options?: SecondParameter<typeof axios>,) => {
+      return axios<GetSites200Item[]>(
+      {url: `/v1/links/sites`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+export const getRecentOgs = (
+    
+ options?: SecondParameter<typeof axios>,) => {
+      return axios<GetRecentOgs200Item[]>(
+      {url: `/v1/links/ogs/recent`, method: 'GET'
+    },
+      options);
+    }
+  
+export const getOgsByTag = (
+    tag: string,
+ options?: SecondParameter<typeof axios>,) => {
+      return axios<GetOgsByTag200Item[]>(
+      {url: `/v1/links/ogs/tag/${tag}`, method: 'GET'
+    },
+      options);
+    }
+  
+export const getOgs = (
+    params?: GetOgsParams,
+ options?: SecondParameter<typeof axios>,) => {
+      return axios<GetOgs200Item[]>(
+      {url: `/v1/links/ogs`, method: 'GET',
+        params
+    },
+      options);
+    }
+  
+export const getRequests = (
+    
+ options?: SecondParameter<typeof axios>,) => {
+      return axios<GetRequests200Item[]>(
+      {url: `/v1/requests`, method: 'GET'
+    },
+      options);
+    }
+  
+export const createRequest = (
+    createRequestBody: BodyType<CreateRequestBody>,
+ options?: SecondParameter<typeof axios>,) => {
+      return axios<CreateRequest200>(
+      {url: `/v1/requests`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createRequestBody
+    },
+      options);
+    }
+  
+export const acceptRequest = (
     id: string,
-    params?: AcceptRequestParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.post(
-      `https://api.yzlab.ru/v1/requests/${id}/accept`,undefined,{
-    ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
-
-export const rejectRequest = <TData = AxiosResponse<Request>>(
+ options?: SecondParameter<typeof axios>,) => {
+      return axios<Request>(
+      {url: `/v1/requests/${id}/accept`, method: 'POST'
+    },
+      options);
+    }
+  
+export const rejectRequest = (
     id: string,
-    params?: RejectRequestParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.post(
-      `https://api.yzlab.ru/v1/requests/${id}/reject`,undefined,{
-    ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
-
-export const getRequestByLink = <TData = AxiosResponse<GetRequestByLink200>>(
-    params?: GetRequestByLinkParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.post(
-      `https://api.yzlab.ru/v1/requests/link`,undefined,{
-    ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
-
-export const getDomains = <TData = AxiosResponse<GetDomains200Item[]>>(
-     options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `https://api.yzlab.ru/v1/domains`,options
-    );
-  }
-
-export const getV1DomainsDomainDomain = <TData = AxiosResponse<GetV1DomainsDomainDomain200>>(
-    domain: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `https://api.yzlab.ru/v1/domains/domain/${domain}`,options
-    );
-  }
-
-export type PostV1EmailCheckResult = AxiosResponse<PostV1EmailCheck200>
-export type SubscribeEmailResult = AxiosResponse<SubscribeEmail200>
-export type UnSubscribeEmailResult = AxiosResponse<UnSubscribeEmail200>
-export type GetIndexPreviewResult = AxiosResponse<GetIndexPreview200>
-export type CreateLinkResult = AxiosResponse<Sites>
-export type IncreaseClicksResult = AxiosResponse<Increase>
-export type GetLinkByDomainAndPathnameResult = AxiosResponse<GetLinkByDomainAndPathname200>
-export type GetRecentSitesResult = AxiosResponse<GetRecentSites200Item[]>
-export type GetSitesByTagResult = AxiosResponse<GetSitesByTag200Item[]>
-export type GetSitesResult = AxiosResponse<GetSites200Item[]>
-export type GetRecentOgsResult = AxiosResponse<GetRecentOgs200Item[]>
-export type GetOgsByTagResult = AxiosResponse<GetOgsByTag200Item[]>
-export type GetOgsResult = AxiosResponse<GetOgs200Item[]>
-export type GetRequestsResult = AxiosResponse<GetRequests200Item[]>
-export type CreateRequestResult = AxiosResponse<CreateRequest200>
-export type AcceptRequestResult = AxiosResponse<Request>
-export type RejectRequestResult = AxiosResponse<Request>
-export type GetRequestByLinkResult = AxiosResponse<GetRequestByLink200>
-export type GetDomainsResult = AxiosResponse<GetDomains200Item[]>
-export type GetV1DomainsDomainDomainResult = AxiosResponse<GetV1DomainsDomainDomain200>
+ options?: SecondParameter<typeof axios>,) => {
+      return axios<Request>(
+      {url: `/v1/requests/${id}/reject`, method: 'POST'
+    },
+      options);
+    }
+  
+export const getRequestByLink = (
+    params?: GetRequestByLinkParams,
+ options?: SecondParameter<typeof axios>,) => {
+      return axios<GetRequestByLink200>(
+      {url: `/v1/requests/link`, method: 'POST',
+        params
+    },
+      options);
+    }
+  
+export const getDomains = (
+    
+ options?: SecondParameter<typeof axios>,) => {
+      return axios<GetDomains200Item[]>(
+      {url: `/v1/domains`, method: 'GET'
+    },
+      options);
+    }
+  
+export const getV1DomainsDomainDomain = (
+    domain: string,
+ options?: SecondParameter<typeof axios>,) => {
+      return axios<GetV1DomainsDomainDomain200>(
+      {url: `/v1/domains/domain/${domain}`, method: 'GET'
+    },
+      options);
+    }
+  
+export type PostV1EmailCheckResult = NonNullable<Awaited<ReturnType<typeof postV1EmailCheck>>>
+export type SubscribeEmailResult = NonNullable<Awaited<ReturnType<typeof subscribeEmail>>>
+export type UnSubscribeEmailResult = NonNullable<Awaited<ReturnType<typeof unSubscribeEmail>>>
+export type GetIndexPreviewResult = NonNullable<Awaited<ReturnType<typeof getIndexPreview>>>
+export type CreateLinkResult = NonNullable<Awaited<ReturnType<typeof createLink>>>
+export type IncreaseClicksResult = NonNullable<Awaited<ReturnType<typeof increaseClicks>>>
+export type GetLinkByDomainAndPathnameResult = NonNullable<Awaited<ReturnType<typeof getLinkByDomainAndPathname>>>
+export type GetRecentSitesResult = NonNullable<Awaited<ReturnType<typeof getRecentSites>>>
+export type GetSitesByTagResult = NonNullable<Awaited<ReturnType<typeof getSitesByTag>>>
+export type GetSitesResult = NonNullable<Awaited<ReturnType<typeof getSites>>>
+export type GetRecentOgsResult = NonNullable<Awaited<ReturnType<typeof getRecentOgs>>>
+export type GetOgsByTagResult = NonNullable<Awaited<ReturnType<typeof getOgsByTag>>>
+export type GetOgsResult = NonNullable<Awaited<ReturnType<typeof getOgs>>>
+export type GetRequestsResult = NonNullable<Awaited<ReturnType<typeof getRequests>>>
+export type CreateRequestResult = NonNullable<Awaited<ReturnType<typeof createRequest>>>
+export type AcceptRequestResult = NonNullable<Awaited<ReturnType<typeof acceptRequest>>>
+export type RejectRequestResult = NonNullable<Awaited<ReturnType<typeof rejectRequest>>>
+export type GetRequestByLinkResult = NonNullable<Awaited<ReturnType<typeof getRequestByLink>>>
+export type GetDomainsResult = NonNullable<Awaited<ReturnType<typeof getDomains>>>
+export type GetV1DomainsDomainDomainResult = NonNullable<Awaited<ReturnType<typeof getV1DomainsDomainDomain>>>
