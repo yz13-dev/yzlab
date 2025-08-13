@@ -1,6 +1,7 @@
 import packageJson from "@/package.json";
 import { OpenAPIHono } from '@hono/zod-openapi';
 import { compress } from 'hono/compress';
+import { cors } from 'hono/cors';
 import { handle } from "hono/vercel";
 import { v1 } from "./v1";
 
@@ -10,7 +11,18 @@ const app = new OpenAPIHono().basePath("/");
 
 app.use(compress())
 
-app.route("/", v1)
+app.route("/", v1);
+
+app.use("*", cors({
+  origin: (origin, c) => {
+    return origin.endsWith('.yzlab.com')
+      ? origin
+      : 'https://yzlab.ru'
+  },
+  allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"], // Specify allowed methods
+  credentials: true,
+  maxAge: 60 * 5 // 5 minutes
+}))
 
 app.doc("/openapi.json", {
   openapi: "3.0.0",
