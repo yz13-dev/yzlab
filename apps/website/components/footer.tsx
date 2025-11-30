@@ -18,7 +18,7 @@ export default function () {
               Проект <Link href="https://yz13.ru" className="text-foreground hover:underline font-medium">YZ13</Link>
             </span>
             <span className="text-xs text-muted-foreground">
-              Есть вопросы? Напишите нам по email <Link href="mailto:yz13@yz13.ru" className="text-foreground hover:underline">yz13@yz13.ru</Link>
+              Есть вопросы? Напишите нам по email <Link href="mailto:yz13.dev@gmail.com" className="text-foreground hover:underline">yz13.dev@gmail.com</Link>
             </span>
           </div>
         </div>
