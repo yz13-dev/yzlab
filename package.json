@@ -54,6 +54,6 @@
     "packages/*"
   ],
   "dependencies": {
-    "next": "15.3.6"
+    "next": "15.3.8"
   }
 }
